@@ -1,0 +1,44 @@
+[
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program1",
+  "arguments": [
+   "gcc",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "token-list.o",
+   "token-list.c"
+  ],
+  "file": "token-list.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program1",
+  "arguments": [
+   "gcc",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "id-list.o",
+   "id-list.c"
+  ],
+  "file": "id-list.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program1",
+  "arguments": [
+   "gcc",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "scan.o",
+   "scan.c"
+  ],
+  "file": "scan.c"
+ }
+]
