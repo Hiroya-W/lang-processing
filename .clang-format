@@ -1,0 +1,9 @@
+BasedOnStyle:  Google
+
+# ここから自分の好みのオプションを指定する
+ColumnLimit: 0
+IndentWidth: 4
+Language: Cpp
+Standard: Cpp11
+TabWidth: 4
+UseTab: Never
