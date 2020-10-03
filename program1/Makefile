@@ -1,6 +1,6 @@
 CC := gcc
-OBJS := id-list.o token-list.o
-CFLAGS := -W -Wall -g
+OBJS := id-list.o token-list.o scan.o
+CFLAGS := -ansi -W -Wall -g 
 
 token-list: $(OBJS)
 
@@ -8,6 +8,6 @@ $(OBJS): token-list.h
 
 .PHONY: clean
 clean:
-	-rm *.o 
+	-rm *.o token-list
 
 .DEFAULT_GOAL=token-list
