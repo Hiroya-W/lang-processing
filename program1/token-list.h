@@ -58,6 +58,8 @@
 
 #define NUMOFTOKEN 49
 
+extern FILE *fp;
+
 /* token-list.c */
 
 #define KEYWORDSIZE 28
