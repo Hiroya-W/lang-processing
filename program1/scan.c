@@ -61,7 +61,7 @@ int end_scan(void) {
 }
 
 static int scan_alnum() {
-    memset(string_attr, "\0", sizeof(string_attr));
+    memset(string_attr, '\0', sizeof(string_attr));
     string_attr[0] = cbuf;
 
     look_ahead();
