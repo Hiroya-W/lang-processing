@@ -58,8 +58,6 @@
 
 #define NUMOFTOKEN 49
 
-extern FILE *fp;
-
 /* token-list.c */
 
 #define KEYWORDSIZE 28
@@ -72,6 +70,7 @@ extern struct KEY {
 extern void error(char *mes);
 
 /* scan.c */
+extern FILE *fp;
 extern int num_attr;
 extern char string_attr[MAXSTRSIZE];
 extern int init_scan(char *filename);
