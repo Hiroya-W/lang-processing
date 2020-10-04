@@ -9,6 +9,7 @@ FILE *fp;
 char string_attr[MAXSTRSIZE];
 static int cbuf; /* look-ahead character */
 
+static int _isblank(int c);
 static int scan_alnum();
 static int get_keyword_token_code(char *token);
 static void look_ahead();
@@ -36,7 +37,7 @@ int scan(void) {
     while (1) {
         if (cbuf == EOF) {
             return -1;
-        } else if (isblank(cbuf)) { /* Space or Tab */
+        } else if (_isblank(cbuf)) { /* Space or Tab */
             look_ahead();
             continue;
         } else if (isalpha(cbuf)) { /* Name or Keyword */
@@ -58,6 +59,14 @@ int end_scan(void) {
         return -1;
     }
     return 0;
+}
+
+static int _isblank(int c) {
+    if (c == ' ' || c == '\t') {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 static int scan_alnum() {
