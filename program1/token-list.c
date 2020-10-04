@@ -56,7 +56,9 @@ int main(int nc, char *np[]) {
         printf("File %s can not open.\n", np[1]);
         return 0;
     }
-    /* 作成する部分：トークンカウント用の配列？を初期化する */
+
+    memset(numtoken, 0, sizeof(numtoken));
+
     while ((token = scan()) >= 0) {
         /* 作成する部分：トークンをカウントする */
     }
