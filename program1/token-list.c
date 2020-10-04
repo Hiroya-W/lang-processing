@@ -1,5 +1,8 @@
 ﻿#include "token-list.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 /* keyword list */
 struct KEY key[KEYWORDSIZE] = {
     {"and", TAND},
@@ -49,12 +52,12 @@ int main(int nc, char *np[]) {
     int token, i;
 
     if (nc < 2) {
-        printf("File name id not given.\n");
-        return 0;
+        fprintf(stderr, "File name id not given.\n");
+        return EXIT_FAILURE;
     }
     if (init_scan(np[1]) < 0) {
-        printf("File %s can not open.\n", np[1]);
-        return 0;
+        fprintf(stderr, "File %s can not open.\n", np[1]);
+        return EXIT_FAILURE;
     }
 
     memset(numtoken, 0, sizeof(numtoken));
@@ -62,7 +65,11 @@ int main(int nc, char *np[]) {
     while ((token = scan()) >= 0) {
         /* 作成する部分：トークンをカウントする */
     }
-    end_scan();
+
+    if (end_scan() < 0) {
+        fprintf(stderr, "File %s can not close.\n", np[1]);
+        return EXIT_FAILURE;
+    }
     /* 作成する部分:カウントした結果を出力する */
     return 0;
 }

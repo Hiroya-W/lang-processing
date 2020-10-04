@@ -10,7 +10,7 @@ static void look_ahead();
 
 int init_scan(char *filename) {
     if ((fp = fopen(filename, "r")) == NULL) {
-        return EXIT_FAILURE;
+        return -1;
     }
 
     look_ahead();
@@ -31,9 +31,11 @@ int scan(void) {
 int get_linenum(void) {
     return 0;
 }
-void end_scan(void) {
-    fclose(fp);
-    return;
+int end_scan(void) {
+    if (fclose(fp) == EOF) {
+        return -1;
+    }
+    return 0;
 }
 
 static void look_ahead() {
