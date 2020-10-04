@@ -1,6 +1,6 @@
 CC := gcc
 OBJS := id-list.o token-list.o scan.o
-CFLAGS := -ansi -W -Wall -g 
+CFLAGS := -ansi -fno-common -W -Wall -g 
 
 token-list: $(OBJS)
 
