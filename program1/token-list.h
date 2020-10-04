@@ -1,4 +1,7 @@
-﻿/* token-list.h  */
+﻿#ifndef _TOKEN_LIST_H_
+#define _TOKEN_LIST_H_
+
+/* token-list.h  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,3 +80,4 @@ extern int init_scan(char *filename);
 extern int scan(void);
 extern int get_linenum(void);
 extern int end_scan(void);
+#endif
