@@ -16,6 +16,7 @@ static int get_keyword_token_code(char *token);
 static void look_ahead();
 static int string_attr_push_back(const char c);
 static int linenum = 1;
+static int token_linenum = 0;
 
 int init_scan(char *filename) {
     if ((fp = fopen(filename, "r")) == NULL) {
@@ -70,9 +71,15 @@ int scan(void) {
     }
     return token_code;
 }
+
 int get_linenum(void) {
-    return linenum;
+    return token_linenum;
 }
+
+void set_token_linenum(void) {
+    token_linenum = linenum;
+}
+
 int end_scan(void) {
     if (fclose(fp) == EOF) {
         return -1;
