@@ -14,6 +14,7 @@ static int _isblank(int c);
 static int scan_alnum();
 static int scan_digit();
 static int scan_string();
+static int scan_comment();
 static int get_keyword_token_code(char *token);
 static void look_ahead();
 static int string_attr_push_back(const char c);
@@ -70,9 +71,13 @@ int scan(void) {
             token_code = scan_digit();
             break;
         } else if (current_char == '\'') { /* String */
+            token_code = scan_string();
             break;
-        } else if (current_char == '/' || current_char == '{') { /* Comment */
-            break;
+        } else if ((current_char == '/' && next_char == '*') || current_char == '{') { /* Comment */
+            if (scan_comment() == -1) {
+                break;
+            }
+            continue;
         } else { /* Symbol */
             break;
         }
@@ -160,6 +165,30 @@ static int scan_string() {
         look_ahead();
     }
     return TSTRING;
+}
+
+static int scan_comment() {
+    if (current_char == '/' && next_char == '*') {
+        look_ahead();
+        look_ahead();
+        while (!(current_char != EOF)) {
+            if (current_char == '*' && next_char == '/') {
+                look_ahead();
+                look_ahead();
+                return 0;
+            }
+        }
+    } else if (current_char == '{') {
+        look_ahead();
+        while (!(current_char != EOF)) {
+            if (current_char == '}') {
+                look_ahead();
+                return 0;
+            }
+        }
+    }
+    /* EOF */
+    return -1;
 }
 
 static int get_keyword_token_code(char *token) {
