@@ -12,11 +12,13 @@ static int next_char = '\0'; /* look-ahead character */
 
 static int _isblank(int c);
 static int scan_alnum();
+static int scan_digit();
 static int get_keyword_token_code(char *token);
 static void look_ahead();
 static int string_attr_push_back(const char c);
 static int linenum = 1;
 static int token_linenum = 0;
+int num_attr = 0;
 
 int init_scan(char *filename) {
     if ((fp = fopen(filename, "r")) == NULL) {
@@ -64,6 +66,7 @@ int scan(void) {
             token_code = scan_alnum();
             break;
         } else if (isdigit(current_char)) { /* Digit */
+            token_code = scan_digit();
             break;
         } else {
             break;
@@ -108,6 +111,30 @@ static int scan_alnum() {
         look_ahead();
     }
     return get_keyword_token_code(string_attr);
+}
+
+static int scan_digit() {
+    int num = current_char - '0';
+
+    memset(string_attr, '\0', sizeof(string_attr));
+    string_attr[0] = current_char;
+
+    look_ahead();
+    while (isdigit(current_char)) {
+        if (string_attr_push_back(current_char) == -1) {
+            error("function scan_digit()");
+            return -1;
+        }
+        num *= 10;
+        num += current_char - '0';
+        look_ahead();
+    }
+    if (num <= MAX_NUM_ATTR) {
+        num_attr = num;
+        return TNUMBER;
+    }
+
+    return -1;
 }
 
 static int get_keyword_token_code(char *token) {

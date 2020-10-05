@@ -76,5 +76,5 @@ int main(int nc, char *np[]) {
 
 void error(char *mes) {
     fprintf(stderr, "\n ERROR: %s\n", mes);
-    end_scan();
+    /* end_scan(); */
 }

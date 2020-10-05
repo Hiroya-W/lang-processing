@@ -61,6 +61,8 @@
 
 #define NUMOFTOKEN 49
 
+#define MAX_NUM_ATTR 32767
+
 /* token-list.c */
 
 #define KEYWORDSIZE 28
