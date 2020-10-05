@@ -13,6 +13,7 @@ static int next_char = '\0'; /* look-ahead character */
 static int _isblank(int c);
 static int scan_alnum();
 static int scan_digit();
+static int scan_string();
 static int get_keyword_token_code(char *token);
 static void look_ahead();
 static int string_attr_push_back(const char c);
@@ -59,7 +60,7 @@ int scan(void) {
                 look_ahead();
                 linenum++;
             }
-        } else if (_isblank(current_char)) { /* Space or Tab */
+        } else if (_isblank(current_char)) { /* Separator (Space or Tab) */
             look_ahead();
             continue;
         } else if (isalpha(current_char)) { /* Name or Keyword */
@@ -68,7 +69,11 @@ int scan(void) {
         } else if (isdigit(current_char)) { /* Digit */
             token_code = scan_digit();
             break;
-        } else {
+        } else if (current_char == '\'') { /* String */
+            break;
+        } else if (current_char == '/' || current_char == '{') { /* Comment */
+            break;
+        } else { /* Symbol */
             break;
         }
     }
@@ -135,6 +140,26 @@ static int scan_digit() {
     }
 
     return -1;
+}
+
+static int scan_string() {
+    memset(string_attr, '\0', sizeof(string_attr));
+    look_ahead();
+    string_attr[0] = current_char;
+
+    while ((!(current_char == '\'') || next_char == '\'')) {
+        if (!isprint(current_char)) {
+            error("function scan_string()");
+            fprintf(stderr, "%x is not graphic character.\n", current_char);
+            return -1;
+        }
+        if (string_attr_push_back(current_char) == -1) {
+            error("function scan_digit()");
+            return -1;
+        }
+        look_ahead();
+    }
+    return TSTRING;
 }
 
 static int get_keyword_token_code(char *token) {
