@@ -7,20 +7,23 @@
 
 FILE *fp;
 char string_attr[MAXSTRSIZE];
-static int cbuf; /* look-ahead character */
+static int current_char;
+static int next_char = '\0'; /* look-ahead character */
 
 static int _isblank(int c);
 static int scan_alnum();
 static int get_keyword_token_code(char *token);
 static void look_ahead();
 static int string_attr_push_back(const char c);
+static int linenum = 1;
 
 int init_scan(char *filename) {
     if ((fp = fopen(filename, "r")) == NULL) {
         return -1;
     }
 
-    look_ahead();
+    look_ahead(); /* current_char = `\0`, next_char = 'p' */
+    look_ahead(); /* current_char = `p`, next_char = 'r' */
 
     return 0;
 }
@@ -35,17 +38,31 @@ int scan(void) {
      */
     int token_code = -1;
     while (1) {
-        if (cbuf == EOF) { /* End Of File*/
+        if (current_char == EOF) { /* End Of File*/
             return -1;
-        } else if (!isprint(cbuf)) { /* Not Graphic Character(0x20~0x7e) */
+        } else if (!isprint(current_char)) { /* Not Graphic Character(0x20~0x7e) */
             return -1;
-        } else if (_isblank(cbuf)) { /* Space or Tab */
+        } else if (current_char == '\r' || current_char == '\n') { /* End of Line */
+            if (current_char == '\r') {
+                if (next_char == '\n') {
+                    look_ahead();
+                }
+                look_ahead();
+                linenum++;
+            } else {
+                if (next_char == '\r') {
+                    look_ahead();
+                }
+                look_ahead();
+                linenum++;
+            }
+        } else if (_isblank(current_char)) { /* Space or Tab */
             look_ahead();
             continue;
-        } else if (isalpha(cbuf)) { /* Name or Keyword */
+        } else if (isalpha(current_char)) { /* Name or Keyword */
             token_code = scan_alnum();
             break;
-        } else if (isdigit(cbuf)) { /* Digit */
+        } else if (isdigit(current_char)) { /* Digit */
             break;
         } else {
             break;
@@ -54,7 +71,7 @@ int scan(void) {
     return token_code;
 }
 int get_linenum(void) {
-    return 0;
+    return linenum;
 }
 int end_scan(void) {
     if (fclose(fp) == EOF) {
@@ -73,11 +90,11 @@ static int _isblank(int c) {
 
 static int scan_alnum() {
     memset(string_attr, '\0', sizeof(string_attr));
-    string_attr[0] = cbuf;
+    string_attr[0] = current_char;
 
     look_ahead();
-    while (isalnum(cbuf)) {
-        if (string_attr_push_back(cbuf) == -1) {
+    while (isalnum(current_char)) {
+        if (string_attr_push_back(current_char) == -1) {
             error("function scan_alnum()");
             return -1;
         }
@@ -88,6 +105,7 @@ static int scan_alnum() {
 
 static int get_keyword_token_code(char *token) {
     int index;
+    /* TODO: binary search */
     for (index = 0; index < KEYWORDSIZE; index++) {
         if (strcmp(token, key[index].keyword) == 0) {
             /* This token is Keyword */
@@ -111,6 +129,7 @@ static int string_attr_push_back(const char c) {
 }
 
 static void look_ahead() {
-    cbuf = fgetc(fp);
+    current_char = next_char;
+    next_char = fgetc(fp);
     return;
 }
