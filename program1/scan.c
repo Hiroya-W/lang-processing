@@ -35,7 +35,9 @@ int scan(void) {
      */
     int token_code = -1;
     while (1) {
-        if (cbuf == EOF) {
+        if (cbuf == EOF) { /* End Of File*/
+            return -1;
+        } else if (!isprint(cbuf)) { /* Not Graphic Character(0x20~0x7e) */
             return -1;
         } else if (_isblank(cbuf)) { /* Space or Tab */
             look_ahead();
