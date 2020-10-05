@@ -15,6 +15,7 @@ static int scan_alnum();
 static int scan_digit();
 static int scan_string();
 static int scan_comment();
+static int scan_symbol();
 static int get_keyword_token_code(char *token);
 static void look_ahead();
 static int string_attr_push_back(const char c);
@@ -79,6 +80,7 @@ int scan(void) {
             }
             continue;
         } else { /* Symbol */
+            token_code = scan_symbol();
             break;
         }
     }
@@ -189,6 +191,57 @@ static int scan_comment() {
     }
     /* EOF */
     return -1;
+}
+
+static int scan_symbol() {
+    char symbol = current_char;
+    look_ahead();
+    switch (symbol) {
+        case '+':
+            return TPLUS;
+        case '-':
+            return TMINUS;
+        case '*':
+            return TSTAR;
+        case '=':
+            return TEQUAL;
+        case '<':
+            if (next_char == '>') {
+                return TNOTEQ;
+            } else if (next_char == '=') {
+                return TLEEQ;
+            } else {
+                return TLE;
+            }
+        case '>':
+            if (next_char == '=') {
+                return TGREQ;
+            } else {
+                return TGR;
+            }
+        case '(':
+            return TLPAREN;
+        case ')':
+            return TRPAREN;
+        case '[':
+            return TLSQPAREN;
+        case ']':
+            return TRSQPAREN;
+        case ':':
+            if (next_char == '=') {
+                return TASSIGN;
+            } else {
+                return TCOLON;
+            }
+        case '.':
+            return TDOT;
+        case ',':
+            return TCOMMA;
+        case ';':
+            return TSEMI;
+        default:
+            return -1;
+    }
 }
 
 static int get_keyword_token_code(char *token) {
