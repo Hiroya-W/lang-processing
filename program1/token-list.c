@@ -73,7 +73,9 @@ int main(int nc, char *np[]) {
     }
     /* 作成する部分:カウントした結果を出力する */
     for (index = 0; index < NUMOFTOKEN + 1; index++) {
-        fprintf(stdout, "%10s: %5d\n", tokenstr[index], numtoken[index]);
+        if (numtoken[index] > 0) {
+            fprintf(stdout, "%10s: %5d\n", tokenstr[index], numtoken[index]);
+        }
     }
 
     return 0;
