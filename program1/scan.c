@@ -46,8 +46,6 @@ int scan(void) {
     while (1) {
         if (current_char == EOF) { /* End Of File*/
             return -1;
-        } else if (!isprint(current_char)) { /* Not Graphic Character(0x20~0x7e) */
-            return -1;
         } else if (current_char == '\r' || current_char == '\n') { /* End of Line */
             if (current_char == '\r') {
                 if (next_char == '\n') {
@@ -64,7 +62,8 @@ int scan(void) {
             }
         } else if (_isblank(current_char)) { /* Separator (Space or Tab) */
             look_ahead();
-            continue;
+        } else if (!isprint(current_char)) { /* Not Graphic Character(0x20~0x7e) */
+            return -1;
         } else if (isalpha(current_char)) { /* Name or Keyword */
             token_code = scan_alnum();
             break;
@@ -78,7 +77,6 @@ int scan(void) {
             if (scan_comment() == -1) {
                 break;
             }
-            continue;
         } else { /* Symbol */
             token_code = scan_symbol();
             break;
