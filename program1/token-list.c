@@ -49,7 +49,7 @@ char *tokenstr[NUMOFTOKEN + 1] = {
     "break"};
 
 int main(int nc, char *np[]) {
-    int token, i;
+    int token, index;
 
     if (nc < 2) {
         fprintf(stderr, "File name id not given.\n");
@@ -64,6 +64,7 @@ int main(int nc, char *np[]) {
 
     while ((token = scan()) >= 0) {
         /* 作成する部分：トークンをカウントする */
+        numtoken[token]++;
     }
 
     if (end_scan() < 0) {
@@ -71,6 +72,10 @@ int main(int nc, char *np[]) {
         return EXIT_FAILURE;
     }
     /* 作成する部分:カウントした結果を出力する */
+    for (index = 0; index < NUMOFTOKEN + 1; index++) {
+        fprintf(stdout, "%10s: %5d\n", tokenstr[index], numtoken[index]);
+    }
+
     return 0;
 }
 
