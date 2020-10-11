@@ -150,7 +150,6 @@ static int scan_digit() {
 static int scan_string() {
     memset(string_attr, '\0', sizeof(string_attr));
     look_ahead();
-    string_attr[0] = current_char;
 
     while ((!(current_char == '\'') || next_char == '\'')) {
         if (!isprint(current_char)) {
