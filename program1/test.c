@@ -52,7 +52,7 @@ void scan_test_003(void) {
 
 void scan_test_004(void) {
     init_scan("samples/sample11.mpl");
-    cbuf = 0x80; /* Not Graphic character */
+    current_char = 0x80; /* Not Graphic character */
     CU_ASSERT(scan() == -1);
     end_scan();
 }
