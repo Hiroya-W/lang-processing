@@ -154,7 +154,7 @@ static int scan_string() {
     while ((!(current_char == '\'') || next_char == '\'')) {
         if (!isprint(current_char)) {
             error("function scan_string()");
-            fprintf(stderr, "%x is not graphic character.\n", current_char);
+            fprintf(stderr, "[%c]0x%x is not graphic character.\n", current_char, current_char);
             return -1;
         }
         if (string_attr_push_back(current_char) == -1) {
@@ -163,6 +163,8 @@ static int scan_string() {
         }
         look_ahead();
     }
+    look_ahead(); /* read '\'' */
+
     return TSTRING;
 }
 
@@ -203,15 +205,18 @@ static int scan_symbol() {
         case '=':
             return TEQUAL;
         case '<':
-            if (next_char == '>') {
+            if (current_char == '>') {
+                look_ahead();
                 return TNOTEQ;
-            } else if (next_char == '=') {
+            } else if (current_char == '=') {
+                look_ahead();
                 return TLEEQ;
             } else {
                 return TLE;
             }
         case '>':
-            if (next_char == '=') {
+            if (current_char == '=') {
+                look_ahead();
                 return TGREQ;
             } else {
                 return TGR;
@@ -225,7 +230,8 @@ static int scan_symbol() {
         case ']':
             return TRSQPAREN;
         case ':':
-            if (next_char == '=') {
+            if (current_char == '=') {
+                look_ahead();
                 return TASSIGN;
             } else {
                 return TCOLON;
