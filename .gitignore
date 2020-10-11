@@ -1,2 +1,3 @@
 # object file
 *.o
+.clangd/

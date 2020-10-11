@@ -1,4 +1,7 @@
-﻿/* token-list.h  */
+﻿#ifndef _TOKEN_LIST_H_
+#define _TOKEN_LIST_H_
+
+/* token-list.h  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,6 +61,8 @@
 
 #define NUMOFTOKEN 49
 
+#define MAX_NUM_ATTR 32767
+
 /* token-list.c */
 
 #define KEYWORDSIZE 28
@@ -70,9 +75,11 @@ extern struct KEY {
 extern void error(char *mes);
 
 /* scan.c */
-extern int init_scan(char *filename);
-extern int scan(void);
+extern FILE *fp;
 extern int num_attr;
 extern char string_attr[MAXSTRSIZE];
+extern int init_scan(char *filename);
+extern int scan(void);
 extern int get_linenum(void);
-extern void end_scan(void);
+extern int end_scan(void);
+#endif

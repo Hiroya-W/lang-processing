@@ -1,5 +1,8 @@
 ﻿#include "token-list.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 /* keyword list */
 struct KEY key[KEYWORDSIZE] = {
     {"and", TAND},
@@ -46,26 +49,39 @@ char *tokenstr[NUMOFTOKEN + 1] = {
     "break"};
 
 int main(int nc, char *np[]) {
-    int token, i;
+    int token, index;
 
     if (nc < 2) {
-        printf("File name id not given.\n");
-        return 0;
+        fprintf(stderr, "File name id not given.\n");
+        return EXIT_FAILURE;
     }
     if (init_scan(np[1]) < 0) {
-        printf("File %s can not open.\n", np[1]);
-        return 0;
+        fprintf(stderr, "File %s can not open.\n", np[1]);
+        return EXIT_FAILURE;
     }
-    /* 作成する部分：トークンカウント用の配列？を初期化する */
+
+    memset(numtoken, 0, sizeof(numtoken));
+
     while ((token = scan()) >= 0) {
         /* 作成する部分：トークンをカウントする */
+        numtoken[token]++;
     }
-    end_scan();
+
+    if (end_scan() < 0) {
+        fprintf(stderr, "File %s can not close.\n", np[1]);
+        return EXIT_FAILURE;
+    }
     /* 作成する部分:カウントした結果を出力する */
+    for (index = 0; index < NUMOFTOKEN + 1; index++) {
+        if (numtoken[index] > 0) {
+            fprintf(stdout, "%10s: %5d\n", tokenstr[index], numtoken[index]);
+        }
+    }
+
     return 0;
 }
 
 void error(char *mes) {
-    printf("\n ERROR: %s\n", mes);
-    end_scan();
+    fprintf(stderr, "\n ERROR: %s\n", mes);
+    /* end_scan(); */
 }

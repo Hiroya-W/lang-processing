@@ -3,6 +3,8 @@
   "directory": "/home/hiroya/Documents/git-repos/lang-processing/program1",
   "arguments": [
    "gcc",
+   "-ansi",
+   "-fno-common",
    "-W",
    "-Wall",
    "-g",
@@ -17,6 +19,8 @@
   "directory": "/home/hiroya/Documents/git-repos/lang-processing/program1",
   "arguments": [
    "gcc",
+   "-ansi",
+   "-fno-common",
    "-W",
    "-Wall",
    "-g",
@@ -31,6 +35,8 @@
   "directory": "/home/hiroya/Documents/git-repos/lang-processing/program1",
   "arguments": [
    "gcc",
+   "-ansi",
+   "-fno-common",
    "-W",
    "-Wall",
    "-g",
@@ -40,5 +46,19 @@
    "scan.c"
   ],
   "file": "scan.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program1",
+  "arguments": [
+   "gcc",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "test.c"
+  ],
+  "file": "test.c"
  }
 ]
