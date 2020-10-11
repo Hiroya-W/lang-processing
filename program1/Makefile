@@ -21,6 +21,10 @@ $(OBJS): token-list.h
 
 $(TEST_OBJS): token-list.h 
 
+.PHONY: check
+check: test
+	@./test
+
 .PHONY: clean
 clean:
 	-rm *.o token-list test test-ignore
