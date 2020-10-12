@@ -1,2 +1,6 @@
 token-list
 test
+*.gcno 
+*.gcov 
+*.gcda 
+*.gch
