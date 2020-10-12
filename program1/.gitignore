@@ -4,3 +4,4 @@ test
 *.gcov 
 *.gcda 
 *.gch
+Doxyfile.bak
