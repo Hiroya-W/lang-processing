@@ -26,6 +26,8 @@ static int linenum = 1;
 static int token_linenum = 0;
 
 static int _isblank(int c);
+int get_linenum(void);
+void set_token_linenum(void);
 static int scan_alnum();
 static int scan_digit();
 static int scan_string();
@@ -95,6 +97,7 @@ int scan(void) {
             break;
         }
     }
+    set_token_linenum();
     return token_code;
 }
 
