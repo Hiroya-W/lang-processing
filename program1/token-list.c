@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* keyword list */
+/*! list of keywords */
 struct KEY key[KEYWORDSIZE] = {
     {"and", TAND},
     {"array", TARRAY},
@@ -34,10 +34,10 @@ struct KEY key[KEYWORDSIZE] = {
     {"write", TWRITE},
     {"writeln", TWRITELN}};
 
-/* Token counter */
+/*! Token counter  */
 int numtoken[NUMOFTOKEN + 1];
 
-/* string of each token */
+/*! String of each token */
 char *tokenstr[NUMOFTOKEN + 1] = {
     "", "NAME", "program", "var", "array", "of", "begin",
     "end", "if", "then", "else", "procedure", "return", "call",
@@ -48,6 +48,12 @@ char *tokenstr[NUMOFTOKEN + 1] = {
     ":=", ".", ",", ":", ";", "read", "write",
     "break"};
 
+/*!
+ * @brief main function
+ * @param[in] nc The number of arguments
+ * @param[in] np File name to read
+ * @return int Returns 0 on success and 1 on failure.
+ */
 int main(int nc, char *np[]) {
     int token, index;
 
@@ -63,7 +69,7 @@ int main(int nc, char *np[]) {
     memset(numtoken, 0, sizeof(numtoken));
 
     while ((token = scan()) >= 0) {
-        /* 作成する部分：トークンをカウントする */
+        /* Count the tokens */
         numtoken[token]++;
     }
 
@@ -71,7 +77,7 @@ int main(int nc, char *np[]) {
         fprintf(stderr, "File %s can not close.\n", np[1]);
         return EXIT_FAILURE;
     }
-    /* 作成する部分:カウントした結果を出力する */
+    /* Output the results of the count. */
     for (index = 0; index < NUMOFTOKEN + 1; index++) {
         if (numtoken[index] > 0) {
             fprintf(stdout, "%10s: %5d\n", tokenstr[index], numtoken[index]);
@@ -81,7 +87,10 @@ int main(int nc, char *np[]) {
     return 0;
 }
 
+/*!
+ * @brief display an error message
+ * @param[in] mes Error message
+ */
 void error(char *mes) {
     fprintf(stderr, "\n ERROR: %s\n", mes);
-    /* end_scan(); */
 }
