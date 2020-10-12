@@ -1,0 +1,211 @@
+\hypertarget{token-list_8c}{}\doxysection{token-\/list.c ファイル}
+\label{token-list_8c}\index{token-\/list.c@{token-\/list.c}}
+{\ttfamily \#include \char`\"{}token-\/list.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+token-\/list.c の依存先関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{token-list_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{関数}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{token-list_8c_a2c537f75cb588446247c82d5b6b0308b}{main}} (int nc, char $\ast$np\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em main function \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28}{error}} (char $\ast$mes)
+\begin{DoxyCompactList}\small\item\em display an error message \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{変数}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structKEY}{K\+EY}} \mbox{\hyperlink{token-list_8c_a45722dc5e4ef396b489ec2922545f607}{key}} \mbox{[}\mbox{\hyperlink{token-list_8h_a0c2c0c7a8deb7c7f99e4e4187ad12913}{K\+E\+Y\+W\+O\+R\+D\+S\+I\+ZE}}\mbox{]}
+\item 
+int \mbox{\hyperlink{token-list_8c_afb36ad47a45d4fe8b9082b377bf89b99}{numtoken}} \mbox{[}\mbox{\hyperlink{token-list_8h_a0707129a519f82069df23a048c9fc82a}{N\+U\+M\+O\+F\+T\+O\+K\+EN}}+1\mbox{]}
+\item 
+char $\ast$ \mbox{\hyperlink{token-list_8c_a9cbf3facc8b469b626032b31ec0ba292}{tokenstr}} \mbox{[}\mbox{\hyperlink{token-list_8h_a0707129a519f82069df23a048c9fc82a}{N\+U\+M\+O\+F\+T\+O\+K\+EN}}+1\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{関数詳解}
+\mbox{\Hypertarget{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28}\label{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28}} 
+\index{token-\/list.c@{token-\/list.c}!error@{error}}
+\index{error@{error}!token-\/list.c@{token-\/list.c}}
+\doxysubsubsection{\texorpdfstring{error()}{error()}}
+{\footnotesize\ttfamily void error (\begin{DoxyParamCaption}\item[{char $\ast$}]{mes }\end{DoxyParamCaption})}
+
+
+
+display an error message 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\texttt{ in}}  & {\em mes} & Error message \\
+\hline
+\end{DoxyParams}
+
+
+ token-\/list.\+c の 94 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{94                       \{}
+\DoxyCodeLine{95     fprintf(stderr, \textcolor{stringliteral}{"{}\(\backslash\)n ERROR: \%s\(\backslash\)n"{}}, mes);}
+\DoxyCodeLine{96 \}}
+
+\end{DoxyCode}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{token-list_8c_a2c537f75cb588446247c82d5b6b0308b}\label{token-list_8c_a2c537f75cb588446247c82d5b6b0308b}} 
+\index{token-\/list.c@{token-\/list.c}!main@{main}}
+\index{main@{main}!token-\/list.c@{token-\/list.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{nc,  }\item[{char $\ast$}]{np\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+main function 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\texttt{ in}}  & {\em nc} & The number of arguments \\
+\hline
+\mbox{\texttt{ in}}  & {\em np} & File name to read \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+int Returns 0 on success and 1 on failure. 
+\end{DoxyReturn}
+
+
+ token-\/list.\+c の 57 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{57                              \{}
+\DoxyCodeLine{58     \textcolor{keywordtype}{int} token, index;}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60     \textcolor{keywordflow}{if} (nc < 2) \{}
+\DoxyCodeLine{61         fprintf(stderr, \textcolor{stringliteral}{"{}File name id not given.\(\backslash\)n"{}});}
+\DoxyCodeLine{62         \textcolor{keywordflow}{return} EXIT\_FAILURE;}
+\DoxyCodeLine{63     \}}
+\DoxyCodeLine{64     \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_ab155bf91f844588b6ccdb530034f28e9}{init\_scan}}(np[1]) < 0) \{}
+\DoxyCodeLine{65         fprintf(stderr, \textcolor{stringliteral}{"{}File \%s can not open.\(\backslash\)n"{}}, np[1]);}
+\DoxyCodeLine{66         \textcolor{keywordflow}{return} EXIT\_FAILURE;}
+\DoxyCodeLine{67     \}}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69     memset(\mbox{\hyperlink{token-list_8c_afb36ad47a45d4fe8b9082b377bf89b99}{numtoken}}, 0, \textcolor{keyword}{sizeof}(\mbox{\hyperlink{token-list_8c_afb36ad47a45d4fe8b9082b377bf89b99}{numtoken}}));}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71     \textcolor{keywordflow}{while} ((token = \mbox{\hyperlink{scan_8c_a2cb909d1b7351cc6fc24dd70b939070a}{scan}}()) >= 0) \{}
+\DoxyCodeLine{72         \textcolor{comment}{/* Count the tokens */}}
+\DoxyCodeLine{73         \mbox{\hyperlink{token-list_8c_afb36ad47a45d4fe8b9082b377bf89b99}{numtoken}}[token]++;}
+\DoxyCodeLine{74     \}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_adc64a7c31696f9592dc76ba72aa3cb07}{end\_scan}}() < 0) \{}
+\DoxyCodeLine{77         fprintf(stderr, \textcolor{stringliteral}{"{}File \%s can not close.\(\backslash\)n"{}}, np[1]);}
+\DoxyCodeLine{78         \textcolor{keywordflow}{return} EXIT\_FAILURE;}
+\DoxyCodeLine{79     \}}
+\DoxyCodeLine{80     \textcolor{comment}{/* Output the results of the count. */}}
+\DoxyCodeLine{81     \textcolor{keywordflow}{for} (index = 0; index < \mbox{\hyperlink{token-list_8h_a0707129a519f82069df23a048c9fc82a}{NUMOFTOKEN}} + 1; index++) \{}
+\DoxyCodeLine{82         \textcolor{keywordflow}{if} (\mbox{\hyperlink{token-list_8c_afb36ad47a45d4fe8b9082b377bf89b99}{numtoken}}[index] > 0) \{}
+\DoxyCodeLine{83             fprintf(stdout, \textcolor{stringliteral}{"{}\%10s: \%5d\(\backslash\)n"{}}, \mbox{\hyperlink{token-list_8c_a9cbf3facc8b469b626032b31ec0ba292}{tokenstr}}[index], \mbox{\hyperlink{token-list_8c_afb36ad47a45d4fe8b9082b377bf89b99}{numtoken}}[index]);}
+\DoxyCodeLine{84         \}}
+\DoxyCodeLine{85     \}}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{88 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{token-list_8c_a2c537f75cb588446247c82d5b6b0308b_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{変数詳解}
+\mbox{\Hypertarget{token-list_8c_a45722dc5e4ef396b489ec2922545f607}\label{token-list_8c_a45722dc5e4ef396b489ec2922545f607}} 
+\index{token-\/list.c@{token-\/list.c}!key@{key}}
+\index{key@{key}!token-\/list.c@{token-\/list.c}}
+\doxysubsubsection{\texorpdfstring{key}{key}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structKEY}{K\+EY}} key\mbox{[}\mbox{\hyperlink{token-list_8h_a0c2c0c7a8deb7c7f99e4e4187ad12913}{K\+E\+Y\+W\+O\+R\+D\+S\+I\+ZE}}\mbox{]}}
+
+{\bfseries 初期値\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}and"{}}, \mbox{\hyperlink{token-list_8h_add85f900af95450ef948906c1733ac22}{TAND}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}array"{}}, \mbox{\hyperlink{token-list_8h_a2ae1d16f609c2465470cffcc75656301}{TARRAY}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}begin"{}}, \mbox{\hyperlink{token-list_8h_a24d4997637c23af1024dcfb79a24c9e9}{TBEGIN}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}boolean"{}}, \mbox{\hyperlink{token-list_8h_a9a8b9a75c15d44e29a962ab73c72f397}{TBOOLEAN}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}break"{}}, \mbox{\hyperlink{token-list_8h_a76e7a9133d8637ec98e745af8fcd51f0}{TBREAK}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}call"{}}, \mbox{\hyperlink{token-list_8h_acbc805def32a6523e8a3fef8467d7e52}{TCALL}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}char"{}}, \mbox{\hyperlink{token-list_8h_a65c91f8d7af3c67b8a21e089fdddd0fe}{TCHAR}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}div"{}}, \mbox{\hyperlink{token-list_8h_ad2082d2b85743da635e5e27a814dae4c}{TDIV}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}do"{}}, \mbox{\hyperlink{token-list_8h_ac0030df3fdf5dfae600fe50e37e3a280}{TDO}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}else"{}}, \mbox{\hyperlink{token-list_8h_afe66f11bf1e42d3573359424258f0b87}{TELSE}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}end"{}}, \mbox{\hyperlink{token-list_8h_a0205a533363a3e99f949efe21cd21211}{TEND}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}false"{}}, \mbox{\hyperlink{token-list_8h_aac0bb017dfe4bb4b9ad94484fbfae47c}{TFALSE}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}if"{}}, \mbox{\hyperlink{token-list_8h_ac0aac614368d573fd5afa2afa71b1ce5}{TIF}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}integer"{}}, \mbox{\hyperlink{token-list_8h_a7eebedc59e0eff52f1df429e13ef780a}{TINTEGER}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}not"{}}, \mbox{\hyperlink{token-list_8h_aae87e7543204388a2eab86ab577d1ec3}{TNOT}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}of"{}}, \mbox{\hyperlink{token-list_8h_a0759e25285bc72dd8c9e86243ae50375}{TOF}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}or"{}}, \mbox{\hyperlink{token-list_8h_aae33e6b3aa3ad0d9110ab80e07dc7952}{TOR}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}procedure"{}}, \mbox{\hyperlink{token-list_8h_abcc2ff248848f76f37e178d350c9eced}{TPROCEDURE}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}program"{}}, \mbox{\hyperlink{token-list_8h_af67f924715aee6a0bea65d6568a9d289}{TPROGRAM}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}read"{}}, \mbox{\hyperlink{token-list_8h_ae93de06539e509558cae3c2243a618e5}{TREAD}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}readln"{}}, \mbox{\hyperlink{token-list_8h_af538dbc9fab6ba1f039c02fb4823c46f}{TREADLN}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}return"{}}, \mbox{\hyperlink{token-list_8h_a5162b21fe49c78d3cf1b3b0169e9f8f9}{TRETURN}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}then"{}}, \mbox{\hyperlink{token-list_8h_a1ecd5fd78942dc77313404c08a23849d}{TTHEN}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}true"{}}, \mbox{\hyperlink{token-list_8h_ab5489947defa08a934834107e6b0e6e9}{TTRUE}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}var"{}}, \mbox{\hyperlink{token-list_8h_a14e2bfc26bbf97c37d427e0fea1087c5}{TVAR}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}while"{}}, \mbox{\hyperlink{token-list_8h_ab3e7cffc6612c89ee9c4565c5513c132}{TWHILE}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}write"{}}, \mbox{\hyperlink{token-list_8h_adf7fe5d362fb617cdce331ddc7442448}{TWRITE}}\},}
+\DoxyCodeLine{    \{\textcolor{stringliteral}{"{}writeln"{}}, \mbox{\hyperlink{token-list_8h_a525bce3d36db006655005798ff7aa241}{TWRITELN}}\}\}}
+
+\end{DoxyCode}
+list of keywords 
+
+ token-\/list.\+c の 1 行目に定義があります。
+
+\mbox{\Hypertarget{token-list_8c_afb36ad47a45d4fe8b9082b377bf89b99}\label{token-list_8c_afb36ad47a45d4fe8b9082b377bf89b99}} 
+\index{token-\/list.c@{token-\/list.c}!numtoken@{numtoken}}
+\index{numtoken@{numtoken}!token-\/list.c@{token-\/list.c}}
+\doxysubsubsection{\texorpdfstring{numtoken}{numtoken}}
+{\footnotesize\ttfamily int numtoken\mbox{[}\mbox{\hyperlink{token-list_8h_a0707129a519f82069df23a048c9fc82a}{N\+U\+M\+O\+F\+T\+O\+K\+EN}}+1\mbox{]}}
+
+Token counter ~\newline
+ 
+
+ token-\/list.\+c の 38 行目に定義があります。
+
+\mbox{\Hypertarget{token-list_8c_a9cbf3facc8b469b626032b31ec0ba292}\label{token-list_8c_a9cbf3facc8b469b626032b31ec0ba292}} 
+\index{token-\/list.c@{token-\/list.c}!tokenstr@{tokenstr}}
+\index{tokenstr@{tokenstr}!token-\/list.c@{token-\/list.c}}
+\doxysubsubsection{\texorpdfstring{tokenstr}{tokenstr}}
+{\footnotesize\ttfamily char$\ast$ tokenstr\mbox{[}\mbox{\hyperlink{token-list_8h_a0707129a519f82069df23a048c9fc82a}{N\+U\+M\+O\+F\+T\+O\+K\+EN}}+1\mbox{]}}
+
+{\bfseries 初期値\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}"{}}, \textcolor{stringliteral}{"{}NAME"{}}, \textcolor{stringliteral}{"{}program"{}}, \textcolor{stringliteral}{"{}var"{}}, \textcolor{stringliteral}{"{}array"{}}, \textcolor{stringliteral}{"{}of"{}}, \textcolor{stringliteral}{"{}begin"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}end"{}}, \textcolor{stringliteral}{"{}if"{}}, \textcolor{stringliteral}{"{}then"{}}, \textcolor{stringliteral}{"{}else"{}}, \textcolor{stringliteral}{"{}procedure"{}}, \textcolor{stringliteral}{"{}return"{}}, \textcolor{stringliteral}{"{}call"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}while"{}}, \textcolor{stringliteral}{"{}do"{}}, \textcolor{stringliteral}{"{}not"{}}, \textcolor{stringliteral}{"{}or"{}}, \textcolor{stringliteral}{"{}div"{}}, \textcolor{stringliteral}{"{}and"{}}, \textcolor{stringliteral}{"{}char"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}integer"{}}, \textcolor{stringliteral}{"{}boolean"{}}, \textcolor{stringliteral}{"{}readln"{}}, \textcolor{stringliteral}{"{}writeln"{}}, \textcolor{stringliteral}{"{}true"{}}, \textcolor{stringliteral}{"{}false"{}}, \textcolor{stringliteral}{"{}NUMBER"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}STRING"{}}, \textcolor{stringliteral}{"{}+"{}}, \textcolor{stringliteral}{"{}-\/"{}}, \textcolor{stringliteral}{"{}*"{}}, \textcolor{stringliteral}{"{}="{}}, \textcolor{stringliteral}{"{}<>"{}}, \textcolor{stringliteral}{"{}<"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}<="{}}, \textcolor{stringliteral}{"{}>"{}}, \textcolor{stringliteral}{"{}>="{}}, \textcolor{stringliteral}{"{}("{}}, \textcolor{stringliteral}{"{})"{}}, \textcolor{stringliteral}{"{}["{}}, \textcolor{stringliteral}{"{}]"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}:="{}}, \textcolor{stringliteral}{"{}."{}}, \textcolor{stringliteral}{"{},"{}}, \textcolor{stringliteral}{"{}:"{}}, \textcolor{stringliteral}{"{};"{}}, \textcolor{stringliteral}{"{}read"{}}, \textcolor{stringliteral}{"{}write"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}break"{}}\}}
+
+\end{DoxyCode}
+String of each token 
+
+ token-\/list.\+c の 41 行目に定義があります。
+

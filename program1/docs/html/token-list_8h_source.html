@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.20"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lang Processing - Program1: token-list.h ソースファイル</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Lang Processing - Program1
+   &#160;<span id="projectnumber">1.0.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.20 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','検索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('token-list_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">token-list.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="token-list_8h.html">[詳解]</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _TOKEN_LIST_H_</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define _TOKEN_LIST_H_</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">/* token-list.h  */</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="token-list_8h.html#a292d5c171f84f8dc52595a241448472f">   10</a></span>&#160;<span class="preprocessor">#define MAXSTRSIZE 1024</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/* @{ */</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="token-list_8h.html#af7dd188b7e9a8592e394e37ba6272a90">   15</a></span>&#160;<span class="preprocessor">#define TNAME 1</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="token-list_8h.html#af67f924715aee6a0bea65d6568a9d289">   17</a></span>&#160;<span class="preprocessor">#define TPROGRAM 2</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="token-list_8h.html#a14e2bfc26bbf97c37d427e0fea1087c5">   19</a></span>&#160;<span class="preprocessor">#define TVAR 3</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="token-list_8h.html#a2ae1d16f609c2465470cffcc75656301">   21</a></span>&#160;<span class="preprocessor">#define TARRAY 4</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="token-list_8h.html#a0759e25285bc72dd8c9e86243ae50375">   23</a></span>&#160;<span class="preprocessor">#define TOF 5</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="token-list_8h.html#a24d4997637c23af1024dcfb79a24c9e9">   25</a></span>&#160;<span class="preprocessor">#define TBEGIN 6</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="token-list_8h.html#a0205a533363a3e99f949efe21cd21211">   27</a></span>&#160;<span class="preprocessor">#define TEND 7</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="token-list_8h.html#ac0aac614368d573fd5afa2afa71b1ce5">   29</a></span>&#160;<span class="preprocessor">#define TIF 8</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="token-list_8h.html#a1ecd5fd78942dc77313404c08a23849d">   31</a></span>&#160;<span class="preprocessor">#define TTHEN 9</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="token-list_8h.html#afe66f11bf1e42d3573359424258f0b87">   33</a></span>&#160;<span class="preprocessor">#define TELSE 10</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="token-list_8h.html#abcc2ff248848f76f37e178d350c9eced">   35</a></span>&#160;<span class="preprocessor">#define TPROCEDURE 11</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="token-list_8h.html#a5162b21fe49c78d3cf1b3b0169e9f8f9">   37</a></span>&#160;<span class="preprocessor">#define TRETURN 12</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="token-list_8h.html#acbc805def32a6523e8a3fef8467d7e52">   39</a></span>&#160;<span class="preprocessor">#define TCALL 13</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="token-list_8h.html#ab3e7cffc6612c89ee9c4565c5513c132">   41</a></span>&#160;<span class="preprocessor">#define TWHILE 14</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="token-list_8h.html#ac0030df3fdf5dfae600fe50e37e3a280">   43</a></span>&#160;<span class="preprocessor">#define TDO 15</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="token-list_8h.html#aae87e7543204388a2eab86ab577d1ec3">   45</a></span>&#160;<span class="preprocessor">#define TNOT 16</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="token-list_8h.html#aae33e6b3aa3ad0d9110ab80e07dc7952">   47</a></span>&#160;<span class="preprocessor">#define TOR 17</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="token-list_8h.html#ad2082d2b85743da635e5e27a814dae4c">   49</a></span>&#160;<span class="preprocessor">#define TDIV 18</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="token-list_8h.html#add85f900af95450ef948906c1733ac22">   51</a></span>&#160;<span class="preprocessor">#define TAND 19</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="token-list_8h.html#a65c91f8d7af3c67b8a21e089fdddd0fe">   53</a></span>&#160;<span class="preprocessor">#define TCHAR 20</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="token-list_8h.html#a7eebedc59e0eff52f1df429e13ef780a">   55</a></span>&#160;<span class="preprocessor">#define TINTEGER 21</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="token-list_8h.html#a9a8b9a75c15d44e29a962ab73c72f397">   57</a></span>&#160;<span class="preprocessor">#define TBOOLEAN 22</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="token-list_8h.html#af538dbc9fab6ba1f039c02fb4823c46f">   59</a></span>&#160;<span class="preprocessor">#define TREADLN 23</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="token-list_8h.html#a525bce3d36db006655005798ff7aa241">   61</a></span>&#160;<span class="preprocessor">#define TWRITELN 24</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="token-list_8h.html#ab5489947defa08a934834107e6b0e6e9">   63</a></span>&#160;<span class="preprocessor">#define TTRUE 25</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="token-list_8h.html#aac0bb017dfe4bb4b9ad94484fbfae47c">   65</a></span>&#160;<span class="preprocessor">#define TFALSE 26</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="token-list_8h.html#a12ac3b9fdb855c77c385bcb07988903a">   67</a></span>&#160;<span class="preprocessor">#define TNUMBER 27</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="token-list_8h.html#a71d464164c73300977ffb80b82691d77">   69</a></span>&#160;<span class="preprocessor">#define TSTRING 28</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="token-list_8h.html#a9108d631d79d040b0634d924ecddf65f">   71</a></span>&#160;<span class="preprocessor">#define TPLUS 29</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="token-list_8h.html#a40a9113c885ef2de24d8242ee97238d8">   73</a></span>&#160;<span class="preprocessor">#define TMINUS 30</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="token-list_8h.html#a76b814f2784fb1774481f493a4e55595">   75</a></span>&#160;<span class="preprocessor">#define TSTAR 31</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="token-list_8h.html#a18685de97327b3513d4de0064ecb774c">   77</a></span>&#160;<span class="preprocessor">#define TEQUAL 32</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="token-list_8h.html#a6ed54a7abafb49f7691316c55d730d82">   79</a></span>&#160;<span class="preprocessor">#define TNOTEQ 33</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="token-list_8h.html#a67a34c39a001f103807d669fb19b5e30">   81</a></span>&#160;<span class="preprocessor">#define TLE 34</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="token-list_8h.html#ab0596a1a9284d7d39d6b8bc7937277bd">   83</a></span>&#160;<span class="preprocessor">#define TLEEQ 35</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="token-list_8h.html#ad067baa3ae681ad89af81cbb7f8c890f">   85</a></span>&#160;<span class="preprocessor">#define TGR 36</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="token-list_8h.html#a4ad13b1272846f0f5bb71f6e28a3325e">   87</a></span>&#160;<span class="preprocessor">#define TGREQ 37</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="token-list_8h.html#a805d5b7f830594bb6573b75816702b19">   89</a></span>&#160;<span class="preprocessor">#define TLPAREN 38</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="token-list_8h.html#af510e0a7788db114f472b3334086ca96">   91</a></span>&#160;<span class="preprocessor">#define TRPAREN 39</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="token-list_8h.html#a8722f39cea05089fe4dae97fd0ca4d2d">   93</a></span>&#160;<span class="preprocessor">#define TLSQPAREN 40</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="token-list_8h.html#a736ace65d557e68d033dc9031a70d26c">   95</a></span>&#160;<span class="preprocessor">#define TRSQPAREN 41</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="token-list_8h.html#a4cd029f714fbeecc372074748f45c820">   97</a></span>&#160;<span class="preprocessor">#define TASSIGN 42</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="token-list_8h.html#a13f4e13c35f3493e46350f3067387b45">   99</a></span>&#160;<span class="preprocessor">#define TDOT 43</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="token-list_8h.html#a0bf844aff463b9e407d9d241f262e90c">  101</a></span>&#160;<span class="preprocessor">#define TCOMMA 44</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="token-list_8h.html#a9c4ec8dc05d1d5ffbdcc6409f24e3e9f">  103</a></span>&#160;<span class="preprocessor">#define TCOLON 45</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="token-list_8h.html#aa7af0a619c5ca9bc710c02b4c5920693">  105</a></span>&#160;<span class="preprocessor">#define TSEMI 46</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="token-list_8h.html#ae93de06539e509558cae3c2243a618e5">  107</a></span>&#160;<span class="preprocessor">#define TREAD 47</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="token-list_8h.html#adf7fe5d362fb617cdce331ddc7442448">  109</a></span>&#160;<span class="preprocessor">#define TWRITE 48</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="token-list_8h.html#a76e7a9133d8637ec98e745af8fcd51f0">  111</a></span>&#160;<span class="preprocessor">#define TBREAK 49</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">/* @} */</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="token-list_8h.html#a0707129a519f82069df23a048c9fc82a">  115</a></span>&#160;<span class="preprocessor">#define NUMOFTOKEN 49</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="token-list_8h.html#aef3040046d58373a7e0acfcfc9398958">  118</a></span>&#160;<span class="preprocessor">#define MAX_NUM_ATTR 32767</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">/* token-list.c */</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="token-list_8h.html#a0c2c0c7a8deb7c7f99e4e4187ad12913">  122</a></span>&#160;<span class="preprocessor">#define KEYWORDSIZE 28</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno"><a class="line" href="structKEY.html">  127</a></span>&#160;<span class="keyword">extern</span> <span class="keyword">struct </span><a class="code" href="structKEY.html">KEY</a> {</div>
+<div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="structKEY.html#a430e1640fb0676e53b009f54378e5319">  128</a></span>&#160;    <span class="keywordtype">char</span> *<a class="code" href="structKEY.html#a430e1640fb0676e53b009f54378e5319">keyword</a>; </div>
+<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="structKEY.html#a324318ca00ac2771c65c0a1203751fa6">  129</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structKEY.html#a324318ca00ac2771c65c0a1203751fa6">keytoken</a>;  </div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="token-list_8h.html#a45722dc5e4ef396b489ec2922545f607">  130</a></span>&#160;} <a class="code" href="token-list_8h.html#a45722dc5e4ef396b489ec2922545f607">key</a>[<a class="code" href="token-list_8h.html#a0c2c0c7a8deb7c7f99e4e4187ad12913">KEYWORDSIZE</a>];</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code" href="token-list_8h.html#a053efa4d38ff9ceb3feadf2f0f084a28">error</a>(<span class="keywordtype">char</span> *mes);</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="comment">/* scan.c */</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="keyword">extern</span> FILE *<a class="code" href="token-list_8h.html#aa065f30aa9f5f9a42132c82c787ee70b">fp</a>;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="token-list_8h.html#adc80dd58d415b6dafd9f71cc35f9a392">num_attr</a>;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">char</span> <a class="code" href="token-list_8h.html#a7e60d396ac326ffee075db726173a53f">string_attr</a>[<a class="code" href="token-list_8h.html#a292d5c171f84f8dc52595a241448472f">MAXSTRSIZE</a>];</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="token-list_8h.html#ab155bf91f844588b6ccdb530034f28e9">init_scan</a>(<span class="keywordtype">char</span> *filename);</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="token-list_8h.html#a2cb909d1b7351cc6fc24dd70b939070a">scan</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="token-list_8h.html#abe8f89eeb56df1f5bde22ca242953664">get_linenum</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="token-list_8h.html#adc64a7c31696f9592dc76ba72aa3cb07">end_scan</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="preprocessor">#endif</span></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<div class="ttc" id="astructKEY_html"><div class="ttname"><a href="structKEY.html">KEY</a></div><div class="ttdoc">A pair of token codes for a keyword</div><div class="ttdef"><b>Definition:</b> <a href="token-list_8h_source.html#l00127">token-list.h:127</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_a2cb909d1b7351cc6fc24dd70b939070a"><div class="ttname"><a href="token-list_8h.html#a2cb909d1b7351cc6fc24dd70b939070a">scan</a></div><div class="ttdeci">int scan(void)</div><div class="ttdoc">Scan the file and return the token code</div><div class="ttdef"><b>Definition:</b> <a href="scan_8c_source.html#l00057">scan.c:57</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_ab155bf91f844588b6ccdb530034f28e9"><div class="ttname"><a href="token-list_8h.html#ab155bf91f844588b6ccdb530034f28e9">init_scan</a></div><div class="ttdeci">int init_scan(char *filename)</div><div class="ttdoc">Initialization to begin scanning</div><div class="ttdef"><b>Definition:</b> <a href="scan_8c_source.html#l00042">scan.c:42</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_abe8f89eeb56df1f5bde22ca242953664"><div class="ttname"><a href="token-list_8h.html#abe8f89eeb56df1f5bde22ca242953664">get_linenum</a></div><div class="ttdeci">int get_linenum(void)</div><div class="ttdoc">Return the line number of the last token scanned</div><div class="ttdef"><b>Definition:</b> <a href="scan_8c_source.html#l00105">scan.c:105</a></div></div>
+<div class="ttc" id="astructKEY_html_a430e1640fb0676e53b009f54378e5319"><div class="ttname"><a href="structKEY.html#a430e1640fb0676e53b009f54378e5319">KEY::keyword</a></div><div class="ttdeci">char * keyword</div><div class="ttdef"><b>Definition:</b> <a href="token-list_8h_source.html#l00128">token-list.h:128</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_a292d5c171f84f8dc52595a241448472f"><div class="ttname"><a href="token-list_8h.html#a292d5c171f84f8dc52595a241448472f">MAXSTRSIZE</a></div><div class="ttdeci">#define MAXSTRSIZE</div><div class="ttdef"><b>Definition:</b> <a href="token-list_8h_source.html#l00010">token-list.h:10</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_a0c2c0c7a8deb7c7f99e4e4187ad12913"><div class="ttname"><a href="token-list_8h.html#a0c2c0c7a8deb7c7f99e4e4187ad12913">KEYWORDSIZE</a></div><div class="ttdeci">#define KEYWORDSIZE</div><div class="ttdef"><b>Definition:</b> <a href="token-list_8h_source.html#l00122">token-list.h:122</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_adc80dd58d415b6dafd9f71cc35f9a392"><div class="ttname"><a href="token-list_8h.html#adc80dd58d415b6dafd9f71cc35f9a392">num_attr</a></div><div class="ttdeci">int num_attr</div><div class="ttdef"><b>Definition:</b> <a href="scan_8c_source.html#l00011">scan.c:11</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_a7e60d396ac326ffee075db726173a53f"><div class="ttname"><a href="token-list_8h.html#a7e60d396ac326ffee075db726173a53f">string_attr</a></div><div class="ttdeci">char string_attr[MAXSTRSIZE]</div><div class="ttdef"><b>Definition:</b> <a href="scan_8c_source.html#l00013">scan.c:13</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_a053efa4d38ff9ceb3feadf2f0f084a28"><div class="ttname"><a href="token-list_8h.html#a053efa4d38ff9ceb3feadf2f0f084a28">error</a></div><div class="ttdeci">void error(char *mes)</div><div class="ttdoc">display an error message</div><div class="ttdef"><b>Definition:</b> <a href="token-list_8c_source.html#l00094">token-list.c:94</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_aa065f30aa9f5f9a42132c82c787ee70b"><div class="ttname"><a href="token-list_8h.html#aa065f30aa9f5f9a42132c82c787ee70b">fp</a></div><div class="ttdeci">FILE * fp</div><div class="ttdef"><b>Definition:</b> <a href="scan_8c_source.html#l00009">scan.c:9</a></div></div>
+<div class="ttc" id="atoken-list_8h_html_a45722dc5e4ef396b489ec2922545f607"><div class="ttname"><a href="token-list_8h.html#a45722dc5e4ef396b489ec2922545f607">key</a></div><div class="ttdeci">struct KEY key[KEYWORDSIZE]</div></div>
+<div class="ttc" id="atoken-list_8h_html_adc64a7c31696f9592dc76ba72aa3cb07"><div class="ttname"><a href="token-list_8h.html#adc64a7c31696f9592dc76ba72aa3cb07">end_scan</a></div><div class="ttdeci">int end_scan(void)</div><div class="ttdoc">The process of finishing the scan</div><div class="ttdef"><b>Definition:</b> <a href="scan_8c_source.html#l00120">scan.c:120</a></div></div>
+<div class="ttc" id="astructKEY_html_a324318ca00ac2771c65c0a1203751fa6"><div class="ttname"><a href="structKEY.html#a324318ca00ac2771c65c0a1203751fa6">KEY::keytoken</a></div><div class="ttdeci">int keytoken</div><div class="ttdef"><b>Definition:</b> <a href="token-list_8h_source.html#l00129">token-list.h:129</a></div></div>
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="token-list_8h.html">token-list.h</a></li>
+    <li class="footer">構築: <a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20 </li>
+  </ul>
+</div>
+</body>
+</html>

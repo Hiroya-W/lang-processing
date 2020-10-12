@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.20"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lang Processing - Program1: id-list.c ソースファイル</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Lang Processing - Program1
+   &#160;<span id="projectnumber">1.0.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.20 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','検索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('id-list_8c_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">id-list.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="id-list_8c.html">[詳解]</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="token-list_8h.html">token-list.h</a>&quot;</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00003"></a><span class="lineno"><a class="line" href="structID.html">    3</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structID.html">ID</a> {</div>
+<div class="line"><a name="l00004"></a><span class="lineno"><a class="line" href="structID.html#abc0b631f142488baf9aee79bd8689663">    4</a></span>&#160;    <span class="keywordtype">char</span> *<a class="code" href="structID.html#abc0b631f142488baf9aee79bd8689663">name</a>;</div>
+<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="structID.html#ad9448544f7672702847915386e4167a8">    5</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structID.html#ad9448544f7672702847915386e4167a8">count</a>;</div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="structID.html#a5e85dbfc824d3d822ca473a22f8ed2d7">    6</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structID.html">ID</a> *<a class="code" href="structID.html#a5e85dbfc824d3d822ca473a22f8ed2d7">nextp</a>;</div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">    7</a></span>&#160;} * <a class="code" href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">idroot</a>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="id-list_8c.html#a155f9755ec7daa8239fbbcde196ecdc8">    9</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="id-list_8c.html#a155f9755ec7daa8239fbbcde196ecdc8">init_idtab</a>() { <span class="comment">/* Initialise the table */</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <a class="code" href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">idroot</a> = NULL;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="id-list_8c.html#ac7ac3701e4c4fcd8183f4e813b5d9454">   13</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structID.html">ID</a> *<a class="code" href="id-list_8c.html#ac7ac3701e4c4fcd8183f4e813b5d9454">search_idtab</a>(<span class="keywordtype">char</span> *np) { <span class="comment">/* search the name pointed by np */</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">struct </span><a class="code" href="structID.html">ID</a> *p;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">for</span> (p = <a class="code" href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">idroot</a>; p != NULL; p = p-&gt;<a class="code" href="structID.html#a5e85dbfc824d3d822ca473a22f8ed2d7">nextp</a>) {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">if</span> (strcmp(np, p-&gt;<a class="code" href="structID.html#abc0b631f142488baf9aee79bd8689663">name</a>) == 0) <span class="keywordflow">return</span> (p);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    }</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">return</span> (NULL);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="id-list_8c.html#a28a5bab0aef22ef6f1ef02ef13eecf01">   22</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="id-list_8c.html#a28a5bab0aef22ef6f1ef02ef13eecf01">id_countup</a>(<span class="keywordtype">char</span> *np) { <span class="comment">/* Register and count up the name pointed by np */</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">struct </span><a class="code" href="structID.html">ID</a> *p;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">char</span> *cp;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">if</span> ((p = <a class="code" href="id-list_8c.html#ac7ac3701e4c4fcd8183f4e813b5d9454">search_idtab</a>(np)) != NULL)</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        p-&gt;<a class="code" href="structID.html#ad9448544f7672702847915386e4167a8">count</a>++;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">if</span> ((p = (<span class="keyword">struct</span> <a class="code" href="structID.html">ID</a> *)malloc(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> <a class="code" href="structID.html">ID</a>))) == NULL) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            printf(<span class="stringliteral">&quot;can not malloc in id_countup\n&quot;</span>);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordflow">if</span> ((cp = (<span class="keywordtype">char</span> *)malloc(strlen(np) + 1)) == NULL) {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            printf(<span class="stringliteral">&quot;can not malloc-2 in id_countup\n&quot;</span>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        }</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        strcpy(cp, np);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        p-&gt;<a class="code" href="structID.html#abc0b631f142488baf9aee79bd8689663">name</a> = cp;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        p-&gt;<a class="code" href="structID.html#ad9448544f7672702847915386e4167a8">count</a> = 1;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        p-&gt;<a class="code" href="structID.html#a5e85dbfc824d3d822ca473a22f8ed2d7">nextp</a> = <a class="code" href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">idroot</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">idroot</a> = p;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="id-list_8c.html#a5070b318015c53f47dabbaa4a213976b">   45</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="id-list_8c.html#a5070b318015c53f47dabbaa4a213976b">print_idtab</a>() { <span class="comment">/* Output the registered data */</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">struct </span><a class="code" href="structID.html">ID</a> *p;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">for</span> (p = <a class="code" href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">idroot</a>; p != NULL; p = p-&gt;<a class="code" href="structID.html#a5e85dbfc824d3d822ca473a22f8ed2d7">nextp</a>) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">if</span> (p-&gt;<a class="code" href="structID.html#ad9448544f7672702847915386e4167a8">count</a> != 0)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            printf(<span class="stringliteral">&quot;\t\&quot;Identifier\&quot; \&quot;%s\&quot;\t%d\n&quot;</span>, p-&gt;<a class="code" href="structID.html#abc0b631f142488baf9aee79bd8689663">name</a>, p-&gt;<a class="code" href="structID.html#ad9448544f7672702847915386e4167a8">count</a>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="id-list_8c.html#a0a998b3e243a7e85b27e874ff53afca9">   54</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="id-list_8c.html#a0a998b3e243a7e85b27e874ff53afca9">release_idtab</a>() { <span class="comment">/* Release tha data structure */</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">struct </span><a class="code" href="structID.html">ID</a> *p, *q;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">for</span> (p = <a class="code" href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">idroot</a>; p != NULL; p = q) {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        free(p-&gt;<a class="code" href="structID.html#abc0b631f142488baf9aee79bd8689663">name</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        q = p-&gt;<a class="code" href="structID.html#a5e85dbfc824d3d822ca473a22f8ed2d7">nextp</a>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        free(p);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="id-list_8c.html#a155f9755ec7daa8239fbbcde196ecdc8">init_idtab</a>();</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<div class="ttc" id="aid-list_8c_html_ac7ac3701e4c4fcd8183f4e813b5d9454"><div class="ttname"><a href="id-list_8c.html#ac7ac3701e4c4fcd8183f4e813b5d9454">search_idtab</a></div><div class="ttdeci">struct ID * search_idtab(char *np)</div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00013">id-list.c:13</a></div></div>
+<div class="ttc" id="aid-list_8c_html_a155f9755ec7daa8239fbbcde196ecdc8"><div class="ttname"><a href="id-list_8c.html#a155f9755ec7daa8239fbbcde196ecdc8">init_idtab</a></div><div class="ttdeci">void init_idtab()</div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00009">id-list.c:9</a></div></div>
+<div class="ttc" id="aid-list_8c_html_a5070b318015c53f47dabbaa4a213976b"><div class="ttname"><a href="id-list_8c.html#a5070b318015c53f47dabbaa4a213976b">print_idtab</a></div><div class="ttdeci">void print_idtab()</div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00045">id-list.c:45</a></div></div>
+<div class="ttc" id="aid-list_8c_html_ae609a5db7923de53fc0467b16f74c0a2"><div class="ttname"><a href="id-list_8c.html#ae609a5db7923de53fc0467b16f74c0a2">idroot</a></div><div class="ttdeci">struct ID * idroot</div></div>
+<div class="ttc" id="astructID_html"><div class="ttname"><a href="structID.html">ID</a></div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00003">id-list.c:3</a></div></div>
+<div class="ttc" id="astructID_html_a5e85dbfc824d3d822ca473a22f8ed2d7"><div class="ttname"><a href="structID.html#a5e85dbfc824d3d822ca473a22f8ed2d7">ID::nextp</a></div><div class="ttdeci">struct ID * nextp</div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00006">id-list.c:6</a></div></div>
+<div class="ttc" id="astructID_html_abc0b631f142488baf9aee79bd8689663"><div class="ttname"><a href="structID.html#abc0b631f142488baf9aee79bd8689663">ID::name</a></div><div class="ttdeci">char * name</div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00004">id-list.c:4</a></div></div>
+<div class="ttc" id="astructID_html_ad9448544f7672702847915386e4167a8"><div class="ttname"><a href="structID.html#ad9448544f7672702847915386e4167a8">ID::count</a></div><div class="ttdeci">int count</div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00005">id-list.c:5</a></div></div>
+<div class="ttc" id="aid-list_8c_html_a28a5bab0aef22ef6f1ef02ef13eecf01"><div class="ttname"><a href="id-list_8c.html#a28a5bab0aef22ef6f1ef02ef13eecf01">id_countup</a></div><div class="ttdeci">void id_countup(char *np)</div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00022">id-list.c:22</a></div></div>
+<div class="ttc" id="aid-list_8c_html_a0a998b3e243a7e85b27e874ff53afca9"><div class="ttname"><a href="id-list_8c.html#a0a998b3e243a7e85b27e874ff53afca9">release_idtab</a></div><div class="ttdeci">void release_idtab()</div><div class="ttdef"><b>Definition:</b> <a href="id-list_8c_source.html#l00054">id-list.c:54</a></div></div>
+<div class="ttc" id="atoken-list_8h_html"><div class="ttname"><a href="token-list_8h.html">token-list.h</a></div></div>
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="id-list_8c.html">id-list.c</a></li>
+    <li class="footer">構築: <a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20 </li>
+  </ul>
+</div>
+</body>
+</html>
