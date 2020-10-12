@@ -8,7 +8,7 @@
                 "request": "launch",
                 "program": "${workspaceFolder}/token-list",
                 "args": [
-                    "samples/sample11pp.mpl"
+                    "samples/sample12.mpl"
                 ],
                 "stopAtEntry": false,
                 "cwd": "${workspaceFolder}",

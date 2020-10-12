@@ -172,20 +172,22 @@ static int scan_comment() {
     if (current_char == '/' && next_char == '*') {
         look_ahead();
         look_ahead();
-        while (!(current_char != EOF)) {
+        while (current_char != EOF) {
             if (current_char == '*' && next_char == '/') {
                 look_ahead();
                 look_ahead();
                 return 0;
             }
+            look_ahead();
         }
     } else if (current_char == '{') {
         look_ahead();
-        while (!(current_char != EOF)) {
+        while (current_char != EOF) {
             if (current_char == '}') {
                 look_ahead();
                 return 0;
             }
+            look_ahead();
         }
     }
     /* EOF */
