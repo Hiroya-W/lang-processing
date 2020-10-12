@@ -1,0 +1,16 @@
+<map id="main" name="main">
+<area shape="rect" id="node1" title="main function" alt="" coords="5,56,60,83"/>
+<area shape="rect" id="node2" href="$scan_8c.html#adc64a7c31696f9592dc76ba72aa3cb07" title="The process of finishing the scan" alt="" coords="108,5,191,32"/>
+<area shape="rect" id="node3" href="$scan_8c.html#ab155bf91f844588b6ccdb530034f28e9" title="Initialization to begin scanning" alt="" coords="109,56,189,83"/>
+<area shape="rect" id="node5" href="$scan_8c.html#a2cb909d1b7351cc6fc24dd70b939070a" title="Scan the file and return the token code" alt="" coords="123,169,175,196"/>
+<area shape="rect" id="node4" href="$scan_8c.html#a61855ff2af426bc6ac454733a9e61ff6" title="Pre&#45;reading file" alt="" coords="453,169,550,196"/>
+<area shape="rect" id="node6" href="$scan_8c.html#a2b4c5998f59f61fe725ddae19bd9f421" title="Determine if a character is a space character or not." alt="" coords="261,43,337,69"/>
+<area shape="rect" id="node7" href="$scan_8c.html#abe09b7c5dd179b960f98ef76fc56548a" title="Scan one string of letters and numbers" alt="" coords="249,347,349,373"/>
+<area shape="rect" id="node11" href="$scan_8c.html#a2c0a7cd533251d8b6b13250f25ce661b" title="Scan the annotation" alt="" coords="239,144,360,171"/>
+<area shape="rect" id="node12" href="$scan_8c.html#adb3e836549bc1ecd61ed98bf63f813d0" title="Scan one number sequence." alt="" coords="255,245,343,272"/>
+<area shape="rect" id="node13" href="$scan_8c.html#aa05ec80aa6ee0242d82d13e8982da6e8" title="Scan one string." alt="" coords="251,296,347,323"/>
+<area shape="rect" id="node14" href="$scan_8c.html#a24e391d80789ff75d7ad4fea534c546d" title="Scan one symbol" alt="" coords="246,195,353,221"/>
+<area shape="rect" id="node8" href="$token-list_8c.html#a053efa4d38ff9ceb3feadf2f0f084a28" title="display an error message" alt="" coords="643,296,696,323"/>
+<area shape="rect" id="node9" href="$scan_8c.html#a4f248267642169d2ee463aac0441808a" title="Get the token code for a token" alt="" coords="408,372,595,399"/>
+<area shape="rect" id="node10" href="$scan_8c.html#a016837b84f7630bff1cfbb43d248f03d" title="Adding characters to the end of a scanned string" alt="" coords="419,321,584,348"/>
+</map>
