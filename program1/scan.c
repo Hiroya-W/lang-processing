@@ -5,10 +5,25 @@
 
 #include "token-list.h"
 
+/*! File pointer of the loaded file */
 FILE *fp;
+/*! Scanned unsigned integer */
+int num_attr = 0;
+/*! Scanned string  */
 char string_attr[MAXSTRSIZE];
+
+/*! @name looka ahead */
+/* @{ */
+/*! The letters you just loaded. */
 static int current_char;
-static int next_char = '\0'; /* look-ahead character */
+/*! look-ahead character */
+static int next_char = '\0';
+static void look_ahead();
+/* @} */
+/*! Line number of the character you just loaded */
+static int linenum = 1;
+/*! The line number of the last token scanned */
+static int token_linenum = 0;
 
 static int _isblank(int c);
 static int scan_alnum();
@@ -17,31 +32,29 @@ static int scan_string();
 static int scan_comment();
 static int scan_symbol();
 static int get_keyword_token_code(char *token);
-static void look_ahead();
 static int string_attr_push_back(const char c);
-static int linenum = 1;
-static int token_linenum = 0;
-int num_attr = 0;
 
+/*!
+ * @brief Initialization to begin scanning
+ * @param[in] filename File name to scan
+ * @return int Returns 0 on success and -1 on failure.
+ */
 int init_scan(char *filename) {
     if ((fp = fopen(filename, "r")) == NULL) {
         return -1;
     }
 
-    look_ahead(); /* current_char = `\0`, next_char = 'p' */
-    look_ahead(); /* current_char = `p`, next_char = 'r' */
+    look_ahead();
+    look_ahead();
 
     return 0;
 }
 
+/*!
+ * @brief Scan the file and return the token code
+ * @return int Returns token code on success and -1 on failure.
+ */
 int scan(void) {
-    /* 
-     * 先頭の文字が分離子であれば，それを読み飛ばす（注釈の時は注釈全体を読み飛ばす） 
-     * 分離子以外の文字であれば，次のように場合分けする
-     *   英字なら，英数字が続く限り読み込む．それがキーワードのどれかならそのキーワードである
-     *     どのキーワードとも異なれば，名前である．
-     *   数字なら，数字が続く限り読み込む．それは符号なし整数である．
-     */
     int token_code = -1;
     while (1) {
         if (current_char == EOF) { /* End Of File*/
@@ -85,14 +98,25 @@ int scan(void) {
     return token_code;
 }
 
+/*!
+ * @brief Return the line number of the last token scanned
+ * @return int Return line number
+ */
 int get_linenum(void) {
     return token_linenum;
 }
 
+/*!
+ * @brief Set the line number of the last token scanned
+ */
 void set_token_linenum(void) {
     token_linenum = linenum;
 }
 
+/*!
+ * @brief The process of finishing the scan
+ * @return int Returns 0 on success and -1 on failure.
+ */
 int end_scan(void) {
     if (fclose(fp) == EOF) {
         return -1;
@@ -100,6 +124,11 @@ int end_scan(void) {
     return 0;
 }
 
+/*!
+ * @brief Determine if a character is a space character or not.
+ * @param[in] c Character to be determined
+ * @return int Returns 1 for a blank character, 0 otherwise.
+ */
 static int _isblank(int c) {
     if (c == ' ' || c == '\t') {
         return 1;
@@ -108,6 +137,10 @@ static int _isblank(int c) {
     }
 }
 
+/*!
+ * @brief Scan one string of letters and numbers
+ * @return int Returns token code on success and -1 on failure.
+ */
 static int scan_alnum() {
     memset(string_attr, '\0', sizeof(string_attr));
     string_attr[0] = current_char;
@@ -123,6 +156,10 @@ static int scan_alnum() {
     return get_keyword_token_code(string_attr);
 }
 
+/*!
+ * @brief Scan one number sequence.
+ * @return int Returns token code of number on success and -1 on failure.
+ */
 static int scan_digit() {
     int num = current_char - '0';
 
@@ -147,6 +184,10 @@ static int scan_digit() {
     return -1;
 }
 
+/*!
+ * @brief Scan one string.
+ * @return int Returns token code of string on success and -1 on failure.
+ */
 static int scan_string() {
     memset(string_attr, '\0', sizeof(string_attr));
     look_ahead();
@@ -168,6 +209,10 @@ static int scan_string() {
     return TSTRING;
 }
 
+/*!
+ * @brief Scan the annotation
+ * @return int Returns 0 on success and -1 on failure.
+ */
 static int scan_comment() {
     if (current_char == '/' && next_char == '*') {
         look_ahead();
@@ -194,6 +239,10 @@ static int scan_comment() {
     return -1;
 }
 
+/*!
+ * @brief Scan one symbol
+ * @return int Returns token code of symbol on success and -1 on failure.
+ */
 static int scan_symbol() {
     char symbol = current_char;
     look_ahead();
@@ -248,7 +297,11 @@ static int scan_symbol() {
             return -1;
     }
 }
-
+/*!
+ * @brief Get the token code for a token
+ * @param[in] token token to be determined
+ * @return int If it is a keyword, it returns its token code, otherwise it returns the Name token code
+ */
 static int get_keyword_token_code(char *token) {
     int index;
     /* TODO: binary search */
@@ -262,6 +315,11 @@ static int get_keyword_token_code(char *token) {
     return TNAME;
 }
 
+/*!
+ * @brief Adding characters to the end of a scanned string
+ * @param[in] c Characters to add
+ * @return int Returns 0 on success and -1 on failure.
+ */
 static int string_attr_push_back(const char c) {
     int len = strlen(string_attr);
     if (len < MAXSTRSIZE - 1) {
@@ -274,6 +332,9 @@ static int string_attr_push_back(const char c) {
     }
 }
 
+/*!
+ * @brief Pre-reading file
+ */
 static void look_ahead() {
     current_char = next_char;
     next_char = fgetc(fp);
