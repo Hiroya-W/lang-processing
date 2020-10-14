@@ -714,16 +714,16 @@ int Returns 0 on success and -\/1 on failure.
 \end{DoxyReturn}
 
 
- scan.\+c の 120 行目に定義があります。
+ scan.\+c の 123 行目に定義があります。
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{120                    \{}
-\DoxyCodeLine{121     \textcolor{keywordflow}{if} (fclose(\mbox{\hyperlink{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}{fp}}) == EOF) \{}
-\DoxyCodeLine{122         \textcolor{keywordflow}{return} -\/1;}
-\DoxyCodeLine{123     \}}
-\DoxyCodeLine{124     \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{125 \}}
+\DoxyCodeLine{123                    \{}
+\DoxyCodeLine{124     \textcolor{keywordflow}{if} (fclose(\mbox{\hyperlink{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}{fp}}) == EOF) \{}
+\DoxyCodeLine{125         \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{126     \}}
+\DoxyCodeLine{127     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{128 \}}
 
 \end{DoxyCode}
 被呼び出し関係図\+:\nopagebreak
@@ -781,13 +781,13 @@ int Return line number
 \end{DoxyReturn}
 
 
- scan.\+c の 105 行目に定義があります。
+ scan.\+c の 108 行目に定義があります。
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{105                       \{}
-\DoxyCodeLine{106     \textcolor{keywordflow}{return} \mbox{\hyperlink{scan_8c_a1c69be99e6fd2304a4df484f1c36f66c}{token\_linenum}};}
-\DoxyCodeLine{107 \}}
+\DoxyCodeLine{108                       \{}
+\DoxyCodeLine{109     \textcolor{keywordflow}{return} \mbox{\hyperlink{scan_8c_a1c69be99e6fd2304a4df484f1c36f66c}{token\_linenum}};}
+\DoxyCodeLine{110 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{token-list_8h_ab155bf91f844588b6ccdb530034f28e9}\label{token-list_8h_ab155bf91f844588b6ccdb530034f28e9}} 
@@ -810,20 +810,20 @@ int Returns 0 on success and -\/1 on failure.
 \end{DoxyReturn}
 
 
- scan.\+c の 42 行目に定義があります。
+ scan.\+c の 44 行目に定義があります。
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{42                               \{}
-\DoxyCodeLine{43     \textcolor{keywordflow}{if} ((\mbox{\hyperlink{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}{fp}} = fopen(filename, \textcolor{stringliteral}{"{}r"{}})) == NULL) \{}
-\DoxyCodeLine{44         \textcolor{keywordflow}{return} -\/1;}
-\DoxyCodeLine{45     \}}
-\DoxyCodeLine{46 }
-\DoxyCodeLine{47     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
-\DoxyCodeLine{48     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
-\DoxyCodeLine{49 }
-\DoxyCodeLine{50     \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{51 \}}
+\DoxyCodeLine{44                               \{}
+\DoxyCodeLine{45     \textcolor{keywordflow}{if} ((\mbox{\hyperlink{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}{fp}} = fopen(filename, \textcolor{stringliteral}{"{}r"{}})) == NULL) \{}
+\DoxyCodeLine{46         \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{47     \}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{50     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{53 \}}
 
 \end{DoxyCode}
 呼び出し関係図\+:\nopagebreak
@@ -855,56 +855,58 @@ int Returns token code on success and -\/1 on failure.
 \end{DoxyReturn}
 
 
- scan.\+c の 57 行目に定義があります。
+ scan.\+c の 59 行目に定義があります。
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{57                \{}
-\DoxyCodeLine{58     \textcolor{keywordtype}{int} token\_code = -\/1;}
-\DoxyCodeLine{59     \textcolor{keywordflow}{while} (1) \{}
-\DoxyCodeLine{60         \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == EOF) \{ \textcolor{comment}{/* End Of File*/}}
-\DoxyCodeLine{61             \textcolor{keywordflow}{return} -\/1;}
-\DoxyCodeLine{62         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)r'} || \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)n'}) \{ \textcolor{comment}{/* End of Line */}}
-\DoxyCodeLine{63             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)r'}) \{}
-\DoxyCodeLine{64                 \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'\(\backslash\)n'}) \{}
-\DoxyCodeLine{65                     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
-\DoxyCodeLine{66                 \}}
-\DoxyCodeLine{67                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
-\DoxyCodeLine{68                 \mbox{\hyperlink{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}{linenum}}++;}
-\DoxyCodeLine{69             \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{70                 \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'\(\backslash\)r'}) \{}
-\DoxyCodeLine{71                     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
-\DoxyCodeLine{72                 \}}
-\DoxyCodeLine{73                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
-\DoxyCodeLine{74                 \mbox{\hyperlink{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}{linenum}}++;}
-\DoxyCodeLine{75             \}}
-\DoxyCodeLine{76         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a2b4c5998f59f61fe725ddae19bd9f421}{\_isblank}}(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Separator (Space or Tab) */}}
-\DoxyCodeLine{77             \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
-\DoxyCodeLine{78         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (!isprint(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Not Graphic Character(0x20\string~0x7e) */}}
-\DoxyCodeLine{79             \textcolor{keywordflow}{return} -\/1;}
-\DoxyCodeLine{80         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (isalpha(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Name or Keyword */}}
-\DoxyCodeLine{81             token\_code = \mbox{\hyperlink{scan_8c_abe09b7c5dd179b960f98ef76fc56548a}{scan\_alnum}}();}
-\DoxyCodeLine{82             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{83         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (isdigit(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Digit */}}
-\DoxyCodeLine{84             token\_code = \mbox{\hyperlink{scan_8c_adb3e836549bc1ecd61ed98bf63f813d0}{scan\_digit}}();}
-\DoxyCodeLine{85             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{86         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)''}) \{ \textcolor{comment}{/* String */}}
-\DoxyCodeLine{87             token\_code = \mbox{\hyperlink{scan_8c_aa05ec80aa6ee0242d82d13e8982da6e8}{scan\_string}}();}
-\DoxyCodeLine{88             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{89         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} ((\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'/'} \&\& \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'*'}) || \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\{'}) \{ \textcolor{comment}{/* Comment */}}
-\DoxyCodeLine{90             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a2c0a7cd533251d8b6b13250f25ce661b}{scan\_comment}}() == -\/1) \{}
-\DoxyCodeLine{91                 \textcolor{keywordflow}{break};}
-\DoxyCodeLine{92             \}}
-\DoxyCodeLine{93         \} \textcolor{keywordflow}{else} \{ \textcolor{comment}{/* Symbol */}}
-\DoxyCodeLine{94             token\_code = \mbox{\hyperlink{scan_8c_a24e391d80789ff75d7ad4fea534c546d}{scan\_symbol}}();}
-\DoxyCodeLine{95             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{96         \}}
-\DoxyCodeLine{97     \}}
-\DoxyCodeLine{98     \textcolor{keywordflow}{return} token\_code;}
-\DoxyCodeLine{99 \}}
+\DoxyCodeLine{59                \{}
+\DoxyCodeLine{60     \textcolor{keywordtype}{int} token\_code = -\/1;}
+\DoxyCodeLine{61     \textcolor{keywordflow}{while} (1) \{}
+\DoxyCodeLine{62         \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == EOF) \{ \textcolor{comment}{/* End Of File*/}}
+\DoxyCodeLine{63             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{64         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)r'} || \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)n'}) \{ \textcolor{comment}{/* End of Line */}}
+\DoxyCodeLine{65             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)r'}) \{}
+\DoxyCodeLine{66                 \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'\(\backslash\)n'}) \{}
+\DoxyCodeLine{67                     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{68                 \}}
+\DoxyCodeLine{69                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{70                 \mbox{\hyperlink{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}{linenum}}++;}
+\DoxyCodeLine{71             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{72                 \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'\(\backslash\)r'}) \{}
+\DoxyCodeLine{73                     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{74                 \}}
+\DoxyCodeLine{75                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{76                 \mbox{\hyperlink{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}{linenum}}++;}
+\DoxyCodeLine{77             \}}
+\DoxyCodeLine{78         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a2b4c5998f59f61fe725ddae19bd9f421}{\_isblank}}(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Separator (Space or Tab) */}}
+\DoxyCodeLine{79             \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{80         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (!isprint(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Not Graphic Character(0x20\string~0x7e) */}}
+\DoxyCodeLine{81             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{82         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (isalpha(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Name or Keyword */}}
+\DoxyCodeLine{83             token\_code = \mbox{\hyperlink{scan_8c_abe09b7c5dd179b960f98ef76fc56548a}{scan\_alnum}}();}
+\DoxyCodeLine{84             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{85         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (isdigit(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Digit */}}
+\DoxyCodeLine{86             token\_code = \mbox{\hyperlink{scan_8c_adb3e836549bc1ecd61ed98bf63f813d0}{scan\_digit}}();}
+\DoxyCodeLine{87             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{88         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)''}) \{ \textcolor{comment}{/* String */}}
+\DoxyCodeLine{89             token\_code = \mbox{\hyperlink{scan_8c_aa05ec80aa6ee0242d82d13e8982da6e8}{scan\_string}}();}
+\DoxyCodeLine{90             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{91         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} ((\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'/'} \&\& \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'*'}) || \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\{'}) \{ \textcolor{comment}{/* Comment */}}
+\DoxyCodeLine{92             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a2c0a7cd533251d8b6b13250f25ce661b}{scan\_comment}}() == -\/1) \{}
+\DoxyCodeLine{93                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{94             \}}
+\DoxyCodeLine{95         \} \textcolor{keywordflow}{else} \{ \textcolor{comment}{/* Symbol */}}
+\DoxyCodeLine{96             token\_code = \mbox{\hyperlink{scan_8c_a24e391d80789ff75d7ad4fea534c546d}{scan\_symbol}}();}
+\DoxyCodeLine{97             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{98         \}}
+\DoxyCodeLine{99     \}}
+\DoxyCodeLine{100     \mbox{\hyperlink{scan_8c_a85dcfcc32e9fe688779321e7da354360}{set\_token\_linenum}}();}
+\DoxyCodeLine{101     \textcolor{keywordflow}{return} token\_code;}
+\DoxyCodeLine{102 \}}
 
 \end{DoxyCode}
-呼び出し関係図\+:\nopagebreak
+呼び出し関係図\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
