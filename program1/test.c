@@ -11,8 +11,14 @@
 
 void scan_func_test_isblank(void);
 void integration_test_sample11pp(void);
+void integration_test_sample12(void);
+void integration_test_sample15(void);
+
+void exceptional_test1(void);
 
 void set_correct_ans_sample11pp(int *correct_ans);
+void set_correct_ans_sample12(int *correct_ans);
+void set_correct_ans_sample15(int *correct_ans);
 
 #undef main
 int main() {
@@ -20,12 +26,17 @@ int main() {
 
     CU_initialize_registry();
 
-    suite = CU_add_suite("Scan functions Test ", NULL, NULL);
+    suite = CU_add_suite("Scan functions Test", NULL, NULL);
     CU_add_test(suite, "scan_func_test_isblank", scan_func_test_isblank);
 
-    suite = CU_add_suite("Integration Test ", NULL, NULL);
+    suite = CU_add_suite("Integration Test", NULL, NULL);
     CU_add_test(suite, "integration_test_sample11pp", integration_test_sample11pp);
+    CU_add_test(suite, "integration_test_sample12", integration_test_sample12);
+    CU_add_test(suite, "integration_test_sample15", integration_test_sample15);
     CU_basic_run_tests();
+
+    suite = CU_add_suite("Exceptional Test", NULL, NULL);
+    CU_add_test(suite, "exceptional_test1", exceptional_test1);
 
     int ret = CU_get_number_of_failures();
 
@@ -72,8 +83,91 @@ void integration_test_sample11pp(void) {
 
     /* check */
     for (index = 0; index < NUMOFTOKEN + 1; index++) {
-        /* fprintf(stdout, "%10s: %5d, correct == %5d\n", tokenstr[index], numtoken[index], correct_ans[index]); */
         CU_ASSERT_EQUAL(numtoken[index], correct_ans[index]);
+    }
+}
+
+void integration_test_sample12(void) {
+    int correct_ans[NUMOFTOKEN + 1];
+    memset(correct_ans, 0, sizeof(correct_ans));
+    set_correct_ans_sample12(correct_ans);
+
+    int token, index;
+    int ret;
+    char *filename = "samples/sample12.mpl";
+    init_scan(filename);
+
+    memset(numtoken, 0, sizeof(numtoken));
+
+    while ((token = scan()) >= 0) {
+        /* 作成する部分：トークンをカウントする */
+        numtoken[token]++;
+    }
+
+    ret = end_scan();
+    CU_ASSERT_EQUAL(ret, 0); /* success -> 0, fail -> not 0  */
+
+    if (ret < 0) {
+        CU_FAIL("File sample12 can not close.\n");
+        return;
+    }
+
+    /* check */
+    for (index = 0; index < NUMOFTOKEN + 1; index++) {
+        CU_ASSERT_EQUAL(numtoken[index], correct_ans[index]);
+    }
+}
+
+void integration_test_sample15(void) {
+    int correct_ans[NUMOFTOKEN + 1];
+    memset(correct_ans, 0, sizeof(correct_ans));
+    set_correct_ans_sample15(correct_ans);
+
+    int token, index;
+    int ret;
+    char *filename = "samples/sample15.mpl";
+    init_scan(filename);
+
+    memset(numtoken, 0, sizeof(numtoken));
+
+    while ((token = scan()) >= 0) {
+        /* 作成する部分：トークンをカウントする */
+        numtoken[token]++;
+    }
+
+    ret = end_scan();
+    CU_ASSERT_EQUAL(ret, 0); /* success -> 0, fail -> not 0  */
+
+    if (ret < 0) {
+        CU_FAIL("File sample15 can not close.\n");
+        return;
+    }
+
+    /* check */
+    for (index = 0; index < NUMOFTOKEN + 1; index++) {
+        CU_ASSERT_EQUAL(numtoken[index], correct_ans[index]);
+    }
+}
+
+void exceptional_test1(void) {
+    int token;
+    int ret;
+    char *filename = "samples/comment1.mpl";
+    init_scan(filename);
+
+    memset(numtoken, 0, sizeof(numtoken));
+
+    while ((token = scan()) >= 0) {
+        /* 作成する部分：トークンをカウントする */
+        numtoken[token]++;
+    }
+
+    ret = end_scan();
+    CU_ASSERT_EQUAL(ret, 0); /* success -> 0, fail -> not 0  */
+
+    if (ret < 0) {
+        CU_FAIL("File comment1.mpl can not close.\n");
+        return;
     }
 }
 
@@ -103,4 +197,37 @@ void set_correct_ans_sample11pp(int *correct_ans) {
     correct_ans[TCOMMA] = 3;
     correct_ans[TCOLON] = 6;
     correct_ans[TSEMI] = 17;
+}
+
+void set_correct_ans_sample12(int *correct_ans) {
+    correct_ans[TNAME] = 1;
+    correct_ans[TPROGRAM] = 1;
+    correct_ans[TBEGIN] = 1;
+    correct_ans[TEND] = 1;
+    correct_ans[TDOT] = 1;
+    correct_ans[TSEMI] = 1;
+}
+
+void set_correct_ans_sample15(int *correct_ans) {
+    correct_ans[TNAME] = 18;
+    correct_ans[TPROGRAM] = 1;
+    correct_ans[TVAR] = 1;
+    correct_ans[TBEGIN] = 2;
+    correct_ans[TEND] = 2;
+    correct_ans[TWHILE] = 1;
+    correct_ans[TDO] = 1;
+    correct_ans[TINTEGER] = 1;
+    correct_ans[TWRITELN] = 3;
+    correct_ans[TNUMBER] = 11;
+    correct_ans[TSTRING] = 10;
+    correct_ans[TPLUS] = 1;
+    correct_ans[TSTAR] = 5;
+    correct_ans[TLE] = 1;
+    correct_ans[TLPAREN] = 3;
+    correct_ans[TRPAREN] = 3;
+    correct_ans[TASSIGN] = 4;
+    correct_ans[TDOT] = 1;
+    correct_ans[TCOMMA] = 13;
+    correct_ans[TCOLON] = 6;
+    correct_ans[TSEMI] = 9;
 }
