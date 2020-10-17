@@ -102,5 +102,5 @@ void set_correct_ans_sample11pp(int *correct_ans) {
     correct_ans[TDOT] = 1;
     correct_ans[TCOMMA] = 3;
     correct_ans[TCOLON] = 6;
-    correct_ans[TSEMI] = 17;
+    correct_ans[TSEMI] = 18;
 }
