@@ -1,6 +1,5 @@
-#include <CUnit/CUnit.h>
-/* #include <BCUnit/Console.h> */
 #include <CUnit/Basic.h>
+#include <CUnit/CUnit.h>
 #include <CUnit/TestDB.h>
 #include <CUnit/TestRun.h>
 #include <stdio.h>
@@ -26,11 +25,9 @@ int main() {
 
     suite = CU_add_suite("Integration Test ", NULL, NULL);
     CU_add_test(suite, "integration_test_sample11pp", integration_test_sample11pp);
-    /* CU_console_run_tests(); */
     CU_basic_run_tests();
 
     int ret = CU_get_number_of_failures();
-    printf("failed %d\n", ret);
 
     CU_cleanup_registry();
 
@@ -75,7 +72,7 @@ void integration_test_sample11pp(void) {
 
     /* check */
     for (index = 0; index < NUMOFTOKEN + 1; index++) {
-        fprintf(stdout, "%10s: %5d, correct == %5d\n", tokenstr[index], numtoken[index], correct_ans[index]);
+        /* fprintf(stdout, "%10s: %5d, correct == %5d\n", tokenstr[index], numtoken[index], correct_ans[index]); */
         CU_ASSERT_EQUAL(numtoken[index], correct_ans[index]);
     }
 }
