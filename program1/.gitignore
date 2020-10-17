@@ -5,3 +5,4 @@ test
 *.gcda 
 *.gch
 Doxyfile.bak
+output.txt
