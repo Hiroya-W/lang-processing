@@ -23,7 +23,6 @@ $(TEST_OBJS): token-list.h
 
 .PHONY: check
 check: test
-	@-rm *.gcno *.gcov *.gcda *.gch
 	@./test
 
 .PHONY: clean
