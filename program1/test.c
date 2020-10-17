@@ -1,6 +1,8 @@
-#include <BCUnit/BCUnit.h>
-#include <BCUnit/Console.h>
-#include <BCUnit/TestDB.h>
+#include <CUnit/CUnit.h>
+/* #include <BCUnit/Console.h> */
+#include <CUnit/Basic.h>
+#include <CUnit/TestDB.h>
+#include <CUnit/TestRun.h>
 #include <stdio.h>
 
 /* Source Files */
@@ -24,9 +26,19 @@ int main() {
 
     suite = CU_add_suite("Integration Test ", NULL, NULL);
     CU_add_test(suite, "integration_test_sample11pp", integration_test_sample11pp);
-    CU_console_run_tests();
+    /* CU_console_run_tests(); */
+    CU_basic_run_tests();
+
+    int ret = CU_get_number_of_failures();
+    printf("failed %d\n", ret);
+
     CU_cleanup_registry();
-    return 0;
+
+    if (ret != 0) {
+        return ret;
+    } else {
+        return 0;
+    }
 }
 
 void scan_func_test_isblank(void) {

@@ -5,9 +5,9 @@ TEST_OBJS := test.o
 CFLAGS := -ansi -fno-common -W -Wall -g 
 TEST_CFLAGS := $(CFLAGS) -Dmain=_main_disabled -coverage -fprofile-arcs -ftest-coverage
 TEST_LIBDIR := -L/usr/lib 
-TEST_LIB := -lbcunit
+TEST_LIB := -lcunit
 
-all: token-list test
+all: clean token-list test
 
 token-list: $(OBJS)
 
