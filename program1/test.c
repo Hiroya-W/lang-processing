@@ -8,9 +8,10 @@
 #include "token-list.c"
 #include "token-list.h"
 
-void scan_test_001(void);
-void scan_test_002(void);
-void scan_test_003(void);
+void scan_func_test_isblank(void);
+void integration_test_sample11pp(void);
+
+void set_correct_ans_sample11pp(int *correct_ans);
 
 #undef main
 int main() {
@@ -18,41 +19,79 @@ int main() {
 
     CU_initialize_registry();
 
-    suite = CU_add_suite("Scan Test ", NULL, NULL);
-    CU_add_test(suite, "test_001", scan_test_001);
-    CU_add_test(suite, "test_002", scan_test_002);
-    CU_add_test(suite, "test_003", scan_test_003);
+    suite = CU_add_suite("Scan functions Test ", NULL, NULL);
+    CU_add_test(suite, "scan_func_test_isblank", scan_func_test_isblank);
+
+    suite = CU_add_suite("Integration Test ", NULL, NULL);
+    CU_add_test(suite, "integration_test_sample11pp", integration_test_sample11pp);
     CU_console_run_tests();
     CU_cleanup_registry();
     return 0;
 }
 
-void scan_test_001(void) {
+void scan_func_test_isblank(void) {
     CU_ASSERT(_isblank(' ') == 1);
     CU_ASSERT(_isblank('\t') == 1);
     CU_ASSERT(_isblank('\n') == 0);
     CU_ASSERT(_isblank('a') == 0);
 }
 
-void scan_test_002(void) {
-    int i;
-    for (i = 0; i < KEYWORDSIZE; i++) {
-        CU_ASSERT(get_keyword_token_code(key[i].keyword) == key[i].keytoken);
+void integration_test_sample11pp(void) {
+    int correct_ans[NUMOFTOKEN + 1];
+    memset(correct_ans, 0, sizeof(correct_ans));
+    set_correct_ans_sample11pp(correct_ans);
+
+    int token, index;
+    int ret;
+    char *filename = "samples/sample11pp.mpl";
+    init_scan(filename);
+
+    memset(numtoken, 0, sizeof(numtoken));
+
+    while ((token = scan()) >= 0) {
+        /* 作成する部分：トークンをカウントする */
+        numtoken[token]++;
     }
-    CU_ASSERT(get_keyword_token_code("ABCDE") == TNAME);
-    CU_ASSERT(get_keyword_token_code("AB12") == TNAME);
+
+    ret = end_scan();
+    CU_ASSERT_EQUAL(ret, 0); /* success -> 0, fail -> not 0  */
+
+    if (ret < 0) {
+        CU_FAIL("File sample11pp can not close.\n");
+        return;
+    }
+
+    /* check */
+    for (index = 0; index < NUMOFTOKEN + 1; index++) {
+        fprintf(stdout, "%10s: %5d, correct == %5d\n", tokenstr[index], numtoken[index], correct_ans[index]);
+        CU_ASSERT_EQUAL(numtoken[index], correct_ans[index]);
+    }
 }
 
-void scan_test_003(void) {
-    init_scan("samples/sample11.mpl");
-    CU_ASSERT(scan() == TPROGRAM);
-    CU_ASSERT(scan() == TNAME);
-    end_scan();
-}
-
-void scan_test_004(void) {
-    init_scan("samples/sample11.mpl");
-    current_char = 0x80; /* Not Graphic character */
-    CU_ASSERT(scan() == -1);
-    end_scan();
+void set_correct_ans_sample11pp(int *correct_ans) {
+    correct_ans[TNAME] = 27;
+    correct_ans[TPROGRAM] = 1;
+    correct_ans[TVAR] = 4;
+    correct_ans[TBEGIN] = 5;
+    correct_ans[TEND] = 5;
+    correct_ans[TPROCEDURE] = 3;
+    correct_ans[TCALL] = 3;
+    correct_ans[TWHILE] = 1;
+    correct_ans[TDO] = 1;
+    correct_ans[TINTEGER] = 6;
+    correct_ans[TREADLN] = 2;
+    correct_ans[TWRITELN] = 2;
+    correct_ans[TNUMBER] = 4;
+    correct_ans[TSTRING] = 2;
+    correct_ans[TPLUS] = 1;
+    correct_ans[TMINUS] = 1;
+    correct_ans[TSTAR] = 1;
+    correct_ans[TGR] = 1;
+    correct_ans[TLPAREN] = 8;
+    correct_ans[TRPAREN] = 8;
+    correct_ans[TASSIGN] = 3;
+    correct_ans[TDOT] = 1;
+    correct_ans[TCOMMA] = 3;
+    correct_ans[TCOLON] = 6;
+    correct_ans[TSEMI] = 17;
 }
