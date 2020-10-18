@@ -139,4 +139,10 @@ extern int init_scan(char *filename);
 extern int scan(void);
 extern int get_linenum(void);
 extern int end_scan(void);
+
+/* id-list.c */
+extern void init_idtab();
+extern void id_countup(char *np);
+extern void print_idtab();
+extern void release_idtab();
 #endif
