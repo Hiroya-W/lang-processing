@@ -1,5 +1,6 @@
 #include <CUnit/Basic.h>
 #include <CUnit/CUnit.h>
+/* #include <CUnit/Console.h> */
 #include <CUnit/TestDB.h>
 #include <CUnit/TestRun.h>
 #include <stdio.h>
@@ -16,7 +17,9 @@ void integration_test_sample12(void);
 void integration_test_sample15(void);
 void integration_test_sample011(void);
 
-void exceptional_test1(void);
+void exceptional_comment1(void);
+void exceptional_string1(void);
+void exceptional_number1(void);
 
 void set_correct_ans_sample11pp(int *correct_ans);
 void set_correct_ans_sample12(int *correct_ans);
@@ -37,10 +40,14 @@ int main() {
     CU_add_test(suite, "integration_test_sample12", integration_test_sample12);
     CU_add_test(suite, "integration_test_sample15", integration_test_sample15);
     CU_add_test(suite, "integration_test_sample011", integration_test_sample011);
-    CU_basic_run_tests();
 
     suite = CU_add_suite("Exceptional Test", NULL, NULL);
-    CU_add_test(suite, "exceptional_test1", exceptional_test1);
+    CU_add_test(suite, "exceptional_comment1", exceptional_comment1);
+    CU_add_test(suite, "exceptional_string1", exceptional_string1);
+    CU_add_test(suite, "exceptional_number1", exceptional_number1);
+
+    CU_basic_run_tests();
+    /* CU_console_run_tests(); */
 
     int ret = CU_get_number_of_failures();
 
@@ -185,24 +192,59 @@ void integration_test_sample011(void) {
     }
 }
 
-void exceptional_test1(void) {
-    int token;
+void exceptional_comment1(void) {
     int ret;
     char *filename = "samples/comment1.mpl";
     init_scan(filename);
 
     memset(numtoken, 0, sizeof(numtoken));
 
-    while ((token = scan()) >= 0) {
-        /* 作成する部分：トークンをカウントする */
-        numtoken[token]++;
-    }
+    ret = scan();
+    CU_ASSERT_EQUAL(ret, -1);
 
     ret = end_scan();
-    CU_ASSERT_EQUAL(ret, 0); /* success -> 0, fail -> not 0  */
+    CU_ASSERT_EQUAL(ret, 0);
 
     if (ret < 0) {
         CU_FAIL("File comment1.mpl can not close.\n");
+        return;
+    }
+}
+
+void exceptional_string1(void) {
+    int ret;
+    char *filename = "samples/string1.mpl";
+    init_scan(filename);
+
+    memset(numtoken, 0, sizeof(numtoken));
+
+    ret = scan();
+    CU_ASSERT_EQUAL(ret, -1);
+
+    ret = end_scan();
+    CU_ASSERT_EQUAL(ret, 0);
+
+    if (ret < 0) {
+        CU_FAIL("File string1.mpl can not close.\n");
+        return;
+    }
+}
+
+void exceptional_number1(void) {
+    int ret;
+    char *filename = "samples/number1.mpl";
+    init_scan(filename);
+
+    memset(numtoken, 0, sizeof(numtoken));
+
+    ret = scan();
+    CU_ASSERT_EQUAL(ret, -1);
+
+    ret = end_scan();
+    CU_ASSERT_EQUAL(ret, 0);
+
+    if (ret < 0) {
+        CU_FAIL("File number1.mpl can not close.\n");
         return;
     }
 }
