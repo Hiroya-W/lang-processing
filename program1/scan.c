@@ -182,6 +182,9 @@ static int scan_digit() {
     if (num <= MAX_NUM_ATTR) {
         num_attr = num;
         return TNUMBER;
+    } else {
+        /* Buffer Overflow */
+        error("num_attr: Buffer Overflow.");
     }
 
     return -1;
@@ -195,14 +198,23 @@ static int scan_string() {
     memset(string_attr, '\0', sizeof(string_attr));
     look_ahead();
 
-    while ((!(current_char == '\'') || next_char == '\'')) {
+    while (1) {
         if (!isprint(current_char)) {
             error("function scan_string()");
             fprintf(stderr, "[%c]0x%x is not graphic character.\n", current_char, current_char);
             return -1;
         }
+
+        if (current_char == '\'' && next_char != '\'') {
+            break;
+        }
+
+        if (current_char == '\'' && next_char == '\'') {
+            look_ahead();
+        }
+
         if (string_attr_push_back(current_char) == -1) {
-            error("function scan_digit()");
+            error("function scan_string()");
             return -1;
         }
         look_ahead();
