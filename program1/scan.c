@@ -194,7 +194,6 @@ static int scan_digit() {
  * @brief Scan one string.
  * @return int Returns token code of string on success and -1 on failure.
  */
-
 static int scan_string() {
     memset(string_attr, '\0', sizeof(string_attr));
     look_ahead();
