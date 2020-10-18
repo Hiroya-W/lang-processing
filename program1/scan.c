@@ -43,6 +43,8 @@ static int string_attr_push_back(const char c);
  */
 int init_scan(char *filename) {
     if ((fp = fopen(filename, "r")) == NULL) {
+        error("fopen() returns NULL");
+        error("function scan_alnum()");
         return -1;
     }
 
@@ -78,6 +80,8 @@ int scan(void) {
         } else if (_isblank(current_char)) { /* Separator (Space or Tab) */
             look_ahead();
         } else if (!isprint(current_char)) { /* Not Graphic Character(0x20~0x7e) */
+            error("function scan()");
+            fprintf(stderr, "[%c]0x%x is not graphic character.\n", current_char, current_char);
             return -1;
         } else if (isalpha(current_char)) { /* Name or Keyword */
             token_code = scan_alnum();
@@ -122,6 +126,9 @@ void set_token_linenum(void) {
  */
 int end_scan(void) {
     if (fclose(fp) == EOF) {
+        error("function end_scan");
+        fprintf(stderr, "fclose() returns EOF.");
+        ;
         return -1;
     }
     return 0;
@@ -184,7 +191,8 @@ static int scan_digit() {
         return TNUMBER;
     } else {
         /* Buffer Overflow */
-        error("num_attr: Buffer Overflow.");
+        error("function scan_digit");
+        fprintf(stderr, "num_attr: Buffer Overflow.");
     }
 
     return -1;
@@ -251,6 +259,10 @@ static int scan_comment() {
         }
     }
     /* EOF */
+    if (current_char != EOF) {
+        error("function scan_comment");
+        fprintf(stderr, "Failed to scan the comment.");
+    }
     return -1;
 }
 
@@ -309,6 +321,8 @@ static int scan_symbol() {
         case ';':
             return TSEMI;
         default:
+            error("function scan_symbol()");
+            fprintf(stderr, "[%c]0x%x is undefined symbol.\n", current_char, current_char);
             return -1;
     }
 }
@@ -342,7 +356,8 @@ static int string_attr_push_back(const char c) {
         return 0;
     } else {
         /* Buffer Overflow */
-        error("string_attr: Buffer Overflow.");
+        error("function string_attr_push_back");
+        fprintf(stderr, "string_attr: Buffer Overflow.");
         return -1;
     }
 }
