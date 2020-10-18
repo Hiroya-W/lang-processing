@@ -191,18 +191,28 @@ static int scan_digit() {
  * @brief Scan one string.
  * @return int Returns token code of string on success and -1 on failure.
  */
+
 static int scan_string() {
     memset(string_attr, '\0', sizeof(string_attr));
     look_ahead();
 
-    while ((!(current_char == '\'') || next_char == '\'')) {
+    while (1) {
         if (!isprint(current_char)) {
             error("function scan_string()");
             fprintf(stderr, "[%c]0x%x is not graphic character.\n", current_char, current_char);
             return -1;
         }
+
+        if (current_char == '\'' && next_char != '\'') {
+            break;
+        }
+
+        if (current_char == '\'' && next_char == '\'') {
+            look_ahead();
+        }
+
         if (string_attr_push_back(current_char) == -1) {
-            error("function scan_digit()");
+            error("function scan_string()");
             return -1;
         }
         look_ahead();
