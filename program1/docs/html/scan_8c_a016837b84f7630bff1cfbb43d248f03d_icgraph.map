@@ -1,8 +1,0 @@
-<map id="string_attr_push_back" name="string_attr_push_back">
-<area shape="rect" id="node1" title="Adding characters to the end of a scanned string" alt="" coords="356,56,521,83"/>
-<area shape="rect" id="node2" href="$scan_8c.html#abe09b7c5dd179b960f98ef76fc56548a" title="Scan one string of letters and numbers" alt="" coords="208,5,308,32"/>
-<area shape="rect" id="node5" href="$scan_8c.html#adb3e836549bc1ecd61ed98bf63f813d0" title="Scan one number sequence." alt="" coords="214,56,302,83"/>
-<area shape="rect" id="node6" href="$scan_8c.html#aa05ec80aa6ee0242d82d13e8982da6e8" title="Scan one string." alt="" coords="210,107,306,133"/>
-<area shape="rect" id="node3" href="$token-list_8h.html#a2cb909d1b7351cc6fc24dd70b939070a" title="Scan the file and return the token code" alt="" coords="108,56,160,83"/>
-<area shape="rect" id="node4" href="$token-list_8c.html#a2c537f75cb588446247c82d5b6b0308b" title="main function" alt="" coords="5,56,60,83"/>
-</map>

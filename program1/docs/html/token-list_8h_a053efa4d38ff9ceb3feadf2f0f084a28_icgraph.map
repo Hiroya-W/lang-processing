@@ -1,9 +1,0 @@
-<map id="error" name="error">
-<area shape="rect" id="node1" title="display an error message" alt="" coords="569,58,623,85"/>
-<area shape="rect" id="node2" href="$scan_8c.html#abe09b7c5dd179b960f98ef76fc56548a" title="Scan one string of letters and numbers" alt="" coords="208,8,308,34"/>
-<area shape="rect" id="node5" href="$scan_8c.html#adb3e836549bc1ecd61ed98bf63f813d0" title="Scan one number sequence." alt="" coords="214,58,302,85"/>
-<area shape="rect" id="node6" href="$scan_8c.html#aa05ec80aa6ee0242d82d13e8982da6e8" title="Scan one string." alt="" coords="210,109,306,136"/>
-<area shape="rect" id="node7" href="$scan_8c.html#a016837b84f7630bff1cfbb43d248f03d" title="Adding characters to the end of a scanned string" alt="" coords="356,33,521,60"/>
-<area shape="rect" id="node3" href="$token-list_8h.html#a2cb909d1b7351cc6fc24dd70b939070a" title="Scan the file and return the token code" alt="" coords="108,58,160,85"/>
-<area shape="rect" id="node4" href="$token-list_8c.html#a2c537f75cb588446247c82d5b6b0308b" title="main function" alt="" coords="5,58,60,85"/>
-</map>

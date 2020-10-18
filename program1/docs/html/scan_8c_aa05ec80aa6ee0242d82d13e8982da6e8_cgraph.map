@@ -1,6 +1,0 @@
-<map id="scan_string" name="scan_string">
-<area shape="rect" id="node1" title="Scan one string." alt="" coords="5,26,101,52"/>
-<area shape="rect" id="node2" href="$token-list_8c.html#a053efa4d38ff9ceb3feadf2f0f084a28" title="display an error message" alt="" coords="363,26,416,52"/>
-<area shape="rect" id="node3" href="$scan_8c.html#a61855ff2af426bc6ac454733a9e61ff6" title="Pre&#45;reading file" alt="" coords="183,26,281,52"/>
-<area shape="rect" id="node4" href="$scan_8c.html#a016837b84f7630bff1cfbb43d248f03d" title="Adding characters to the end of a scanned string" alt="" coords="149,76,315,103"/>
-</map>
