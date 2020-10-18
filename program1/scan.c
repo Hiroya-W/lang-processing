@@ -182,6 +182,9 @@ static int scan_digit() {
     if (num <= MAX_NUM_ATTR) {
         num_attr = num;
         return TNUMBER;
+    } else {
+        /* Buffer Overflow */
+        error("num_attr: Buffer Overflow.");
     }
 
     return -1;
