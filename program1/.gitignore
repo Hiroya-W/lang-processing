@@ -1,0 +1,9 @@
+token-list
+test
+*.gcno 
+*.gcov 
+*.gcda 
+*.gch
+Doxyfile.bak
+output.txt
+Doxyfile.bak

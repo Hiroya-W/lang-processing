@@ -1,0 +1,28 @@
+{
+    "configurations": {
+        "c:Launch": {
+            "adapter": "vscode-cpptools",
+            "configuration": {
+                "name": "(gdb) Launch",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceFolder}/token-list",
+                "args": [
+                    "samples/sample12.mpl"
+                ],
+                "stopAtEntry": false,
+                "cwd": "${workspaceFolder}",
+                "environment": [],
+                "externalConsole": true,
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
+            }
+        }
+    }
+}

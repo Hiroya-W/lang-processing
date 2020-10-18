@@ -1,0 +1,5 @@
+<map id="scan_comment" name="scan_comment">
+<area shape="rect" id="node1" title="Scan the annotation" alt="" coords="208,5,329,32"/>
+<area shape="rect" id="node2" href="$token-list_8h.html#a2cb909d1b7351cc6fc24dd70b939070a" title="Scan the file and return the token code" alt="" coords="108,5,160,32"/>
+<area shape="rect" id="node3" href="$token-list_8c.html#a2c537f75cb588446247c82d5b6b0308b" title="main function" alt="" coords="5,5,60,32"/>
+</map>

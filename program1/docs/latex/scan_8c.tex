@@ -1,0 +1,833 @@
+\hypertarget{scan_8c}{}\doxysection{scan.\+c ファイル}
+\label{scan_8c}\index{scan.c@{scan.c}}
+{\ttfamily \#include $<$ctype.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}token-\/list.\+h\char`\"{}}\newline
+scan.\+c の依存先関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{scan_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{変数}
+\begin{DoxyCompactItemize}
+\item 
+F\+I\+LE $\ast$ \mbox{\hyperlink{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}{fp}}
+\item 
+int \mbox{\hyperlink{scan_8c_adc80dd58d415b6dafd9f71cc35f9a392}{num\+\_\+attr}} = 0
+\item 
+char \mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\+\_\+attr}} \mbox{[}\mbox{\hyperlink{token-list_8h_a292d5c171f84f8dc52595a241448472f}{M\+A\+X\+S\+T\+R\+S\+I\+ZE}}\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsection*{looka ahead}
+\begin{DoxyCompactItemize}
+\item 
+static int \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\+\_\+char}}
+\item 
+static int \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\+\_\+char}} = \textquotesingle{}\textbackslash{}0\textquotesingle{}
+\item 
+static int \mbox{\hyperlink{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}{linenum}} = 1
+\item 
+static int \mbox{\hyperlink{scan_8c_a1c69be99e6fd2304a4df484f1c36f66c}{token\+\_\+linenum}} = 0
+\item 
+static void \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\+\_\+ahead}} ()
+\begin{DoxyCompactList}\small\item\em Pre-\/reading file \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{scan_8c_a2b4c5998f59f61fe725ddae19bd9f421}{\+\_\+isblank}} (int c)
+\begin{DoxyCompactList}\small\item\em Determine if a character is a space character or not. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{scan_8c_abe8f89eeb56df1f5bde22ca242953664}{get\+\_\+linenum}} (void)
+\begin{DoxyCompactList}\small\item\em Return the line number of the last token scanned \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{scan_8c_a85dcfcc32e9fe688779321e7da354360}{set\+\_\+token\+\_\+linenum}} (void)
+\begin{DoxyCompactList}\small\item\em Set the line number of the last token scanned \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{scan_8c_abe09b7c5dd179b960f98ef76fc56548a}{scan\+\_\+alnum}} ()
+\begin{DoxyCompactList}\small\item\em Scan one string of letters and numbers \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{scan_8c_adb3e836549bc1ecd61ed98bf63f813d0}{scan\+\_\+digit}} ()
+\begin{DoxyCompactList}\small\item\em Scan one number sequence. \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{scan_8c_aa05ec80aa6ee0242d82d13e8982da6e8}{scan\+\_\+string}} ()
+\begin{DoxyCompactList}\small\item\em Scan one string. \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{scan_8c_a2c0a7cd533251d8b6b13250f25ce661b}{scan\+\_\+comment}} ()
+\begin{DoxyCompactList}\small\item\em Scan the annotation \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{scan_8c_a24e391d80789ff75d7ad4fea534c546d}{scan\+\_\+symbol}} ()
+\begin{DoxyCompactList}\small\item\em Scan one symbol \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{scan_8c_a4f248267642169d2ee463aac0441808a}{get\+\_\+keyword\+\_\+token\+\_\+code}} (char $\ast$token)
+\begin{DoxyCompactList}\small\item\em Get the token code for a token \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{scan_8c_a016837b84f7630bff1cfbb43d248f03d}{string\+\_\+attr\+\_\+push\+\_\+back}} (const char c)
+\begin{DoxyCompactList}\small\item\em Adding characters to the end of a scanned string \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{scan_8c_ab155bf91f844588b6ccdb530034f28e9}{init\+\_\+scan}} (char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Initialization to begin scanning \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{scan_8c_a2cb909d1b7351cc6fc24dd70b939070a}{scan}} (void)
+\begin{DoxyCompactList}\small\item\em Scan the file and return the token code \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{scan_8c_adc64a7c31696f9592dc76ba72aa3cb07}{end\+\_\+scan}} (void)
+\begin{DoxyCompactList}\small\item\em The process of finishing the scan \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{関数詳解}
+\mbox{\Hypertarget{scan_8c_a2b4c5998f59f61fe725ddae19bd9f421}\label{scan_8c_a2b4c5998f59f61fe725ddae19bd9f421}} 
+\index{scan.c@{scan.c}!\_isblank@{\_isblank}}
+\index{\_isblank@{\_isblank}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{\_isblank()}{\_isblank()}}
+{\footnotesize\ttfamily static int \+\_\+isblank (\begin{DoxyParamCaption}\item[{int}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Determine if a character is a space character or not. 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\texttt{ in}}  & {\em c} & Character to be determined \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+int Returns 1 for a blank character, 0 otherwise. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 135 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{135                            \{}
+\DoxyCodeLine{136     \textcolor{keywordflow}{if} (c == \textcolor{charliteral}{' '} || c == \textcolor{charliteral}{'\(\backslash\)t'}) \{}
+\DoxyCodeLine{137         \textcolor{keywordflow}{return} 1;}
+\DoxyCodeLine{138     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{139         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{140     \}}
+\DoxyCodeLine{141 \}}
+
+\end{DoxyCode}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=289pt]{scan_8c_a2b4c5998f59f61fe725ddae19bd9f421_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_adc64a7c31696f9592dc76ba72aa3cb07}\label{scan_8c_adc64a7c31696f9592dc76ba72aa3cb07}} 
+\index{scan.c@{scan.c}!end\_scan@{end\_scan}}
+\index{end\_scan@{end\_scan}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{end\_scan()}{end\_scan()}}
+{\footnotesize\ttfamily int end\+\_\+scan (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+The process of finishing the scan 
+
+\begin{DoxyReturn}{戻り値}
+int Returns 0 on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 123 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{123                    \{}
+\DoxyCodeLine{124     \textcolor{keywordflow}{if} (fclose(\mbox{\hyperlink{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}{fp}}) == EOF) \{}
+\DoxyCodeLine{125         \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{126     \}}
+\DoxyCodeLine{127     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{128 \}}
+
+\end{DoxyCode}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{scan_8c_adc64a7c31696f9592dc76ba72aa3cb07_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_a4f248267642169d2ee463aac0441808a}\label{scan_8c_a4f248267642169d2ee463aac0441808a}} 
+\index{scan.c@{scan.c}!get\_keyword\_token\_code@{get\_keyword\_token\_code}}
+\index{get\_keyword\_token\_code@{get\_keyword\_token\_code}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{get\_keyword\_token\_code()}{get\_keyword\_token\_code()}}
+{\footnotesize\ttfamily static int get\+\_\+keyword\+\_\+token\+\_\+code (\begin{DoxyParamCaption}\item[{char $\ast$}]{token }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Get the token code for a token 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\texttt{ in}}  & {\em token} & token to be determined \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+int If it is a keyword, it returns its token code, otherwise it returns the Name token code 
+\end{DoxyReturn}
+
+
+ scan.\+c の 308 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{308                                                \{}
+\DoxyCodeLine{309     \textcolor{keywordtype}{int} index;}
+\DoxyCodeLine{310     \textcolor{comment}{/* TODO: binary search */}}
+\DoxyCodeLine{311     \textcolor{keywordflow}{for} (index = 0; index < \mbox{\hyperlink{token-list_8h_a0c2c0c7a8deb7c7f99e4e4187ad12913}{KEYWORDSIZE}}; index++) \{}
+\DoxyCodeLine{312         \textcolor{keywordflow}{if} (strcmp(token, \mbox{\hyperlink{token-list_8c_a45722dc5e4ef396b489ec2922545f607}{key}}[index].keyword) == 0) \{}
+\DoxyCodeLine{313             \textcolor{comment}{/* This token is Keyword */}}
+\DoxyCodeLine{314             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8c_a45722dc5e4ef396b489ec2922545f607}{key}}[index].\mbox{\hyperlink{structKEY_a324318ca00ac2771c65c0a1203751fa6}{keytoken}};}
+\DoxyCodeLine{315         \}}
+\DoxyCodeLine{316     \}}
+\DoxyCodeLine{317     \textcolor{comment}{/* This token is NAME*/}}
+\DoxyCodeLine{318     \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_af7dd188b7e9a8592e394e37ba6272a90}{TNAME}};}
+\DoxyCodeLine{319 \}}
+
+\end{DoxyCode}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{scan_8c_a4f248267642169d2ee463aac0441808a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_abe8f89eeb56df1f5bde22ca242953664}\label{scan_8c_abe8f89eeb56df1f5bde22ca242953664}} 
+\index{scan.c@{scan.c}!get\_linenum@{get\_linenum}}
+\index{get\_linenum@{get\_linenum}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{get\_linenum()}{get\_linenum()}}
+{\footnotesize\ttfamily int get\+\_\+linenum (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Return the line number of the last token scanned 
+
+\begin{DoxyReturn}{戻り値}
+int Return line number 
+\end{DoxyReturn}
+
+
+ scan.\+c の 108 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{108                       \{}
+\DoxyCodeLine{109     \textcolor{keywordflow}{return} \mbox{\hyperlink{scan_8c_a1c69be99e6fd2304a4df484f1c36f66c}{token\_linenum}};}
+\DoxyCodeLine{110 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{scan_8c_ab155bf91f844588b6ccdb530034f28e9}\label{scan_8c_ab155bf91f844588b6ccdb530034f28e9}} 
+\index{scan.c@{scan.c}!init\_scan@{init\_scan}}
+\index{init\_scan@{init\_scan}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{init\_scan()}{init\_scan()}}
+{\footnotesize\ttfamily int init\+\_\+scan (\begin{DoxyParamCaption}\item[{char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+
+
+Initialization to begin scanning 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\texttt{ in}}  & {\em filename} & File name to scan \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+int Returns 0 on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 44 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{44                               \{}
+\DoxyCodeLine{45     \textcolor{keywordflow}{if} ((\mbox{\hyperlink{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}{fp}} = fopen(filename, \textcolor{stringliteral}{"{}r"{}})) == NULL) \{}
+\DoxyCodeLine{46         \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{47     \}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{50     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{53 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=249pt]{scan_8c_ab155bf91f844588b6ccdb530034f28e9_cgraph}
+\end{center}
+\end{figure}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=217pt]{scan_8c_ab155bf91f844588b6ccdb530034f28e9_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}\label{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}} 
+\index{scan.c@{scan.c}!look\_ahead@{look\_ahead}}
+\index{look\_ahead@{look\_ahead}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{look\_ahead()}{look\_ahead()}}
+{\footnotesize\ttfamily static void look\+\_\+ahead (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Pre-\/reading file 
+
+
+
+ scan.\+c の 341 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{341                          \{}
+\DoxyCodeLine{342     \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} = \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}};}
+\DoxyCodeLine{343     \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} = fgetc(\mbox{\hyperlink{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}{fp}});}
+\DoxyCodeLine{344     \textcolor{keywordflow}{return};}
+\DoxyCodeLine{345 \}}
+
+\end{DoxyCode}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{scan_8c_a61855ff2af426bc6ac454733a9e61ff6_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_a2cb909d1b7351cc6fc24dd70b939070a}\label{scan_8c_a2cb909d1b7351cc6fc24dd70b939070a}} 
+\index{scan.c@{scan.c}!scan@{scan}}
+\index{scan@{scan}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{scan()}{scan()}}
+{\footnotesize\ttfamily int scan (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Scan the file and return the token code 
+
+\begin{DoxyReturn}{戻り値}
+int Returns token code on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 59 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{59                \{}
+\DoxyCodeLine{60     \textcolor{keywordtype}{int} token\_code = -\/1;}
+\DoxyCodeLine{61     \textcolor{keywordflow}{while} (1) \{}
+\DoxyCodeLine{62         \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == EOF) \{ \textcolor{comment}{/* End Of File*/}}
+\DoxyCodeLine{63             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{64         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)r'} || \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)n'}) \{ \textcolor{comment}{/* End of Line */}}
+\DoxyCodeLine{65             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)r'}) \{}
+\DoxyCodeLine{66                 \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'\(\backslash\)n'}) \{}
+\DoxyCodeLine{67                     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{68                 \}}
+\DoxyCodeLine{69                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{70                 \mbox{\hyperlink{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}{linenum}}++;}
+\DoxyCodeLine{71             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{72                 \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'\(\backslash\)r'}) \{}
+\DoxyCodeLine{73                     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{74                 \}}
+\DoxyCodeLine{75                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{76                 \mbox{\hyperlink{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}{linenum}}++;}
+\DoxyCodeLine{77             \}}
+\DoxyCodeLine{78         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a2b4c5998f59f61fe725ddae19bd9f421}{\_isblank}}(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Separator (Space or Tab) */}}
+\DoxyCodeLine{79             \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{80         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (!isprint(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Not Graphic Character(0x20\string~0x7e) */}}
+\DoxyCodeLine{81             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{82         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (isalpha(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Name or Keyword */}}
+\DoxyCodeLine{83             token\_code = \mbox{\hyperlink{scan_8c_abe09b7c5dd179b960f98ef76fc56548a}{scan\_alnum}}();}
+\DoxyCodeLine{84             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{85         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (isdigit(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{ \textcolor{comment}{/* Digit */}}
+\DoxyCodeLine{86             token\_code = \mbox{\hyperlink{scan_8c_adb3e836549bc1ecd61ed98bf63f813d0}{scan\_digit}}();}
+\DoxyCodeLine{87             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{88         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)''}) \{ \textcolor{comment}{/* String */}}
+\DoxyCodeLine{89             token\_code = \mbox{\hyperlink{scan_8c_aa05ec80aa6ee0242d82d13e8982da6e8}{scan\_string}}();}
+\DoxyCodeLine{90             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{91         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} ((\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'/'} \&\& \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'*'}) || \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\{'}) \{ \textcolor{comment}{/* Comment */}}
+\DoxyCodeLine{92             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a2c0a7cd533251d8b6b13250f25ce661b}{scan\_comment}}() == -\/1) \{}
+\DoxyCodeLine{93                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{94             \}}
+\DoxyCodeLine{95         \} \textcolor{keywordflow}{else} \{ \textcolor{comment}{/* Symbol */}}
+\DoxyCodeLine{96             token\_code = \mbox{\hyperlink{scan_8c_a24e391d80789ff75d7ad4fea534c546d}{scan\_symbol}}();}
+\DoxyCodeLine{97             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{98         \}}
+\DoxyCodeLine{99     \}}
+\DoxyCodeLine{100     \mbox{\hyperlink{scan_8c_a85dcfcc32e9fe688779321e7da354360}{set\_token\_linenum}}();}
+\DoxyCodeLine{101     \textcolor{keywordflow}{return} token\_code;}
+\DoxyCodeLine{102 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{scan_8c_a2cb909d1b7351cc6fc24dd70b939070a_cgraph}
+\end{center}
+\end{figure}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{scan_8c_a2cb909d1b7351cc6fc24dd70b939070a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_abe09b7c5dd179b960f98ef76fc56548a}\label{scan_8c_abe09b7c5dd179b960f98ef76fc56548a}} 
+\index{scan.c@{scan.c}!scan\_alnum@{scan\_alnum}}
+\index{scan\_alnum@{scan\_alnum}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{scan\_alnum()}{scan\_alnum()}}
+{\footnotesize\ttfamily static int scan\+\_\+alnum (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Scan one string of letters and numbers 
+
+\begin{DoxyReturn}{戻り値}
+int Returns token code on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 147 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{147                         \{}
+\DoxyCodeLine{148     memset(\mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}, \textcolor{charliteral}{'\(\backslash\)0'}, \textcolor{keyword}{sizeof}(\mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}));}
+\DoxyCodeLine{149     \mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}[0] = \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}};}
+\DoxyCodeLine{150 }
+\DoxyCodeLine{151     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{152     \textcolor{keywordflow}{while} (isalnum(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{}
+\DoxyCodeLine{153         \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a016837b84f7630bff1cfbb43d248f03d}{string\_attr\_push\_back}}(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}}) == -\/1) \{}
+\DoxyCodeLine{154             \mbox{\hyperlink{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28}{error}}(\textcolor{stringliteral}{"{}function scan\_alnum()"{}});}
+\DoxyCodeLine{155             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{156         \}}
+\DoxyCodeLine{157         \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{158     \}}
+\DoxyCodeLine{159     \textcolor{keywordflow}{return} \mbox{\hyperlink{scan_8c_a4f248267642169d2ee463aac0441808a}{get\_keyword\_token\_code}}(\mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}});}
+\DoxyCodeLine{160 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{scan_8c_abe09b7c5dd179b960f98ef76fc56548a_cgraph}
+\end{center}
+\end{figure}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=307pt]{scan_8c_abe09b7c5dd179b960f98ef76fc56548a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_a2c0a7cd533251d8b6b13250f25ce661b}\label{scan_8c_a2c0a7cd533251d8b6b13250f25ce661b}} 
+\index{scan.c@{scan.c}!scan\_comment@{scan\_comment}}
+\index{scan\_comment@{scan\_comment}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{scan\_comment()}{scan\_comment()}}
+{\footnotesize\ttfamily static int scan\+\_\+comment (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Scan the annotation 
+
+\begin{DoxyReturn}{戻り値}
+int Returns 0 on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 219 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{219                           \{}
+\DoxyCodeLine{220     \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'/'} \&\& \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'*'}) \{}
+\DoxyCodeLine{221         \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{222         \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{223         \textcolor{keywordflow}{while} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} != EOF) \{}
+\DoxyCodeLine{224             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'*'} \&\& \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'/'}) \{}
+\DoxyCodeLine{225                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{226                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{227                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{228             \}}
+\DoxyCodeLine{229             \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{230         \}}
+\DoxyCodeLine{231     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\{'}) \{}
+\DoxyCodeLine{232         \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{233         \textcolor{keywordflow}{while} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} != EOF) \{}
+\DoxyCodeLine{234             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\}'}) \{}
+\DoxyCodeLine{235                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{236                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{237             \}}
+\DoxyCodeLine{238             \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{239         \}}
+\DoxyCodeLine{240     \}}
+\DoxyCodeLine{241     \textcolor{comment}{/* EOF */}}
+\DoxyCodeLine{242     \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{243 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=280pt]{scan_8c_a2c0a7cd533251d8b6b13250f25ce661b_cgraph}
+\end{center}
+\end{figure}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=323pt]{scan_8c_a2c0a7cd533251d8b6b13250f25ce661b_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_adb3e836549bc1ecd61ed98bf63f813d0}\label{scan_8c_adb3e836549bc1ecd61ed98bf63f813d0}} 
+\index{scan.c@{scan.c}!scan\_digit@{scan\_digit}}
+\index{scan\_digit@{scan\_digit}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{scan\_digit()}{scan\_digit()}}
+{\footnotesize\ttfamily static int scan\+\_\+digit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Scan one number sequence. 
+
+\begin{DoxyReturn}{戻り値}
+int Returns token code of number on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 166 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{166                         \{}
+\DoxyCodeLine{167     \textcolor{keywordtype}{int} num = \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} -\/ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169     memset(\mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}, \textcolor{charliteral}{'\(\backslash\)0'}, \textcolor{keyword}{sizeof}(\mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}));}
+\DoxyCodeLine{170     \mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}[0] = \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}};}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{173     \textcolor{keywordflow}{while} (isdigit(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{}
+\DoxyCodeLine{174         \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a016837b84f7630bff1cfbb43d248f03d}{string\_attr\_push\_back}}(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}}) == -\/1) \{}
+\DoxyCodeLine{175             \mbox{\hyperlink{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28}{error}}(\textcolor{stringliteral}{"{}function scan\_digit()"{}});}
+\DoxyCodeLine{176             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{177         \}}
+\DoxyCodeLine{178         num *= 10;}
+\DoxyCodeLine{179         num += \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} -\/ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{180         \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{181     \}}
+\DoxyCodeLine{182     \textcolor{keywordflow}{if} (num <= \mbox{\hyperlink{token-list_8h_aef3040046d58373a7e0acfcfc9398958}{MAX\_NUM\_ATTR}}) \{}
+\DoxyCodeLine{183         \mbox{\hyperlink{scan_8c_adc80dd58d415b6dafd9f71cc35f9a392}{num\_attr}} = num;}
+\DoxyCodeLine{184         \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a12ac3b9fdb855c77c385bcb07988903a}{TNUMBER}};}
+\DoxyCodeLine{185     \}}
+\DoxyCodeLine{186 }
+\DoxyCodeLine{187     \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{188 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{scan_8c_adb3e836549bc1ecd61ed98bf63f813d0_cgraph}
+\end{center}
+\end{figure}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=298pt]{scan_8c_adb3e836549bc1ecd61ed98bf63f813d0_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_aa05ec80aa6ee0242d82d13e8982da6e8}\label{scan_8c_aa05ec80aa6ee0242d82d13e8982da6e8}} 
+\index{scan.c@{scan.c}!scan\_string@{scan\_string}}
+\index{scan\_string@{scan\_string}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{scan\_string()}{scan\_string()}}
+{\footnotesize\ttfamily static int scan\+\_\+string (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Scan one string. 
+
+\begin{DoxyReturn}{戻り値}
+int Returns token code of string on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 194 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{194                          \{}
+\DoxyCodeLine{195     memset(\mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}, \textcolor{charliteral}{'\(\backslash\)0'}, \textcolor{keyword}{sizeof}(\mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}));}
+\DoxyCodeLine{196     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198     \textcolor{keywordflow}{while} ((!(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'\(\backslash\)''}) || \mbox{\hyperlink{scan_8c_a36240b8e24f41cbb824cf351769f4c57}{next\_char}} == \textcolor{charliteral}{'\(\backslash\)''})) \{}
+\DoxyCodeLine{199         \textcolor{keywordflow}{if} (!isprint(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}})) \{}
+\DoxyCodeLine{200             \mbox{\hyperlink{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28}{error}}(\textcolor{stringliteral}{"{}function scan\_string()"{}});}
+\DoxyCodeLine{201             fprintf(stderr, \textcolor{stringliteral}{"{}[\%c]0x\%x is not graphic character.\(\backslash\)n"{}}, \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}}, \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}});}
+\DoxyCodeLine{202             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{203         \}}
+\DoxyCodeLine{204         \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a016837b84f7630bff1cfbb43d248f03d}{string\_attr\_push\_back}}(\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}}) == -\/1) \{}
+\DoxyCodeLine{205             \mbox{\hyperlink{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28}{error}}(\textcolor{stringliteral}{"{}function scan\_digit()"{}});}
+\DoxyCodeLine{206             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{207         \}}
+\DoxyCodeLine{208         \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{209     \}}
+\DoxyCodeLine{210     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}(); \textcolor{comment}{/* read '\(\backslash\)'' */}}
+\DoxyCodeLine{211 }
+\DoxyCodeLine{212     \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a71d464164c73300977ffb80b82691d77}{TSTRING}};}
+\DoxyCodeLine{213 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{scan_8c_aa05ec80aa6ee0242d82d13e8982da6e8_cgraph}
+\end{center}
+\end{figure}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=304pt]{scan_8c_aa05ec80aa6ee0242d82d13e8982da6e8_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_a24e391d80789ff75d7ad4fea534c546d}\label{scan_8c_a24e391d80789ff75d7ad4fea534c546d}} 
+\index{scan.c@{scan.c}!scan\_symbol@{scan\_symbol}}
+\index{scan\_symbol@{scan\_symbol}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{scan\_symbol()}{scan\_symbol()}}
+{\footnotesize\ttfamily static int scan\+\_\+symbol (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Scan one symbol 
+
+\begin{DoxyReturn}{戻り値}
+int Returns token code of symbol on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 249 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{249                          \{}
+\DoxyCodeLine{250     \textcolor{keywordtype}{char} symbol = \mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}};}
+\DoxyCodeLine{251     \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{252     \textcolor{keywordflow}{switch} (symbol) \{}
+\DoxyCodeLine{253         \textcolor{keywordflow}{case} \textcolor{charliteral}{'+'}:}
+\DoxyCodeLine{254             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a9108d631d79d040b0634d924ecddf65f}{TPLUS}};}
+\DoxyCodeLine{255         \textcolor{keywordflow}{case} \textcolor{charliteral}{'-\/'}:}
+\DoxyCodeLine{256             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a40a9113c885ef2de24d8242ee97238d8}{TMINUS}};}
+\DoxyCodeLine{257         \textcolor{keywordflow}{case} \textcolor{charliteral}{'*'}:}
+\DoxyCodeLine{258             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a76b814f2784fb1774481f493a4e55595}{TSTAR}};}
+\DoxyCodeLine{259         \textcolor{keywordflow}{case} \textcolor{charliteral}{'='}:}
+\DoxyCodeLine{260             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a18685de97327b3513d4de0064ecb774c}{TEQUAL}};}
+\DoxyCodeLine{261         \textcolor{keywordflow}{case} \textcolor{charliteral}{'<'}:}
+\DoxyCodeLine{262             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'>'}) \{}
+\DoxyCodeLine{263                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{264                 \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a6ed54a7abafb49f7691316c55d730d82}{TNOTEQ}};}
+\DoxyCodeLine{265             \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'='}) \{}
+\DoxyCodeLine{266                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{267                 \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_ab0596a1a9284d7d39d6b8bc7937277bd}{TLEEQ}};}
+\DoxyCodeLine{268             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{269                 \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a67a34c39a001f103807d669fb19b5e30}{TLE}};}
+\DoxyCodeLine{270             \}}
+\DoxyCodeLine{271         \textcolor{keywordflow}{case} \textcolor{charliteral}{'>'}:}
+\DoxyCodeLine{272             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'='}) \{}
+\DoxyCodeLine{273                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{274                 \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a4ad13b1272846f0f5bb71f6e28a3325e}{TGREQ}};}
+\DoxyCodeLine{275             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{276                 \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_ad067baa3ae681ad89af81cbb7f8c890f}{TGR}};}
+\DoxyCodeLine{277             \}}
+\DoxyCodeLine{278         \textcolor{keywordflow}{case} \textcolor{charliteral}{'('}:}
+\DoxyCodeLine{279             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a805d5b7f830594bb6573b75816702b19}{TLPAREN}};}
+\DoxyCodeLine{280         \textcolor{keywordflow}{case} \textcolor{charliteral}{')'}:}
+\DoxyCodeLine{281             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_af510e0a7788db114f472b3334086ca96}{TRPAREN}};}
+\DoxyCodeLine{282         \textcolor{keywordflow}{case} \textcolor{charliteral}{'['}:}
+\DoxyCodeLine{283             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a8722f39cea05089fe4dae97fd0ca4d2d}{TLSQPAREN}};}
+\DoxyCodeLine{284         \textcolor{keywordflow}{case} \textcolor{charliteral}{']'}:}
+\DoxyCodeLine{285             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a736ace65d557e68d033dc9031a70d26c}{TRSQPAREN}};}
+\DoxyCodeLine{286         \textcolor{keywordflow}{case} \textcolor{charliteral}{':'}:}
+\DoxyCodeLine{287             \textcolor{keywordflow}{if} (\mbox{\hyperlink{scan_8c_a28751990f192d6b9868362a00585bf09}{current\_char}} == \textcolor{charliteral}{'='}) \{}
+\DoxyCodeLine{288                 \mbox{\hyperlink{scan_8c_a61855ff2af426bc6ac454733a9e61ff6}{look\_ahead}}();}
+\DoxyCodeLine{289                 \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a4cd029f714fbeecc372074748f45c820}{TASSIGN}};}
+\DoxyCodeLine{290             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{291                 \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a9c4ec8dc05d1d5ffbdcc6409f24e3e9f}{TCOLON}};}
+\DoxyCodeLine{292             \}}
+\DoxyCodeLine{293         \textcolor{keywordflow}{case} \textcolor{charliteral}{'.'}:}
+\DoxyCodeLine{294             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a13f4e13c35f3493e46350f3067387b45}{TDOT}};}
+\DoxyCodeLine{295         \textcolor{keywordflow}{case} \textcolor{charliteral}{','}:}
+\DoxyCodeLine{296             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_a0bf844aff463b9e407d9d241f262e90c}{TCOMMA}};}
+\DoxyCodeLine{297         \textcolor{keywordflow}{case} \textcolor{charliteral}{';'}:}
+\DoxyCodeLine{298             \textcolor{keywordflow}{return} \mbox{\hyperlink{token-list_8h_aa7af0a619c5ca9bc710c02b4c5920693}{TSEMI}};}
+\DoxyCodeLine{299         \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{300             \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{301     \}}
+\DoxyCodeLine{302 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=269pt]{scan_8c_a24e391d80789ff75d7ad4fea534c546d_cgraph}
+\end{center}
+\end{figure}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=312pt]{scan_8c_a24e391d80789ff75d7ad4fea534c546d_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_a85dcfcc32e9fe688779321e7da354360}\label{scan_8c_a85dcfcc32e9fe688779321e7da354360}} 
+\index{scan.c@{scan.c}!set\_token\_linenum@{set\_token\_linenum}}
+\index{set\_token\_linenum@{set\_token\_linenum}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{set\_token\_linenum()}{set\_token\_linenum()}}
+{\footnotesize\ttfamily void set\+\_\+token\+\_\+linenum (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set the line number of the last token scanned 
+
+
+
+ scan.\+c の 115 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{115                              \{}
+\DoxyCodeLine{116     \mbox{\hyperlink{scan_8c_a1c69be99e6fd2304a4df484f1c36f66c}{token\_linenum}} = \mbox{\hyperlink{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}{linenum}};}
+\DoxyCodeLine{117 \}}
+
+\end{DoxyCode}
+被呼び出し関係図\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=341pt]{scan_8c_a85dcfcc32e9fe688779321e7da354360_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{scan_8c_a016837b84f7630bff1cfbb43d248f03d}\label{scan_8c_a016837b84f7630bff1cfbb43d248f03d}} 
+\index{scan.c@{scan.c}!string\_attr\_push\_back@{string\_attr\_push\_back}}
+\index{string\_attr\_push\_back@{string\_attr\_push\_back}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{string\_attr\_push\_back()}{string\_attr\_push\_back()}}
+{\footnotesize\ttfamily static int string\+\_\+attr\+\_\+push\+\_\+back (\begin{DoxyParamCaption}\item[{const char}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Adding characters to the end of a scanned string 
+
+
+\begin{DoxyParams}[1]{引数}
+\mbox{\texttt{ in}}  & {\em c} & Characters to add \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{戻り値}
+int Returns 0 on success and -\/1 on failure. 
+\end{DoxyReturn}
+
+
+ scan.\+c の 326 行目に定義があります。
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{326                                                \{}
+\DoxyCodeLine{327     \textcolor{keywordtype}{int} len = strlen(\mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}});}
+\DoxyCodeLine{328     \textcolor{keywordflow}{if} (len < \mbox{\hyperlink{token-list_8h_a292d5c171f84f8dc52595a241448472f}{MAXSTRSIZE}} -\/ 1) \{}
+\DoxyCodeLine{329         \mbox{\hyperlink{scan_8c_a7e60d396ac326ffee075db726173a53f}{string\_attr}}[len] = c;}
+\DoxyCodeLine{330         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{331     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{332         \textcolor{comment}{/* Buffer Overflow */}}
+\DoxyCodeLine{333         \mbox{\hyperlink{token-list_8c_a053efa4d38ff9ceb3feadf2f0f084a28}{error}}(\textcolor{stringliteral}{"{}string\_attr: Buffer Overflow."{}});}
+\DoxyCodeLine{334         \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{335     \}}
+\DoxyCodeLine{336 \}}
+
+\end{DoxyCode}
+呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=280pt]{scan_8c_a016837b84f7630bff1cfbb43d248f03d_cgraph}
+\end{center}
+\end{figure}
+被呼び出し関係図\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{scan_8c_a016837b84f7630bff1cfbb43d248f03d_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{変数詳解}
+\mbox{\Hypertarget{scan_8c_a28751990f192d6b9868362a00585bf09}\label{scan_8c_a28751990f192d6b9868362a00585bf09}} 
+\index{scan.c@{scan.c}!current\_char@{current\_char}}
+\index{current\_char@{current\_char}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{current\_char}{current\_char}}
+{\footnotesize\ttfamily int current\+\_\+char\hspace{0.3cm}{\ttfamily [static]}}
+
+The letters you just loaded. 
+
+ scan.\+c の 18 行目に定義があります。
+
+\mbox{\Hypertarget{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}\label{scan_8c_aa065f30aa9f5f9a42132c82c787ee70b}} 
+\index{scan.c@{scan.c}!fp@{fp}}
+\index{fp@{fp}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{fp}{fp}}
+{\footnotesize\ttfamily F\+I\+LE$\ast$ fp}
+
+File pointer of the loaded file 
+
+ scan.\+c の 9 行目に定義があります。
+
+\mbox{\Hypertarget{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}\label{scan_8c_a696967e9c7408f4d9d8624ad6bd675f3}} 
+\index{scan.c@{scan.c}!linenum@{linenum}}
+\index{linenum@{linenum}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{linenum}{linenum}}
+{\footnotesize\ttfamily int linenum = 1\hspace{0.3cm}{\ttfamily [static]}}
+
+Line number of the character you just loaded 
+
+ scan.\+c の 24 行目に定義があります。
+
+\mbox{\Hypertarget{scan_8c_a36240b8e24f41cbb824cf351769f4c57}\label{scan_8c_a36240b8e24f41cbb824cf351769f4c57}} 
+\index{scan.c@{scan.c}!next\_char@{next\_char}}
+\index{next\_char@{next\_char}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{next\_char}{next\_char}}
+{\footnotesize\ttfamily int next\+\_\+char = \textquotesingle{}\textbackslash{}0\textquotesingle{}\hspace{0.3cm}{\ttfamily [static]}}
+
+look-\/ahead character 
+
+ scan.\+c の 20 行目に定義があります。
+
+\mbox{\Hypertarget{scan_8c_adc80dd58d415b6dafd9f71cc35f9a392}\label{scan_8c_adc80dd58d415b6dafd9f71cc35f9a392}} 
+\index{scan.c@{scan.c}!num\_attr@{num\_attr}}
+\index{num\_attr@{num\_attr}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{num\_attr}{num\_attr}}
+{\footnotesize\ttfamily int num\+\_\+attr = 0}
+
+Scanned unsigned integer 
+
+ scan.\+c の 11 行目に定義があります。
+
+\mbox{\Hypertarget{scan_8c_a7e60d396ac326ffee075db726173a53f}\label{scan_8c_a7e60d396ac326ffee075db726173a53f}} 
+\index{scan.c@{scan.c}!string\_attr@{string\_attr}}
+\index{string\_attr@{string\_attr}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{string\_attr}{string\_attr}}
+{\footnotesize\ttfamily char string\+\_\+attr\mbox{[}\mbox{\hyperlink{token-list_8h_a292d5c171f84f8dc52595a241448472f}{M\+A\+X\+S\+T\+R\+S\+I\+ZE}}\mbox{]}}
+
+Scanned string ~\newline
+ 
+
+ scan.\+c の 13 行目に定義があります。
+
+\mbox{\Hypertarget{scan_8c_a1c69be99e6fd2304a4df484f1c36f66c}\label{scan_8c_a1c69be99e6fd2304a4df484f1c36f66c}} 
+\index{scan.c@{scan.c}!token\_linenum@{token\_linenum}}
+\index{token\_linenum@{token\_linenum}!scan.c@{scan.c}}
+\doxysubsubsection{\texorpdfstring{token\_linenum}{token\_linenum}}
+{\footnotesize\ttfamily int token\+\_\+linenum = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+The line number of the last token scanned 
+
+ scan.\+c の 26 行目に定義があります。
+
