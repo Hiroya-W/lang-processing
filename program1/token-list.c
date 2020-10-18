@@ -67,10 +67,15 @@ int main(int nc, char *np[]) {
     }
 
     memset(numtoken, 0, sizeof(numtoken));
+    init_idtab();
 
     while ((token = scan()) >= 0) {
         /* Count the tokens */
         numtoken[token]++;
+        /* Count by name */
+        if (token == TNAME) {
+            id_countup(string_attr);
+        }
     }
 
     if (end_scan() < 0) {
@@ -82,7 +87,11 @@ int main(int nc, char *np[]) {
         if (numtoken[index] > 0) {
             fprintf(stdout, "%10s: %5d\n", tokenstr[index], numtoken[index]);
         }
+        if (index == TNAME) {
+            print_idtab();
+        }
     }
+    release_idtab();
 
     return 0;
 }

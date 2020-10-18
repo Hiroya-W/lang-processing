@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 /* Source Files */
+#include "id-list.c"
 #include "scan.c"
 #include "token-list.c"
 #include "token-list.h"
