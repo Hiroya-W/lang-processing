@@ -139,4 +139,8 @@ extern int init_scan(char *filename);
 extern int scan(void);
 extern int get_linenum(void);
 extern int end_scan(void);
+
+/* pretty-printer.c */
+extern int token;
+extern int parse_program(void);
 #endif

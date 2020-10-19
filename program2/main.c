@@ -1,8 +1,5 @@
 ﻿#include "pretty-printer.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
 /*! list of keywords */
 struct KEY key[KEYWORDSIZE] = {
     {"and", TAND},
@@ -34,9 +31,6 @@ struct KEY key[KEYWORDSIZE] = {
     {"write", TWRITE},
     {"writeln", TWRITELN}};
 
-/*! Token counter  */
-int numtoken[NUMOFTOKEN + 1];
-
 /*! String of each token */
 char *tokenstr[NUMOFTOKEN + 1] = {
     "", "NAME", "program", "var", "array", "of", "begin",
@@ -48,6 +42,8 @@ char *tokenstr[NUMOFTOKEN + 1] = {
     ":=", ".", ",", ":", ";", "read", "write",
     "break"};
 
+int token;
+
 /*!
  * @brief main function
  * @param[in] nc The number of arguments
@@ -55,8 +51,7 @@ char *tokenstr[NUMOFTOKEN + 1] = {
  * @return int Returns 0 on success and 1 on failure.
  */
 int main(int nc, char *np[]) {
-    int token, index;
-
+    int ret;
     if (nc < 2) {
         error("function main()");
         fprintf(stderr, "File name id not given.\n");
@@ -67,26 +62,17 @@ int main(int nc, char *np[]) {
         return EXIT_FAILURE;
     }
 
-    memset(numtoken, 0, sizeof(numtoken));
-
-    while ((token = scan()) >= 0) {
-        /* Count the tokens */
-        numtoken[token]++;
-    }
+    token = scan();
+    ret = parse_program();
 
     if (end_scan() < 0) {
         error("function main()");
         fprintf(stderr, "File %s can not close.\n", np[1]);
         return EXIT_FAILURE;
     }
-    /* Output the results of the count. */
-    for (index = 0; index < NUMOFTOKEN + 1; index++) {
-        if (numtoken[index] > 0) {
-            fprintf(stdout, "%10s: %5d\n", tokenstr[index], numtoken[index]);
-        }
-    }
+    /* TODO:Output the results. */
 
-    return 0;
+    return ret;
 }
 
 /*!
