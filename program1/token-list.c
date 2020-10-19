@@ -58,6 +58,7 @@ int main(int nc, char *np[]) {
     int token, index;
 
     if (nc < 2) {
+        error("function main()");
         fprintf(stderr, "File name id not given.\n");
         return EXIT_FAILURE;
     }
@@ -79,6 +80,7 @@ int main(int nc, char *np[]) {
     }
 
     if (end_scan() < 0) {
+        error("function main()");
         fprintf(stderr, "File %s can not close.\n", np[1]);
         return EXIT_FAILURE;
     }
