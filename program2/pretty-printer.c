@@ -18,6 +18,8 @@ static int parse_variable_declaration(void);
 static int parse_variable_names(void);
 static int parse_compound_statement(void);
 static int parse_type(void);
+static int parse_standard_type(void);
+static int parse_array_type(void);
 static int parse_subprogram_declaration(void);
 
 /*!
@@ -107,6 +109,7 @@ static int parse_variable_declaration(void) {
         }
         fprintf(stdout, "%s ", tokenstr[token]);
 
+        token = scan();
         if (parse_type() == ERROR) {
             return ERROR;
         }
@@ -138,14 +141,92 @@ static int parse_variable_names(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a compound_statement
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_compound_statement(void) {
     return error("Unimplemented");
 }
 
+/*!
+ * @brief Parsing a type
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_type(void) {
-    return error("Unimplemented");
+    if (token == TINTEGER || token == TBOOLEAN || token == TCHAR) {
+        if (parse_standard_type() == ERROR) {
+            return ERROR;
+        }
+    } else if (token == TARRAY) {
+        if (parse_array_type() == ERROR) {
+            return ERROR;
+        }
+    } else {
+        return error("Type is not found.");
+    }
+    return NORMAL;
 }
 
+/*!
+ * @brief Parsing a standard type
+ * @return int Returns 0 on success and 1 on failure.
+ */
+static int parse_standard_type(void) {
+    if (token != TINTEGER && token != TBOOLEAN && token != TCHAR) {
+        return error("Standard type is not found.");
+    }
+    fprintf(stdout, "%s", tokenstr[token]);
+    token = scan();
+
+    return NORMAL;
+}
+
+/*!
+ * @brief Parsing a array type
+ * @return int Returns 0 on success and 1 on failure.
+ */
+static int parse_array_type(void) {
+    if (token != TARRAY) {
+        return error("Keyword 'array' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+
+    token = scan();
+    if (token != TLSQPAREN) {
+        return error("Symbol '[' is not found.");
+    }
+    fprintf(stdout, "%s", tokenstr[token]);
+
+    token = scan();
+    if (token != TNUMBER) {
+        return error("Number is not found.");
+    }
+    fprintf(stdout, "%s", string_attr);
+
+    token = scan();
+    if (token != TRSQPAREN) {
+        return error("Symbol ']' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+
+    token = scan();
+    if (token != TOF) {
+        return error("Keyword 'of' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+
+    token = scan();
+    if (parse_standard_type() == ERROR) {
+        return ERROR;
+    }
+    return NORMAL;
+}
+
+/*!
+ * @brief Parsing a subprogram declaration
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_subprogram_declaration(void) {
     return error("Unimplemented");
 }
