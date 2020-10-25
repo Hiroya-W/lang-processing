@@ -31,21 +31,21 @@ int parse_program(void) {
         return error("Keyword 'program' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
-
     token = scan();
+
     if (token != TNAME) {
         return error("Program name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
-
     token = scan();
+
     if (token != TSEMI) {
         return error("Semicolon is not found.");
     }
     fprintf(stdout, "%s", tokenstr[token]);
     fprintf(stdout, "\n");
-
     token = scan();
+
     if (parse_block() == ERROR) {
         return ERROR;
     }
@@ -54,8 +54,8 @@ int parse_program(void) {
         return error("Period is not found at the end of program.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
-
     token = scan();
+
     return NORMAL;
 }
 
@@ -91,8 +91,8 @@ static int parse_variable_declaration(void) {
         return error("Keyword 'var' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
-
     token = scan();
+
     while (token == TNAME) {
         if (is_the_first_line == 0) {
             is_the_first_line = 1;
@@ -108,8 +108,8 @@ static int parse_variable_declaration(void) {
             return error("Colon is not found.");
         }
         fprintf(stdout, "%s ", tokenstr[token]);
-
         token = scan();
+
         if (parse_type() == ERROR) {
             return ERROR;
         }
@@ -126,12 +126,12 @@ static int parse_variable_names(void) {
         return error("Name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
-
     token = scan();
+
     while (token == TCOMMA) {
         fprintf(stdout, "%s ", tokenstr[token]);
-
         token = scan();
+
         if (token != TNAME) {
             return error("Name is not found.");
         }
@@ -191,32 +191,32 @@ static int parse_array_type(void) {
         return error("Keyword 'array' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
-
     token = scan();
+
     if (token != TLSQPAREN) {
         return error("Symbol '[' is not found.");
     }
     fprintf(stdout, "%s", tokenstr[token]);
-
     token = scan();
+
     if (token != TNUMBER) {
         return error("Number is not found.");
     }
     fprintf(stdout, "%s", string_attr);
-
     token = scan();
+
     if (token != TRSQPAREN) {
         return error("Symbol ']' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
-
     token = scan();
+
     if (token != TOF) {
         return error("Keyword 'of' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
-
     token = scan();
+
     if (parse_standard_type() == ERROR) {
         return ERROR;
     }
