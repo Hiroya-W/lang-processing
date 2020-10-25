@@ -1,7 +1,10 @@
 #include "pretty-printer.h"
 
-int block();
-int hukugoubun();
+static int block(void);
+static int variable_declaration(void);
+static int variable_names(void);
+static int hukugoubun(void);
+static int type(void);
 
 /*!
  * @brief Parsing a program
@@ -9,28 +12,56 @@ int hukugoubun();
  */
 int parse_program(void) {
     if (token != TPROGRAM) {
-        error("Keyword 'program' is not found.");
-        return ERROR;
+        return error("Keyword 'program' is not found.");
     }
     token = scan();
     if (token != TNAME) {
-        error("Program name is not found.");
-        return ERROR;
+        return error("Program name is not found.");
     }
     token = scan();
     if (token != TSEMI) {
-        error("Semicolon is not found.");
-        return ERROR;
+        return error("Semicolon is not found.");
     }
     token = scan();
     if (block() == ERROR) {
         return ERROR;
     }
     if (token != TDOT) {
-        error("Period is not found at the end of program.");
-        return ERROR;
+        return error("Period is not found at the end of program.");
     }
     token = scan();
+    return NORMAL;
+}
+
+/*!
+ * @brief Parsing a variable declaration
+ * @return int Returns 0 on success and 1 on failure.
+ */
+static int variable_declaration(void) {
+    int is_the_first_line = 0;
+    if (token != TVAR) {
+        return error("Keyword 'var' is not found.");
+    }
+
+    token = scan();
+    while (token == TNAME) {
+        if (is_the_first_line == 0) {
+            is_the_first_line = 1;
+        } else {
+            /* insert tab */
+        }
+
+        if (variable_names() == ERROR) {
+            return ERROR;
+        }
+        token = scan();
+        if (token != TCOLON) {
+            return error("Colon is not found.");
+        }
+        if (type() == ERROR) {
+            return ERROR;
+        }
+    }
     return NORMAL;
 }
 
@@ -38,7 +69,7 @@ int parse_program(void) {
  * @brief Parsing a block
  * @return int Returns 0 on success and 1 on failure.
  */
-int block(void) {
+static int block(void) {
     /* 
      * variable declaration : TVAR
      * subprogram declaration : TPROCEDURE
@@ -46,6 +77,9 @@ int block(void) {
      */
     while (token == TVAR || token == TPROCEDURE) {
         if (token == TVAR) {
+            if (variable_declaration() == ERROR) {
+                return ERROR;
+            }
         } else {
         }
     }
