@@ -113,6 +113,12 @@ static int parse_variable_declaration(void) {
         if (parse_type() == ERROR) {
             return ERROR;
         }
+
+        if (token != TSEMI) {
+            return error("Symbol ';' is not found.");
+        }
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
     }
     return NORMAL;
 }
