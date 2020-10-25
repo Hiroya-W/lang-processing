@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define ERROR -1
+#define NORMAL 0
+
 /*! maximum length of a string */
 #define MAXSTRSIZE 1024
 
