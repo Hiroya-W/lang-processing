@@ -34,6 +34,25 @@ int parse_program(void) {
 }
 
 /*!
+ * @brief Parsing a block
+ * @return int Returns 0 on success and 1 on failure.
+ */
+static int parse_block(void) {
+    while (token == TVAR || token == TPROCEDURE) {
+        if (token == TVAR) {
+            if (parse_variable_declaration() == ERROR) {
+                return ERROR;
+            }
+        } else {
+        }
+    }
+    if (parse_compound_statement() == ERROR) {
+        return ERROR;
+    }
+    return NORMAL;
+}
+
+/*!
  * @brief Parsing a variable declaration
  * @return int Returns 0 on success and 1 on failure.
  */
@@ -66,26 +85,21 @@ static int parse_variable_declaration(void) {
 }
 
 /*!
- * @brief Parsing a block
+ * @brief Parsing a variable names
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_block(void) {
-    while (token == TVAR || token == TPROCEDURE) {
-        if (token == TVAR) {
-            if (parse_variable_declaration() == ERROR) {
-                return ERROR;
-            }
-        } else {
+static int parse_variable_names(void) {
+    if (token != TNAME) {
+        return error("Name is not found.");
+    }
+    token = scan();
+    while (token == TCOMMA) {
+        token = scan();
+        if (token != TNAME) {
+            return error("Name is not found.");
         }
     }
-    if (parse_compound_statement() == ERROR) {
-        return ERROR;
-    }
     return NORMAL;
-}
-
-static int parse_variable_names(void) {
-    return ERROR;
 }
 static int parse_compound_statement(void) {
     return ERROR;
