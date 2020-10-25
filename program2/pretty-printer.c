@@ -70,11 +70,6 @@ static int parse_variable_declaration(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_block(void) {
-    /* 
-     * variable declaration : TVAR
-     * subprogram declaration : TPROCEDURE
-     * composite statement : TBEGIN
-     */
     while (token == TVAR || token == TPROCEDURE) {
         if (token == TVAR) {
             if (parse_variable_declaration() == ERROR) {
