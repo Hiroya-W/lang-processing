@@ -1,4 +1,6 @@
-﻿#include "pretty-printer.h"
+﻿#include <stdio.h>
+
+#include "pretty-printer.h"
 
 /*! list of keywords */
 struct KEY key[KEYWORDSIZE] = {
@@ -31,19 +33,9 @@ struct KEY key[KEYWORDSIZE] = {
     {"write", TWRITE},
     {"writeln", TWRITELN}};
 
-/*! String of each token */
-char *tokenstr[NUMOFTOKEN + 1] = {
-    "", "NAME", "program", "var", "array", "of", "begin",
-    "end", "if", "then", "else", "procedure", "return", "call",
-    "while", "do", "not", "or", "div", "and", "char",
-    "integer", "boolean", "readln", "writeln", "true", "false", "NUMBER",
-    "STRING", "+", "-", "*", "=", "<>", "<",
-    "<=", ">", ">=", "(", ")", "[", "]",
-    ":=", ".", ",", ":", ";", "read", "write",
-    "break"};
-
 /*! the scanned token */
 int token;
+static char *file_name;
 
 /*!
  * @brief main function
@@ -58,8 +50,11 @@ int main(int nc, char *np[]) {
         fprintf(stderr, "File name id not given.\n");
         return EXIT_FAILURE;
     }
-    if (init_scan(np[1]) < 0) {
-        fprintf(stderr, "File %s can not open.\n", np[1]);
+
+    file_name = np[1];
+
+    if (init_scan(file_name) < 0) {
+        fprintf(stderr, "File %s can not open.\n", file_name);
         return EXIT_FAILURE;
     }
 
@@ -68,11 +63,12 @@ int main(int nc, char *np[]) {
 
     if (end_scan() < 0) {
         error("function main()");
-        fprintf(stderr, "File %s can not close.\n", np[1]);
+        fprintf(stderr, "File %s can not close.\n", file_name);
         return EXIT_FAILURE;
     }
     /* TODO:Output the results. */
 
+    fflush(stdout);
     return ret;
 }
 
@@ -82,6 +78,8 @@ int main(int nc, char *np[]) {
  * @return Return -1 as an error.
  */
 int error(char *mes) {
-    fprintf(stderr, "\n ERROR: %s\n", mes);
+    fprintf(stdout, "\n");
+    fprintf(stderr, "--- %s:%d\n", file_name, get_linenum());
+    fprintf(stderr, " |- ERROR: %s\n", mes);
     return ERROR;
 }
