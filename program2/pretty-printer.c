@@ -1,10 +1,10 @@
 #include "pretty-printer.h"
 
-static int block(void);
-static int variable_declaration(void);
-static int variable_names(void);
-static int hukugoubun(void);
-static int type(void);
+static int parse_block(void);
+static int parse_variable_declaration(void);
+static int parse_variable_names(void);
+static int parse_compound_statement(void);
+static int parse_type(void);
 
 /*!
  * @brief Parsing a program
@@ -23,7 +23,7 @@ int parse_program(void) {
         return error("Semicolon is not found.");
     }
     token = scan();
-    if (block() == ERROR) {
+    if (parse_block() == ERROR) {
         return ERROR;
     }
     if (token != TDOT) {
@@ -37,7 +37,7 @@ int parse_program(void) {
  * @brief Parsing a variable declaration
  * @return int Returns 0 on success and 1 on failure.
  */
-static int variable_declaration(void) {
+static int parse_variable_declaration(void) {
     int is_the_first_line = 0;
     if (token != TVAR) {
         return error("Keyword 'var' is not found.");
@@ -51,14 +51,14 @@ static int variable_declaration(void) {
             /* insert tab */
         }
 
-        if (variable_names() == ERROR) {
+        if (parse_variable_names() == ERROR) {
             return ERROR;
         }
         token = scan();
         if (token != TCOLON) {
             return error("Colon is not found.");
         }
-        if (type() == ERROR) {
+        if (parse_type() == ERROR) {
             return ERROR;
         }
     }
@@ -69,7 +69,7 @@ static int variable_declaration(void) {
  * @brief Parsing a block
  * @return int Returns 0 on success and 1 on failure.
  */
-static int block(void) {
+static int parse_block(void) {
     /* 
      * variable declaration : TVAR
      * subprogram declaration : TPROCEDURE
@@ -77,14 +77,24 @@ static int block(void) {
      */
     while (token == TVAR || token == TPROCEDURE) {
         if (token == TVAR) {
-            if (variable_declaration() == ERROR) {
+            if (parse_variable_declaration() == ERROR) {
                 return ERROR;
             }
         } else {
         }
     }
-    if (hukugoubun() == ERROR) {
+    if (parse_compound_statement() == ERROR) {
         return ERROR;
     }
     return NORMAL;
+}
+
+static int parse_variable_names(void) {
+    return ERROR;
+}
+static int parse_compound_statement(void) {
+    return ERROR;
+}
+static int parse_type(void) {
+    return ERROR;
 }
