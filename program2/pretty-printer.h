@@ -132,7 +132,7 @@ extern struct KEY {
     int keytoken;  /*! token codes for keywords */
 } key[KEYWORDSIZE];
 
-extern void error(char *mes);
+extern int error(char *mes);
 
 /* scan.c */
 extern FILE *fp;

@@ -42,6 +42,7 @@ char *tokenstr[NUMOFTOKEN + 1] = {
     ":=", ".", ",", ":", ";", "read", "write",
     "break"};
 
+/*! the scanned token */
 int token;
 
 /*!
@@ -78,7 +79,9 @@ int main(int nc, char *np[]) {
 /*!
  * @brief display an error message
  * @param[in] mes Error message
+ * @return Return -1 as an error.
  */
-void error(char *mes) {
+int error(char *mes) {
     fprintf(stderr, "\n ERROR: %s\n", mes);
+    return ERROR;
 }
