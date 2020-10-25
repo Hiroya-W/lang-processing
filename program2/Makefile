@@ -1,5 +1,5 @@
 CC := gcc
-OBJS := main.o scan.o
+OBJS := main.o scan.o pretty-printer.o
 SRC := main.c scan.c
 CFLAGS := -ansi -fno-common -W -Wall -g 
 
