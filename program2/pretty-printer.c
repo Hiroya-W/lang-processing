@@ -132,6 +132,7 @@ static int parse_variable_declaration(void) {
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
+    fprintf(stdout, "\n");
     return NORMAL;
 }
 
@@ -251,6 +252,7 @@ static int parse_compound_statement(void) {
     }
     fprintf(stdout, "%s", tokenstr[token]);
     fprintf(stdout, "\n");
+    token = scan();
     /* paragraph */
 
     if (parse_statement() == ERROR) {
@@ -346,5 +348,27 @@ static int parse_statement(void) {
 }
 
 static int parse_assignment_statement(void) {
+    return error("Unimplemented");
+}
+
+static int parse_condition_statement(void) {
+    return error("Unimplemented");
+}
+static int parse_iteration_statement(void) {
+    return error("Unimplemented");
+}
+static int parse_exit_statement(void) {
+    return error("Unimplemented");
+}
+static int parse_call_statement(void) {
+    return error("Unimplemented");
+}
+static int parse_return_statement(void) {
+    return error("Unimplemented");
+}
+static int parse_input_statement(void) {
+    return error("Unimplemented");
+}
+static int parse_output_statement(void) {
     return error("Unimplemented");
 }
