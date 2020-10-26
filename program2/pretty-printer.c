@@ -31,6 +31,7 @@ static int parse_call_statement(void);
 static int parse_return_statement(void);
 static int parse_input_statement(void);
 static int parse_output_statement(void);
+static int parse_output_format(void);
 
 /*!
  * @brief Parsing a program
@@ -370,5 +371,38 @@ static int parse_input_statement(void) {
     return error("Unimplemented");
 }
 static int parse_output_statement(void) {
+    if (token != TWRITE && token != TWRITELN) {
+        return error("Keyword 'write' or 'writeln' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (token == TLPAREN) {
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+
+        if (parse_output_format() == ERROR) {
+            return ERROR;
+        }
+
+        while (token == TCOMMA) {
+            fprintf(stdout, "%s ", tokenstr[token]);
+            token = scan();
+
+            if (parse_output_format() == ERROR) {
+                return ERROR;
+            }
+        }
+
+        if (token != TRPAREN) {
+            return error("Symbol ')' is not found.");
+        }
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+    }
+    return NORMAL;
+}
+
+static int parse_output_format(void) {
     return error("Unimplemented");
 }
