@@ -373,7 +373,35 @@ static int parse_assignment_statement(void) {
 }
 
 static int parse_condition_statement(void) {
-    return error("Unimplemented");
+    if (token != TIF) {
+        return error("Keyword 'if' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (parse_expression() == ERROR) {
+        return ERROR;
+    }
+
+    if (token != TTHEN) {
+        return error("Keyword 'then' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (parse_statement() == ERROR) {
+        return ERROR;
+    }
+
+    if (token == TELSE) {
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+
+        if (parse_statement() == ERROR) {
+            return ERROR;
+        }
+    }
+    return NORMAL;
 }
 static int parse_iteration_statement(void) {
     if (token != TWHILE) {
