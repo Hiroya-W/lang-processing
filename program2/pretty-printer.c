@@ -27,9 +27,7 @@ static int parse_statement(void);
 static int parse_assignment_statement(void);
 static int parse_condition_statement(void);
 static int parse_iteration_statement(void);
-static int parse_exit_statement(void);
 static int parse_call_statement(void);
-static int parse_return_statement(void);
 
 static int parse_variable(void);
 
@@ -314,9 +312,8 @@ static int parse_statement(void) {
             }
             break;
         case TBREAK:
-            if (parse_exit_statement() == ERROR) {
-                return ERROR;
-            }
+            fprintf(stdout, "%s ", tokenstr[token]);
+            token = scan();
             break;
         case TCALL:
             if (parse_call_statement() == ERROR) {
@@ -324,9 +321,8 @@ static int parse_statement(void) {
             }
             break;
         case TRETURN:
-            if (parse_return_statement() == ERROR) {
-                return ERROR;
-            }
+            fprintf(stdout, "%s ", tokenstr[token]);
+            token = scan();
             break;
         case TREAD:
             /* FALLTHROUGH */
@@ -426,13 +422,7 @@ static int parse_iteration_statement(void) {
     }
     return NORMAL;
 }
-static int parse_exit_statement(void) {
-    return error("Unimplemented");
-}
 static int parse_call_statement(void) {
-    return error("Unimplemented");
-}
-static int parse_return_statement(void) {
     return error("Unimplemented");
 }
 
