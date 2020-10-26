@@ -23,6 +23,14 @@ static int parse_array_type(void);
 static int parse_subprogram_declaration(void);
 static int parse_compound_statement(void);
 static int parse_statement(void);
+static int parse_assignment_statement(void);
+static int parse_condition_statement(void);
+static int parse_iteration_statement(void);
+static int parse_exit_statement(void);
+static int parse_call_statement(void);
+static int parse_return_statement(void);
+static int parse_input_statement(void);
+static int parse_output_statement(void);
 
 /*!
  * @brief Parsing a program
@@ -274,5 +282,69 @@ static int parse_compound_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_statement(void) {
+    switch (token) {
+        case TNAME:
+            if (parse_assignment_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TIF:
+            if (parse_condition_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TWHILE:
+            if (parse_iteration_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TBREAK:
+            if (parse_exit_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TCALL:
+            if (parse_call_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TRETURN:
+            if (parse_return_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TREAD:
+            if (parse_input_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TREADLN:
+            if (parse_input_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TWRITE:
+            if (parse_output_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TWRITELN:
+            if (parse_output_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TBEGIN:
+            if (parse_compound_statement() == ERROR) {
+                return ERROR;
+            }
+            break;
+        default:
+            break;
+    }
+
+    return NORMAL;
+}
+
+static int parse_assignment_statement(void) {
     return error("Unimplemented");
 }
