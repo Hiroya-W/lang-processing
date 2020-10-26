@@ -22,6 +22,8 @@ static int parse_type(void);
 static int parse_standard_type(void);
 static int parse_array_type(void);
 static int parse_subprogram_declaration(void);
+static int parse_procedure_name(void);
+static int parse_formal_parameters(void);
 
 static int parse_statement(void);
 static int parse_assignment_statement(void);
@@ -251,14 +253,111 @@ static int parse_array_type(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_subprogram_declaration(void) {
-    return error("Unimplemented");
+    if (token != TPROCEDURE) {
+        return error("Keyword 'procedure' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (parse_procedure_name() == ERROR) {
+        return ERROR;
+    }
+
+    if (token == TLPAREN && parse_formal_parameters() == ERROR) {
+        return ERROR;
+    }
+
+    if (token != TSEMI) {
+        return error("Symbol ';' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (token == TVAR) {
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+
+        if (parse_variable_declaration() == ERROR) {
+            return ERROR;
+        }
+    }
+
+    if (parse_compound_statement() == ERROR) {
+        return ERROR;
+    }
+
+    if (token != TSEMI) {
+        return error("Symbol ';' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    return NORMAL;
+}
+
+static int parse_procedure_name(void) {
+    if (token != TNAME) {
+        return error("Procedure name is not found.");
+    }
+    fprintf(stdout, "%s ", string_attr);
+    token = scan();
+
+    return NORMAL;
+}
+
+static int parse_formal_parameters(void) {
+    if (token != TLPAREN) {
+        return error("Symbol '(' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (parse_variable_names() == ERROR) {
+        return ERROR;
+    }
+
+    if (token != TCOLON) {
+        return error("Symbol ':' is not found.");
+    }
+
+    if (parse_type() == ERROR) {
+        return ERROR;
+    }
+
+    while (token == TSEMI) {
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+
+        if (parse_variable_names() == ERROR) {
+            return ERROR;
+        }
+
+        if (token != TCOLON) {
+            return error("Symbol ':' is not found.");
+        }
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+
+        if (parse_type() == ERROR) {
+            return ERROR;
+        }
+    }
+
+    if (token != TRPAREN) {
+        return error("Sybmol ')' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    return NORMAL;
 }
 
 /*!
  * @brief Parsing a compound_statement
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_compound_statement(void) {
+static int
+parse_compound_statement(void) {
     if (token != TBEGIN) {
         return error("Keyword 'begin' is not found.");
     }
@@ -430,8 +529,8 @@ static int parse_call_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if (token != TNAME) {
-        return error("Procedure name is not found.");
+    if (parse_procedure_name() == ERROR) {
+        return ERROR;
     }
     fprintf(stdout, "%s ", string_attr);
     token = scan();
