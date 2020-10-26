@@ -43,6 +43,7 @@ static int parse_simple_expression(void);
 static int is_relational_operator(int token);
 static int parse_term(void);
 static int parse_factor(void);
+static int parse_constant(void);
 
 /*!
  * @brief Parsing a program
@@ -585,5 +586,92 @@ static int parse_term(void) {
 }
 
 static int parse_factor(void) {
-    return error("factor Unimplemented");
+    switch (token) {
+        case TNAME:
+            if (parse_variable() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TNUMBER:
+            /* FALLTHROUGH */
+        case TFALSE:
+            /* FALLTHROUGH */
+        case TTRUE:
+            /* FALLTHROUGH */
+        case TSTRING:
+            if (parse_constant() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TLPAREN:
+            fprintf(stdout, "%s ", tokenstr[token]);
+            token = scan();
+
+            if (parse_expression() == ERROR) {
+                return ERROR;
+            }
+
+            if (token != TRPAREN) {
+                return error("Symbol ')' is not found.");
+            }
+            fprintf(stdout, "%s ", tokenstr[token]);
+            token = scan();
+            break;
+        case TNOT:
+            fprintf(stdout, "%s ", tokenstr[token]);
+            token = scan();
+
+            if (parse_factor() == ERROR) {
+                return ERROR;
+            }
+            break;
+        case TINTEGER:
+            /* FALLTHROUGH */
+        case TBOOLEAN:
+            /* FALLTHROUGH */
+        case TCHAR:
+            if (parse_standard_type() == ERROR) {
+                return ERROR;
+            }
+
+            if (token != TLPAREN) {
+                return error("Symbol '(' is not found");
+            }
+            fprintf(stdout, "%s ", tokenstr[token]);
+            token = scan();
+
+            if (parse_expression() == ERROR) {
+                return ERROR;
+            }
+
+            if (token != TRSQPAREN) {
+                return error("Symbol ')' is not found.");
+            }
+            fprintf(stdout, "%s ", tokenstr[token]);
+            token = scan();
+            break;
+        default:
+            return error("Factor is not found.");
+    }
+    return NORMAL;
+}
+
+static int parse_constant(void) {
+    switch (token) {
+        case TNUMBER:
+            fprintf(stdout, "%s ", string_attr);
+            break;
+        case TFALSE:
+            /* FALLTHROUGH */
+        case TTRUE:
+            fprintf(stdout, "%s ", tokenstr[token]);
+            break;
+        case TSTRING:
+            fprintf(stdout, "'%s' ", string_attr);
+            break;
+        default:
+            return error("Constant is not found.");
+    }
+    token = scan();
+    return NORMAL;
 }
