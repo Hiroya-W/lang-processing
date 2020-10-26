@@ -1,6 +1,7 @@
 #include "pretty-printer.h"
 
 #include <stdio.h>
+#include <string.h>
 
 /*! String of each token */
 char *tokenstr[NUMOFTOKEN + 1] = {
@@ -21,7 +22,7 @@ static int parse_type(void);
 static int parse_standard_type(void);
 static int parse_array_type(void);
 static int parse_subprogram_declaration(void);
-static int parse_compound_statement(void);
+
 static int parse_statement(void);
 static int parse_assignment_statement(void);
 static int parse_condition_statement(void);
@@ -32,6 +33,9 @@ static int parse_return_statement(void);
 static int parse_input_statement(void);
 static int parse_output_statement(void);
 static int parse_output_format(void);
+static int parse_compound_statement(void);
+
+static int parse_expression(void);
 
 /*!
  * @brief Parsing a program
@@ -317,20 +321,14 @@ static int parse_statement(void) {
             }
             break;
         case TREAD:
-            if (parse_input_statement() == ERROR) {
-                return ERROR;
-            }
-            break;
+            /* FALLTHROUGH */
         case TREADLN:
             if (parse_input_statement() == ERROR) {
                 return ERROR;
             }
             break;
         case TWRITE:
-            if (parse_output_statement() == ERROR) {
-                return ERROR;
-            }
-            break;
+            /* FALLTHROUGH */
         case TWRITELN:
             if (parse_output_statement() == ERROR) {
                 return ERROR;
@@ -374,11 +372,11 @@ static int parse_output_statement(void) {
     if (token != TWRITE && token != TWRITELN) {
         return error("Keyword 'write' or 'writeln' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     if (token == TLPAREN) {
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
         if (parse_output_format() == ERROR) {
@@ -397,12 +395,62 @@ static int parse_output_statement(void) {
         if (token != TRPAREN) {
             return error("Symbol ')' is not found.");
         }
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
     return NORMAL;
 }
 
 static int parse_output_format(void) {
+    if (token == TSTRING && strlen(string_attr) > 1) {
+        fprintf(stdout, "'%s'", string_attr);
+        token = scan();
+        return NORMAL;
+    }
+
+    switch (token) {
+        case TPLUS:
+            /* FALLTHROUGH */
+        case TMINUS:
+            /* FALLTHROUGH */
+        case TNAME:
+            /* FALLTHROUGH */
+        case TNUMBER:
+            /* FALLTHROUGH */
+        case TFALSE:
+            /* FALLTHROUGH */
+        case TTRUE:
+            /* FALLTHROUGH */
+        case TLPAREN:
+            /* FALLTHROUGH */
+        case TNOT:
+            /* FALLTHROUGH */
+        case TINTEGER:
+            /* FALLTHROUGH */
+        case TBOOLEAN:
+            /* FALLTHROUGH */
+        case TCHAR:
+            if (parse_expression() == ERROR) {
+                return ERROR;
+            }
+
+            if (token == TCOLON) {
+                fprintf(stdout, "%s ", tokenstr[token]);
+                token = scan();
+
+                if (token != TNUMBER) {
+                    return error("Number is not found.");
+                }
+                fprintf(stdout, "%s ", string_attr);
+                token = scan();
+            }
+            break;
+        default:
+            return error("Output format is not found.");
+    }
+    return NORMAL;
+}
+
+static int parse_expression(void) {
     return error("Unimplemented");
 }
