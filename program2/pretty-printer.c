@@ -39,6 +39,9 @@ static int parse_output_format(void);
 static int parse_compound_statement(void);
 
 static int parse_expression(void);
+static int parse_simple_expression(void);
+static int is_relational_operator(int token);
+static int parse_term(void);
 
 /*!
  * @brief Parsing a program
@@ -509,5 +512,61 @@ static int parse_output_format(void) {
 }
 
 static int parse_expression(void) {
-    return error("Unimplemented");
+    if (parse_simple_expression() == ERROR) {
+        return ERROR;
+    }
+
+    while (is_relational_operator(token)) {
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
+
+        if (parse_simple_expression() == ERROR) {
+            return ERROR;
+        }
+    }
+
+    return NORMAL;
+}
+
+static int is_relational_operator(int _token) {
+    switch (_token) {
+        case TEQUAL:
+            /* FALLTHROUGH */
+        case TNOTEQ:
+            /* FALLTHROUGH */
+        case TLE:
+            /* FALLTHROUGH */
+        case TLEEQ:
+            /* FALLTHROUGH */
+        case TGR:
+            /* FALLTHROUGH */
+        case TGREQ:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+static int parse_simple_expression(void) {
+    if (token == TPLUS || token == TMINUS) {
+        fprintf(stdout, "%s ", tokenstr[token]);
+    }
+
+    if (parse_term() == ERROR) {
+        return ERROR;
+    }
+
+    while (token == TPLUS || token == TMINUS || token == TOR) {
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
+
+        if (parse_term() == ERROR) {
+            return ERROR;
+        }
+    }
+    return NORMAL;
+}
+
+static int parse_term(void) {
+    return error("term Unimplemented");
 }
