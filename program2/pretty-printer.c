@@ -30,6 +30,9 @@ static int parse_iteration_statement(void);
 static int parse_exit_statement(void);
 static int parse_call_statement(void);
 static int parse_return_statement(void);
+
+static int parse_variable(void);
+
 static int parse_input_statement(void);
 static int parse_output_statement(void);
 static int parse_output_format(void);
@@ -365,8 +368,48 @@ static int parse_call_statement(void) {
 static int parse_return_statement(void) {
     return error("Unimplemented");
 }
+
+static int parse_variable(void) {
+    if (token != TNAME) {
+        return error("Name is not found.");
+    }
+    fprintf(stdout, "%s", string_attr);
+    token = scan();
+
+    return NORMAL;
+}
+
 static int parse_input_statement(void) {
-    return error("Unimplemented");
+    if (token != TREAD && token != TREADLN) {
+        return error("Keyword 'read' or 'readln' is not found.");
+    }
+    fprintf(stdout, "%s", tokenstr[token]);
+    token = scan();
+
+    if (token == TLPAREN) {
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
+
+        if (parse_variable() == ERROR) {
+            return ERROR;
+        }
+
+        while (token == TCOMMA) {
+            fprintf(stdout, "%s", tokenstr[token]);
+            token = scan();
+
+            if (parse_variable() == ERROR) {
+                return ERROR;
+            }
+        }
+        if (token != TRPAREN) {
+            return error("Sybmol ')' is not found.");
+        }
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
+    }
+
+    return NORMAL;
 }
 static int parse_output_statement(void) {
     if (token != TWRITE && token != TWRITELN) {
