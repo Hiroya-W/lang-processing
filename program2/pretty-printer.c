@@ -21,6 +21,8 @@ static int parse_type(void);
 static int parse_standard_type(void);
 static int parse_array_type(void);
 static int parse_subprogram_declaration(void);
+static int parse_compound_statement(void);
+static int parse_statement(void);
 
 /*!
  * @brief Parsing a program
@@ -66,10 +68,12 @@ int parse_program(void) {
 static int parse_block(void) {
     while (token == TVAR || token == TPROCEDURE) {
         if (token == TVAR) {
+            /* paragraph */
             if (parse_variable_declaration() == ERROR) {
                 return ERROR;
             }
         } else {
+            /* paragraph */
             if (parse_subprogram_declaration() == ERROR) {
                 return ERROR;
             }
@@ -145,14 +149,6 @@ static int parse_variable_names(void) {
         token = scan();
     }
     return NORMAL;
-}
-
-/*!
- * @brief Parsing a compound_statement
- * @return int Returns 0 on success and 1 on failure.
- */
-static int parse_compound_statement(void) {
-    return error("Unimplemented");
 }
 
 /*!
@@ -234,5 +230,49 @@ static int parse_array_type(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_subprogram_declaration(void) {
+    return error("Unimplemented");
+}
+
+/*!
+ * @brief Parsing a compound_statement
+ * @return int Returns 0 on success and 1 on failure.
+ */
+static int parse_compound_statement(void) {
+    if (token != TBEGIN) {
+        return error("Keyword 'begin' is not found.");
+    }
+    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "\n");
+    /* paragraph */
+
+    if (parse_statement() == ERROR) {
+        return ERROR;
+    }
+
+    while (token == TSEMI) {
+        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "\n");
+        token = scan();
+
+        if (parse_statement() == ERROR) {
+            return ERROR;
+        }
+    }
+
+    if (token != TEND) {
+        return error("Keyword 'end' is not found.");
+    }
+    fprintf(stdout, "\n");
+    fprintf(stdout, "%s", tokenstr[token]);
+    token = scan();
+
+    return NORMAL;
+}
+
+/*!
+ * @brief Parsing a subprogram declaration
+ * @return int Returns 0 on success and 1 on failure.
+ */
+static int parse_statement(void) {
     return error("Unimplemented");
 }
