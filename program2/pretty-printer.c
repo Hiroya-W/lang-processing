@@ -42,6 +42,7 @@ static int is_relational_operator(int token);
 static int parse_term(void);
 static int parse_factor(void);
 static int parse_constant(void);
+static int parse_expressions(void);
 
 /*!
  * @brief Parsing a program
@@ -423,7 +424,49 @@ static int parse_iteration_statement(void) {
     return NORMAL;
 }
 static int parse_call_statement(void) {
-    return error("Unimplemented");
+    if (token != TCALL) {
+        return error("Keyword 'call' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (token != TNAME) {
+        return error("Procedure name is not found.");
+    }
+    fprintf(stdout, "%s ", string_attr);
+    token = scan();
+
+    if (token == TLPAREN) {
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+
+        if (parse_expressions() == ERROR) {
+            return ERROR;
+        }
+
+        if (token != TRPAREN) {
+            return error("Symbol ')' is not found.");
+        }
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+    }
+
+    return NORMAL;
+}
+
+static int parse_expressions(void) {
+    if (parse_expression() == ERROR) {
+        return ERROR;
+    }
+
+    while (token == TCOMMA) {
+        fprintf(stdout, "%s ", tokenstr[token]);
+
+        if (parse_expression() == ERROR) {
+            return ERROR;
+        }
+    }
+    return NORMAL;
 }
 
 static int parse_variable(void) {
