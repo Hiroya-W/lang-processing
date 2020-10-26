@@ -350,7 +350,21 @@ static int parse_statement(void) {
 }
 
 static int parse_assignment_statement(void) {
-    return error("Unimplemented");
+    if (parse_variable() == ERROR) {
+        return ERROR;
+    }
+
+    if (token != TASSIGN) {
+        return error("Symbol ':=' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (parse_expression() == ERROR) {
+        return ERROR;
+    }
+
+    return NORMAL;
 }
 
 static int parse_condition_statement(void) {
@@ -373,7 +387,7 @@ static int parse_variable(void) {
     if (token != TNAME) {
         return error("Name is not found.");
     }
-    fprintf(stdout, "%s", string_attr);
+    fprintf(stdout, "%s ", string_attr);
     token = scan();
 
     return NORMAL;
