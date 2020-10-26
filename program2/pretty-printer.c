@@ -376,7 +376,27 @@ static int parse_condition_statement(void) {
     return error("Unimplemented");
 }
 static int parse_iteration_statement(void) {
-    return error("Unimplemented");
+    if (token != TWHILE) {
+        return error("Keyword 'while' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
+
+    if (parse_expression() == ERROR) {
+        return ERROR;
+    }
+
+    if (token != TDO) {
+        return error("Keyword 'do' is not found.");
+    }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "\n");
+    token = scan();
+
+    if (parse_statement() == ERROR) {
+        return ERROR;
+    }
+    return NORMAL;
 }
 static int parse_exit_statement(void) {
     return error("Unimplemented");
