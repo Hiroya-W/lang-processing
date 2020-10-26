@@ -42,6 +42,7 @@ static int parse_expression(void);
 static int parse_simple_expression(void);
 static int is_relational_operator(int token);
 static int parse_term(void);
+static int parse_factor(void);
 
 /*!
  * @brief Parsing a program
@@ -568,5 +569,21 @@ static int parse_simple_expression(void) {
 }
 
 static int parse_term(void) {
-    return error("term Unimplemented");
+    if (parse_factor() == ERROR) {
+        return ERROR;
+    }
+
+    while (token == TSTAR || token == TDIV || token == TAND) {
+        fprintf(stdout, "%s ", tokenstr[token]);
+        token = scan();
+
+        if (parse_factor() == ERROR) {
+            return ERROR;
+        }
+    }
+    return NORMAL;
+}
+
+static int parse_factor(void) {
+    return error("factor Unimplemented");
 }
