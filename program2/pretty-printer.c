@@ -144,6 +144,7 @@ static int parse_variable_declaration(void) {
             return error("Symbol ';' is not found.");
         }
         fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "\n");
         token = scan();
     }
     fprintf(stdout, "\n");
@@ -271,6 +272,7 @@ static int parse_subprogram_declaration(void) {
         return error("Symbol ';' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "\n");
     token = scan();
 
     if (token == TVAR) {
@@ -290,6 +292,7 @@ static int parse_subprogram_declaration(void) {
         return error("Symbol ';' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "\n");
     token = scan();
 
     return NORMAL;
@@ -326,6 +329,7 @@ static int parse_formal_parameters(void) {
 
     while (token == TSEMI) {
         fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "\n");
         token = scan();
 
         if (parse_variable_names() == ERROR) {
@@ -356,8 +360,7 @@ static int parse_formal_parameters(void) {
  * @brief Parsing a compound_statement
  * @return int Returns 0 on success and 1 on failure.
  */
-static int
-parse_compound_statement(void) {
+static int parse_compound_statement(void) {
     if (token != TBEGIN) {
         return error("Keyword 'begin' is not found.");
     }
