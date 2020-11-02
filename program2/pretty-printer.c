@@ -532,8 +532,8 @@ static int parse_call_statement(void) {
     if (parse_procedure_name() == ERROR) {
         return ERROR;
     }
-    fprintf(stdout, "%s ", string_attr);
-    token = scan();
+    /* fprintf(stdout, "%s ", string_attr); */
+    /* token = scan(); */
 
     if (token == TLPAREN) {
         fprintf(stdout, "%s ", tokenstr[token]);
