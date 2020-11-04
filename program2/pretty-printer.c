@@ -493,6 +493,7 @@ static int parse_condition_statement(void) {
     }
 
     if (token == TELSE) {
+        fprintf(stdout, "\n");
         fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
