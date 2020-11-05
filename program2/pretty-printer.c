@@ -322,6 +322,8 @@ static int parse_formal_parameters(void) {
     if (token != TCOLON) {
         return error("Symbol ':' is not found.");
     }
+    fprintf(stdout, "%s ", tokenstr[token]);
+    token = scan();
 
     if (parse_type() == ERROR) {
         return ERROR;
