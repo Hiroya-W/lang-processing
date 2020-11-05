@@ -828,7 +828,7 @@ static int parse_factor(void) {
                 return ERROR;
             }
 
-            if (token != TRSQPAREN) {
+            if (token != TRPAREN) {
                 return error("Symbol ')' is not found.");
             }
             fprintf(stdout, "%s ", tokenstr[token]);
