@@ -46,6 +46,11 @@ static int parse_factor(void);
 static int parse_constant(void);
 static int parse_expressions(void);
 
+static void insert_indent(void);
+
+static int exists_empty_statement = 0;
+static int indent_level = 0;
+
 /*!
  * @brief Parsing a program
  * @return int Returns 0 on success and 1 on failure.
@@ -112,18 +117,22 @@ static int parse_block(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_variable_declaration(void) {
-    int is_the_first_line = 0;
+    int is_the_first_line = 1;
     if (token != TVAR) {
         return error("Keyword 'var' is not found.");
     }
+
+    indent_level++;
+    insert_indent();
     fprintf(stdout, "%s ", tokenstr[token]);
+
     token = scan();
 
     while (token == TNAME) {
         if (is_the_first_line == 0) {
-            is_the_first_line = 1;
-        } else {
             /* insert tab */
+            indent_level++;
+            insert_indent();
         }
 
         if (parse_variable_names() == ERROR) {
@@ -146,8 +155,14 @@ static int parse_variable_declaration(void) {
         fprintf(stdout, "%s", tokenstr[token]);
         fprintf(stdout, "\n");
         token = scan();
+
+        if (is_the_first_line == 1) {
+            is_the_first_line = 0;
+        } else {
+            indent_level--;
+        }
     }
-    fprintf(stdout, "\n");
+    indent_level--;
     return NORMAL;
 }
 
@@ -257,7 +272,11 @@ static int parse_subprogram_declaration(void) {
     if (token != TPROCEDURE) {
         return error("Keyword 'procedure' is not found.");
     }
+
+    indent_level++;
+    insert_indent();
     fprintf(stdout, "%s ", tokenstr[token]);
+
     token = scan();
 
     if (parse_procedure_name() == ERROR) {
@@ -291,6 +310,7 @@ static int parse_subprogram_declaration(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
+    indent_level--;
 
     return NORMAL;
 }
@@ -363,10 +383,14 @@ static int parse_compound_statement(void) {
     if (token != TBEGIN) {
         return error("Keyword 'begin' is not found.");
     }
+    fprintf(stdout, "\r");
+    insert_indent();
     fprintf(stdout, "%s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
-    /* paragraph */
+
+    indent_level++;
+    insert_indent();
 
     if (parse_statement() == ERROR) {
         return ERROR;
@@ -377,6 +401,8 @@ static int parse_compound_statement(void) {
         fprintf(stdout, "\n");
         token = scan();
 
+        insert_indent();
+
         if (parse_statement() == ERROR) {
             return ERROR;
         }
@@ -385,7 +411,16 @@ static int parse_compound_statement(void) {
     if (token != TEND) {
         return error("Keyword 'end' is not found.");
     }
-    fprintf(stdout, "\n");
+
+    if (exists_empty_statement) {
+        fprintf(stdout, "\r"); /* "\r": Return to the top of the line */
+        exists_empty_statement = 0;
+    } else {
+        fprintf(stdout, "\n");
+    }
+    indent_level--;
+
+    insert_indent();
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
@@ -446,6 +481,9 @@ static int parse_statement(void) {
             }
             break;
         default:
+            /* There is no error here. */
+            /* empty statement */
+            exists_empty_statement = 1;
             break;
     }
 
@@ -485,7 +523,11 @@ static int parse_condition_statement(void) {
         return error("Keyword 'then' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "\n");
     token = scan();
+
+    indent_level++;
+    insert_indent();
 
     if (parse_statement() == ERROR) {
         return ERROR;
@@ -493,13 +535,22 @@ static int parse_condition_statement(void) {
 
     if (token == TELSE) {
         fprintf(stdout, "\n");
+        indent_level--;
+
+        insert_indent();
         fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "\n");
+
         token = scan();
 
+        indent_level++;
+        insert_indent();
         if (parse_statement() == ERROR) {
             return ERROR;
         }
     }
+
+    indent_level--;
     return NORMAL;
 }
 static int parse_iteration_statement(void) {
@@ -705,7 +756,7 @@ static int parse_expression(void) {
     }
 
     while (is_relational_operator(token)) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
         if (parse_simple_expression() == ERROR) {
@@ -746,7 +797,7 @@ static int parse_simple_expression(void) {
     }
 
     while (token == TPLUS || token == TMINUS || token == TOR) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
         if (parse_term() == ERROR) {
@@ -861,4 +912,12 @@ static int parse_constant(void) {
     }
     token = scan();
     return NORMAL;
+}
+
+static void insert_indent(void) {
+    int i;
+    for (i = 0; i < indent_level; i++) {
+        fprintf(stdout, "    ");
+    }
+    return;
 }
