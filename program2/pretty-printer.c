@@ -82,7 +82,7 @@ int parse_program(void) {
     if (token != TDOT) {
         return error("Period is not found at the end of program.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "\b%s", tokenstr[token]);
     token = scan();
 
     return NORMAL;
