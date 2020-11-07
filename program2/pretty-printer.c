@@ -178,7 +178,7 @@ static int parse_variable_names(void) {
     token = scan();
 
     while (token == TCOMMA) {
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "\b%s ", tokenstr[token]);
         token = scan();
 
         if (token != TNAME) {
@@ -329,7 +329,7 @@ static int parse_formal_parameters(void) {
     if (token != TLPAREN) {
         return error("Symbol '(' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "\b%s", tokenstr[token]);
     token = scan();
 
     if (parse_variable_names() == ERROR) {
@@ -369,7 +369,7 @@ static int parse_formal_parameters(void) {
     if (token != TRPAREN) {
         return error("Sybmol ')' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "\b%s ", tokenstr[token]);
     token = scan();
 
     return NORMAL;
