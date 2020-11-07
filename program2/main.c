@@ -66,7 +66,6 @@ int main(int nc, char *np[]) {
         fprintf(stderr, "File %s can not close.\n", file_name);
         return EXIT_FAILURE;
     }
-    /* TODO:Output the results. */
 
     fflush(stdout);
     return ret;
