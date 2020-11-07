@@ -669,11 +669,11 @@ static int parse_output_statement(void) {
     if (token != TWRITE && token != TWRITELN) {
         return error("Keyword 'write' or 'writeln' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if (token == TLPAREN) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "\b%s", tokenstr[token]);
         token = scan();
 
         if (parse_output_format() == ERROR) {
