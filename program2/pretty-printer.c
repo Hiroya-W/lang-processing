@@ -122,7 +122,6 @@ static int parse_variable_declaration(void) {
         return error("Keyword 'var' is not found.");
     }
 
-    indent_level++;
     insert_indent();
     fprintf(stdout, "%s ", tokenstr[token]);
 
@@ -162,7 +161,6 @@ static int parse_variable_declaration(void) {
             indent_level--;
         }
     }
-    indent_level--;
     return NORMAL;
 }
 
