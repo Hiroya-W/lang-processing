@@ -842,7 +842,7 @@ static int parse_factor(void) {
             }
             break;
         case TLPAREN:
-            fprintf(stdout, "%s ", tokenstr[token]);
+            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
             if (parse_expression() == ERROR) {
@@ -852,7 +852,7 @@ static int parse_factor(void) {
             if (token != TRPAREN) {
                 return error("Symbol ')' is not found.");
             }
-            fprintf(stdout, "%s ", tokenstr[token]);
+            fprintf(stdout, "\b%s ", tokenstr[token]);
             token = scan();
             break;
         case TNOT:
@@ -875,7 +875,7 @@ static int parse_factor(void) {
             if (token != TLPAREN) {
                 return error("Symbol '(' is not found");
             }
-            fprintf(stdout, "%s ", tokenstr[token]);
+            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
             if (parse_expression() == ERROR) {
@@ -885,7 +885,7 @@ static int parse_factor(void) {
             if (token != TRPAREN) {
                 return error("Symbol ')' is not found.");
             }
-            fprintf(stdout, "%s ", tokenstr[token]);
+            fprintf(stdout, "\b%s ", tokenstr[token]);
             token = scan();
             break;
         default:
