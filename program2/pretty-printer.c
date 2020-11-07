@@ -152,7 +152,7 @@ static int parse_variable_declaration(void) {
         if (token != TSEMI) {
             return error("Symbol ';' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "\b%s", tokenstr[token]);
         fprintf(stdout, "\n");
         token = scan();
 
@@ -290,7 +290,7 @@ static int parse_subprogram_declaration(void) {
     if (token != TSEMI) {
         return error("Symbol ';' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "\b%s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
 
@@ -307,7 +307,7 @@ static int parse_subprogram_declaration(void) {
     if (token != TSEMI) {
         return error("Symbol ';' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "\b%s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
     indent_level--;
@@ -347,7 +347,7 @@ static int parse_formal_parameters(void) {
     }
 
     while (token == TSEMI) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "\b%s", tokenstr[token]);
         fprintf(stdout, "\n");
         token = scan();
 
@@ -397,7 +397,7 @@ static int parse_compound_statement(void) {
     }
 
     while (token == TSEMI) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "\b%s", tokenstr[token]);
         fprintf(stdout, "\n");
         token = scan();
 
