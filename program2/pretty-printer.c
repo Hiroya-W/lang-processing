@@ -231,19 +231,19 @@ static int parse_array_type(void) {
     if (token != TARRAY) {
         return error("Keyword 'array' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     if (token != TLSQPAREN) {
         return error("Symbol '[' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     if (token != TNUMBER) {
         return error("Number is not found.");
     }
-    fprintf(stdout, "%s ", string_attr);
+    fprintf(stdout, "%s", string_attr);
     token = scan();
 
     if (token != TRSQPAREN) {
