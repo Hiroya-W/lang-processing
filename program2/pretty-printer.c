@@ -533,24 +533,30 @@ static int parse_condition_statement(void) {
         return ERROR;
     }
 
+    indent_level--;
+
     if (token == TELSE) {
         fprintf(stdout, "\n");
-        indent_level--;
-
         insert_indent();
-        fprintf(stdout, "%s", tokenstr[token]);
-        fprintf(stdout, "\n");
 
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
-        indent_level++;
-        insert_indent();
-        if (parse_statement() == ERROR) {
-            return ERROR;
+        if (token != TIF) {
+            fprintf(stdout, "\b\n");
+            indent_level++;
+            insert_indent();
+            if (parse_statement() == ERROR) {
+                return ERROR;
+            }
+            indent_level--;
+        } else {
+            if (parse_statement() == ERROR) {
+                return ERROR;
+            }
         }
     }
 
-    indent_level--;
     return NORMAL;
 }
 static int parse_iteration_statement(void) {
