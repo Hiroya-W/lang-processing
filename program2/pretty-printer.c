@@ -174,7 +174,7 @@ static int parse_variable_names(void) {
     if (token != TNAME) {
         return error("Name is not found.");
     }
-    fprintf(stdout, "%s", string_attr);
+    fprintf(stdout, "%s ", string_attr);
     token = scan();
 
     while (token == TCOMMA) {
@@ -217,7 +217,7 @@ static int parse_standard_type(void) {
     if (token != TINTEGER && token != TBOOLEAN && token != TCHAR) {
         return error("Standard type is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     return NORMAL;
@@ -237,13 +237,13 @@ static int parse_array_type(void) {
     if (token != TLSQPAREN) {
         return error("Symbol '[' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if (token != TNUMBER) {
         return error("Number is not found.");
     }
-    fprintf(stdout, "%s", string_attr);
+    fprintf(stdout, "%s ", string_attr);
     token = scan();
 
     if (token != TRSQPAREN) {
@@ -290,7 +290,7 @@ static int parse_subprogram_declaration(void) {
     if (token != TSEMI) {
         return error("Symbol ';' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "%s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
 
@@ -307,7 +307,7 @@ static int parse_subprogram_declaration(void) {
     if (token != TSEMI) {
         return error("Symbol ';' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "%s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
     indent_level--;
@@ -347,7 +347,7 @@ static int parse_formal_parameters(void) {
     }
 
     while (token == TSEMI) {
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "%s", tokenstr[token]);
         fprintf(stdout, "\n");
         token = scan();
 
@@ -421,7 +421,7 @@ static int parse_compound_statement(void) {
     indent_level--;
 
     insert_indent();
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     return NORMAL;
@@ -522,7 +522,7 @@ static int parse_condition_statement(void) {
     if (token != TTHEN) {
         return error("Keyword 'then' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "%s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
 
@@ -538,7 +538,7 @@ static int parse_condition_statement(void) {
         indent_level--;
 
         insert_indent();
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "%s", tokenstr[token]);
         fprintf(stdout, "\n");
 
         token = scan();
@@ -567,7 +567,7 @@ static int parse_iteration_statement(void) {
     if (token != TDO) {
         return error("Keyword 'do' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
+    fprintf(stdout, "%s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
 
@@ -637,11 +637,11 @@ static int parse_input_statement(void) {
     if (token != TREAD && token != TREADLN) {
         return error("Keyword 'read' or 'readln' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if (token == TLPAREN) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
         if (parse_variable() == ERROR) {
@@ -649,7 +649,7 @@ static int parse_input_statement(void) {
         }
 
         while (token == TCOMMA) {
-            fprintf(stdout, "%s", tokenstr[token]);
+            fprintf(stdout, "%s ", tokenstr[token]);
             token = scan();
 
             if (parse_variable() == ERROR) {
@@ -659,7 +659,7 @@ static int parse_input_statement(void) {
         if (token != TRPAREN) {
             return error("Sybmol ')' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
     }
 
@@ -669,11 +669,11 @@ static int parse_output_statement(void) {
     if (token != TWRITE && token != TWRITELN) {
         return error("Keyword 'write' or 'writeln' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if (token == TLPAREN) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
         if (parse_output_format() == ERROR) {
@@ -692,7 +692,7 @@ static int parse_output_statement(void) {
         if (token != TRPAREN) {
             return error("Symbol ')' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
     }
     return NORMAL;
