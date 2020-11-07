@@ -670,6 +670,8 @@ static int parse_output_format(void) {
             /* FALLTHROUGH */
         case TTRUE:
             /* FALLTHROUGH */
+        case TSTRING:
+            /* FALLTHROUGH */
         case TLPAREN:
             /* FALLTHROUGH */
         case TNOT:
