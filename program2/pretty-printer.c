@@ -1,7 +1,4 @@
-#include "pretty-printer.h"
-
-#include <stdio.h>
-#include <string.h>
+#include "mppl_compiler.h"
 
 /*! String of each token */
 char *tokenstr[NUMOFTOKEN + 1] = {

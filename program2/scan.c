@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "pretty-printer.h"
+#include "mppl_compiler.h"
 
 /*! File pointer of the loaded file */
 FILE *fp;

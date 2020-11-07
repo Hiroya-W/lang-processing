@@ -7,7 +7,7 @@ all: main
 
 main: $(OBJS)
 
-$(OBJS): pretty-printer.h 
+$(OBJS): mppl_compiler.h 
 
 .PHONY: clean
 clean:
