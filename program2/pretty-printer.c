@@ -788,7 +788,7 @@ static int is_relational_operator(int _token) {
 
 static int parse_simple_expression(void) {
     if (token == TPLUS || token == TMINUS) {
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
 
