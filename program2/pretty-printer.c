@@ -641,7 +641,7 @@ static int parse_input_statement(void) {
     token = scan();
 
     if (token == TLPAREN) {
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "\b%s", tokenstr[token]);
         token = scan();
 
         if (parse_variable() == ERROR) {
@@ -649,7 +649,7 @@ static int parse_input_statement(void) {
         }
 
         while (token == TCOMMA) {
-            fprintf(stdout, "%s ", tokenstr[token]);
+            fprintf(stdout, "\b%s ", tokenstr[token]);
             token = scan();
 
             if (parse_variable() == ERROR) {
@@ -659,7 +659,7 @@ static int parse_input_statement(void) {
         if (token != TRPAREN) {
             return error("Sybmol ')' is not found.");
         }
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "\b%s ", tokenstr[token]);
         token = scan();
     }
 
