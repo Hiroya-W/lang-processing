@@ -3,7 +3,7 @@ OBJS := main.o scan.o pretty-printer.o
 SRC := main.c scan.c
 CFLAGS := -ansi -fno-common -W -Wall -g 
 
-all: clean main
+all: main
 
 main: $(OBJS)
 
