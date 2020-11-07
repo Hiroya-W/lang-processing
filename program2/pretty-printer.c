@@ -313,6 +313,10 @@ static int parse_subprogram_declaration(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a procedure name
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_procedure_name(void) {
     if (token != TNAME) {
         return error("Procedure name is not found.");
@@ -323,6 +327,10 @@ static int parse_procedure_name(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing formal parameters
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_formal_parameters(void) {
     if (token != TLPAREN) {
         return error("Symbol '(' is not found.");
@@ -426,7 +434,7 @@ static int parse_compound_statement(void) {
 }
 
 /*!
- * @brief Parsing a subprogram declaration
+ * @brief Parsing a statement
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_statement(void) {
@@ -488,6 +496,10 @@ static int parse_statement(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a assignment statement
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_assignment_statement(void) {
     if (parse_variable() == ERROR) {
         return ERROR;
@@ -506,6 +518,10 @@ static int parse_assignment_statement(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a condition statement
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_condition_statement(void) {
     if (token != TIF) {
         return error("Keyword 'if' is not found.");
@@ -557,6 +573,11 @@ static int parse_condition_statement(void) {
 
     return NORMAL;
 }
+
+/*!
+ * @brief Parsing a iteration statement
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_iteration_statement(void) {
     if (token != TWHILE) {
         return error("Keyword 'while' is not found.");
@@ -580,6 +601,11 @@ static int parse_iteration_statement(void) {
     }
     return NORMAL;
 }
+
+/*!
+ * @brief Parsing a call statement
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_call_statement(void) {
     if (token != TCALL) {
         return error("Keyword 'call' is not found.");
@@ -590,8 +616,6 @@ static int parse_call_statement(void) {
     if (parse_procedure_name() == ERROR) {
         return ERROR;
     }
-    /* fprintf(stdout, "%s ", string_attr); */
-    /* token = scan(); */
 
     if (token == TLPAREN) {
         fprintf(stdout, "\b%s", tokenstr[token]);
@@ -611,6 +635,10 @@ static int parse_call_statement(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing expressions
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_expressions(void) {
     if (parse_expression() == ERROR) {
         return ERROR;
@@ -627,6 +655,10 @@ static int parse_expressions(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a variable
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_variable(void) {
     if (token != TNAME) {
         return error("Name is not found.");
@@ -637,6 +669,10 @@ static int parse_variable(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a input statement
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_input_statement(void) {
     if (token != TREAD && token != TREADLN) {
         return error("Keyword 'read' or 'readln' is not found.");
@@ -669,6 +705,11 @@ static int parse_input_statement(void) {
 
     return NORMAL;
 }
+
+/*!
+ * @brief Parsing a output statement
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_output_statement(void) {
     if (token != TWRITE && token != TWRITELN) {
         return error("Keyword 'write' or 'writeln' is not found.");
@@ -702,6 +743,10 @@ static int parse_output_statement(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a output format
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_output_format(void) {
     if (token == TSTRING && strlen(string_attr) > 1) {
         fprintf(stdout, "'%s' ", string_attr);
@@ -754,6 +799,10 @@ static int parse_output_format(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a expression
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_expression(void) {
     if (parse_simple_expression() == ERROR) {
         return ERROR;
@@ -771,6 +820,11 @@ static int parse_expression(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Determine if a token is a relational operator or not.
+ * @param[in] _token Token to be determined
+ * @return int Returns 1 for a relational operator, 0 otherwise.
+ */
 static int is_relational_operator(int _token) {
     switch (_token) {
         case TEQUAL:
@@ -790,6 +844,10 @@ static int is_relational_operator(int _token) {
     }
 }
 
+/*!
+ * @brief Parsing a simple expression
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_simple_expression(void) {
     if (token == TPLUS || token == TMINUS) {
         fprintf(stdout, "%s", tokenstr[token]);
@@ -811,6 +869,10 @@ static int parse_simple_expression(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a term
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_term(void) {
     if (parse_factor() == ERROR) {
         return ERROR;
@@ -827,6 +889,10 @@ static int parse_term(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a factor
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_factor(void) {
     switch (token) {
         case TNAME:
@@ -898,6 +964,10 @@ static int parse_factor(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Parsing a constant
+ * @return int Returns 0 on success and 1 on failure.
+ */
 static int parse_constant(void) {
     switch (token) {
         case TNUMBER:
@@ -918,6 +988,9 @@ static int parse_constant(void) {
     return NORMAL;
 }
 
+/*!
+ * @brief Insert an indent
+ */
 static void insert_indent(void) {
     int i;
     for (i = 0; i < indent_level; i++) {
