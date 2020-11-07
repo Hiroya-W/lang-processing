@@ -276,9 +276,6 @@ static int parse_subprogram_declaration(void) {
     token = scan();
 
     if (token == TVAR) {
-        fprintf(stdout, "%s ", tokenstr[token]);
-        token = scan();
-
         if (parse_variable_declaration() == ERROR) {
             return ERROR;
         }
