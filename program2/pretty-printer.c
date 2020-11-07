@@ -48,7 +48,9 @@ static int parse_expressions(void);
 
 static void insert_indent(void);
 
+/*! When a blank line exists, it becomes 1. */
 static int exists_empty_statement = 0;
+/*! Indicates the current indent level. */
 static int indent_level = 0;
 
 /*!
