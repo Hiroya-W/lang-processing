@@ -590,7 +590,7 @@ static int parse_call_statement(void) {
     /* token = scan(); */
 
     if (token == TLPAREN) {
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "\b%s", tokenstr[token]);
         token = scan();
 
         if (parse_expressions() == ERROR) {
@@ -600,7 +600,7 @@ static int parse_call_statement(void) {
         if (token != TRPAREN) {
             return error("Symbol ')' is not found.");
         }
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "\b%s ", tokenstr[token]);
         token = scan();
     }
 
@@ -613,7 +613,7 @@ static int parse_expressions(void) {
     }
 
     while (token == TCOMMA) {
-        fprintf(stdout, "%s ", tokenstr[token]);
+        fprintf(stdout, "\b%s ", tokenstr[token]);
         token = scan();
 
         if (parse_expression() == ERROR) {
