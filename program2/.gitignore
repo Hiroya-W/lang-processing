@@ -10,6 +10,7 @@ test
 
 # output
 output.txt
+outputs/
 
 # documents
 docs/
