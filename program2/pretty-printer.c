@@ -354,6 +354,9 @@ static int parse_formal_parameters(void) {
     while (token == TSEMI) {
         fprintf(stdout, "\b%s", tokenstr[token]);
         fprintf(stdout, "\n");
+        indent_level++;
+        insert_indent();
+
         token = scan();
 
         if (parse_variable_names() == ERROR) {
@@ -369,6 +372,7 @@ static int parse_formal_parameters(void) {
         if (parse_type() == ERROR) {
             return ERROR;
         }
+        indent_level--;
     }
 
     if (token != TRPAREN) {
