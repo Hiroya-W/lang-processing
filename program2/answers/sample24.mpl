@@ -1,4 +1,4 @@
 program Write;
-begin
-    writeln ('It's OK?' ) 
-end .
+begin
+    writeln('It's OK?')
+end.

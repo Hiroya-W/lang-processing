@@ -1,24 +1,24 @@
 program TeaBreak;
-begin
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    writeln ('Say "BREAK!!" ' ) ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
-    break end .
+begin
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    writeln('Say "BREAK!!" ');
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    breakend.

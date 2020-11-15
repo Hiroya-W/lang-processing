@@ -1,4 +1,4 @@
 program Write;
-begin
-    ;
-    writeln ('It' 
+begin
+    ;
+    writeln('It'

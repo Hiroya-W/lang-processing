@@ -1,2 +1,2 @@
 program assignboolean;
-var x 
+var x

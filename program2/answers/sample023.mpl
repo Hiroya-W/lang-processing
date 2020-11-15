@@ -1,3 +1,3 @@
 program assignchar;
-var x , y : char ;
+var x, y : char;
 

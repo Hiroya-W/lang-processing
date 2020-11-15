@@ -1,7 +1,7 @@
 program ifst;
-var ch : char ;
-begin
-    readln (ch ) ;
+var ch : char;
+begin
+    readln(ch);
     if ch = 'a' then
-        writeln ('It is 'a' ' ) ;
+        writeln('It is 'a' ');
     
