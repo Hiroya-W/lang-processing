@@ -122,7 +122,7 @@ static int parse_variable_declaration(void) {
     }
 
     insert_indent();
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
 
     token = scan();
 
@@ -140,7 +140,7 @@ static int parse_variable_declaration(void) {
         if (token != TCOLON) {
             return error("Colon is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
         if (parse_type() == ERROR) {
@@ -175,7 +175,7 @@ static int parse_variable_names(void) {
     token = scan();
 
     while (token == TCOMMA) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
         if (token != TNAME) {
@@ -252,7 +252,7 @@ static int parse_array_type(void) {
     if (token != TOF) {
         return error("Keyword 'of' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
     if (parse_standard_type() == ERROR) {
@@ -272,7 +272,7 @@ static int parse_subprogram_declaration(void) {
 
     indent_level++;
     insert_indent();
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
 
     token = scan();
 
@@ -344,7 +344,7 @@ static int parse_formal_parameters(void) {
     if (token != TCOLON) {
         return error("Symbol ':' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
     if (parse_type() == ERROR) {
@@ -366,7 +366,7 @@ static int parse_formal_parameters(void) {
         if (token != TCOLON) {
             return error("Symbol ':' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
         if (parse_type() == ERROR) {
@@ -392,7 +392,7 @@ static int parse_compound_statement(void) {
     if (token != TBEGIN) {
         return error("Keyword 'begin' is not found.");
     }
-    fprintf(stdout, "\r");
+    /*fprintf(stdout, "\r"); */
     insert_indent();
     fprintf(stdout, "%s", tokenstr[token]);
     fprintf(stdout, "\n");
@@ -410,7 +410,9 @@ static int parse_compound_statement(void) {
         fprintf(stdout, "\n");
         token = scan();
 
-        insert_indent();
+        if (token != TEND) {
+            insert_indent();
+        }
 
         if (parse_statement() == ERROR) {
             return ERROR;
@@ -422,7 +424,7 @@ static int parse_compound_statement(void) {
     }
 
     if (exists_empty_statement) {
-        fprintf(stdout, "\r"); /* "\r": Return to the top of the line */
+        /* fprintf(stdout, "\r");  "\r": Return to the top of the line */
         exists_empty_statement = 0;
     } else {
         fprintf(stdout, "\n");
@@ -511,7 +513,7 @@ static int parse_assignment_statement(void) {
     if (token != TASSIGN) {
         return error("Symbol ':=' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
     if (parse_expression() == ERROR) {
@@ -529,7 +531,7 @@ static int parse_condition_statement(void) {
     if (token != TIF) {
         return error("Keyword 'if' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if (parse_expression() == ERROR) {
@@ -539,12 +541,15 @@ static int parse_condition_statement(void) {
     if (token != TTHEN) {
         return error("Keyword 'then' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, " %s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
 
     indent_level++;
-    insert_indent();
+
+    if (token != TBEGIN) {
+        insert_indent();
+    }
 
     if (parse_statement() == ERROR) {
         return ERROR;
@@ -562,12 +567,15 @@ static int parse_condition_statement(void) {
         if (token != TIF) {
             fprintf(stdout, "\n");
             indent_level++;
-            insert_indent();
+            if (token != TBEGIN) {
+                insert_indent();
+            }
             if (parse_statement() == ERROR) {
                 return ERROR;
             }
             indent_level--;
         } else {
+            fprintf(stdout, " ");
             if (parse_statement() == ERROR) {
                 return ERROR;
             }
@@ -585,7 +593,7 @@ static int parse_iteration_statement(void) {
     if (token != TWHILE) {
         return error("Keyword 'while' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if (parse_expression() == ERROR) {
@@ -595,7 +603,7 @@ static int parse_iteration_statement(void) {
     if (token != TDO) {
         return error("Keyword 'do' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, " %s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
 
@@ -613,7 +621,7 @@ static int parse_call_statement(void) {
     if (token != TCALL) {
         return error("Keyword 'call' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
+    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if (parse_procedure_name() == ERROR) {
@@ -648,7 +656,7 @@ static int parse_expressions(void) {
     }
 
     while (token == TCOMMA) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
         if (parse_expression() == ERROR) {
@@ -729,7 +737,7 @@ static int parse_output_statement(void) {
         }
 
         while (token == TCOMMA) {
-            fprintf(stdout, "%s", tokenstr[token]);
+            fprintf(stdout, "%s ", tokenstr[token]);
             token = scan();
 
             if (parse_output_format() == ERROR) {
@@ -786,7 +794,7 @@ static int parse_output_format(void) {
             }
 
             if (token == TCOLON) {
-                fprintf(stdout, "%s", tokenstr[token]);
+                fprintf(stdout, " %s ", tokenstr[token]);
                 token = scan();
 
                 if (token != TNUMBER) {
@@ -812,7 +820,7 @@ static int parse_expression(void) {
     }
 
     while (is_relational_operator(token)) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
         if (parse_simple_expression() == ERROR) {
@@ -862,7 +870,7 @@ static int parse_simple_expression(void) {
     }
 
     while (token == TPLUS || token == TMINUS || token == TOR) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
         if (parse_term() == ERROR) {
@@ -882,7 +890,7 @@ static int parse_term(void) {
     }
 
     while (token == TSTAR || token == TDIV || token == TAND) {
-        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
         if (parse_factor() == ERROR) {
