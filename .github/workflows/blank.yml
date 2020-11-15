@@ -31,8 +31,9 @@ jobs:
         run: |
             cd program1
             make check
-      - name: CUnit Test = Program2
+      - name: CUnit Test - Program2
         run: |
             cd $GITHUB_WORKSPACE
             cd program2
+            make 
             make check
