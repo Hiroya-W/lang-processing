@@ -28,10 +28,11 @@ jobs:
             sudo apt install -y libcunit1-dev
 
       - name: CUnit Test - Program1
-        working-directory: ./program1
         run: |
+            cd program1
             make check
       - name: CUnit Test = Program2
         run: |
-        working-directory: ./program2
+            cd $GITHUB_WORKSPACE
+            cd program2
             make check
