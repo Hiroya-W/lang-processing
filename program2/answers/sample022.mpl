@@ -1,0 +1,2 @@
+program assignboolean;
+var x
