@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "CUnit/Console.h"
 #include "mppl_compiler.h"
 /* Source Files */
 #include "main.c"
@@ -44,6 +45,7 @@ int main() {
     CU_add_test(suite, "integration_test_parse_output_format", integration_test_parse_output_format);
 
     CU_basic_run_tests();
+    /* CU_console_run_tests(); */
 
     int ret = CU_get_number_of_failures();
 
