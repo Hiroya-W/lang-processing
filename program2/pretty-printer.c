@@ -1,3 +1,5 @@
+#include <CUnit/CUError.h>
+
 #include "mppl_compiler.h"
 
 /*! String of each token */
@@ -49,6 +51,8 @@ static void insert_indent(void);
 static int exists_empty_statement = 0;
 /*! Indicates the current indent level. */
 static int indent_level = 0;
+/*! Indicates a nesting level of while statement */
+static int while_statement_level = 0;
 
 /*!
  * @brief Parsing a program
@@ -460,6 +464,10 @@ static int parse_statement(void) {
             }
             break;
         case TBREAK:
+            if (while_statement_level == 0) {
+                error("Keyword 'break' is written outside of a while statement.");
+                return ERROR;
+            }
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
             break;
@@ -593,6 +601,7 @@ static int parse_iteration_statement(void) {
     if (token != TWHILE) {
         return error("Keyword 'while' is not found.");
     }
+    while_statement_level++;
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
@@ -610,6 +619,7 @@ static int parse_iteration_statement(void) {
     if (parse_statement() == ERROR) {
         return ERROR;
     }
+    while_statement_level--;
     return NORMAL;
 }
 
