@@ -1,5 +1,3 @@
-#include <CUnit/CUError.h>
-
 #include "mppl_compiler.h"
 
 /*! String of each token */
