@@ -1,6 +1,6 @@
 CC := gcc
-OBJS := main.o scan.o cross_reference.o
-SRC := main.c scan.c cross_reference.c
+OBJS := main.o scan.o cross_reference.o id-list.o
+SRC := main.c scan.c cross_reference.c id-list.c
 CFLAGS := -ansi -fno-common -W -Wall -g 
 
 all: main

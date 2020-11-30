@@ -134,7 +134,8 @@ extern struct KEY {
 
 extern int error(char *mes);
 
-/* scan.c */
+/*! @name scan.c */
+/* @{ */
 extern FILE *fp;
 extern int num_attr;
 extern char string_attr[MAXSTRSIZE];
@@ -142,11 +143,23 @@ extern int init_scan(char *filename);
 extern int scan(void);
 extern int get_linenum(void);
 extern int end_scan(void);
+/* @} */
 
-/* pretty-printer.c */
+/*! @name cross_reference.c */
+/* @{ */
 extern int parse_program(void);
+/* @} */
 
-/* main.c */
+/*! @name id-list.c */
+/* @{ */
+/* @} */
+extern void init_crtab();
+extern void release_crtab();
+
+/*! @name main.c */
+/* @{ */
+extern char *tokenstr[NUMOFTOKEN + 1];
 extern int token;
+/* @} */
 
 #endif

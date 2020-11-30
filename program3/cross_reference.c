@@ -2,17 +2,6 @@
 
 #include "mppl_compiler.h"
 
-/*! String of each token */
-char *tokenstr[NUMOFTOKEN + 1] = {
-    "", "NAME", "program", "var", "array", "of", "begin",
-    "end", "if", "then", "else", "procedure", "return", "call",
-    "while", "do", "not", "or", "div", "and", "char",
-    "integer", "boolean", "readln", "writeln", "true", "false", "NUMBER",
-    "STRING", "+", "-", "*", "=", "<>", "<",
-    "<=", ">", ">=", "(", ")", "[", "]",
-    ":=", ".", ",", ":", ";", "read", "write",
-    "break"};
-
 static int parse_block(void);
 static int parse_variable_declaration(void);
 static int parse_variable_names(void);

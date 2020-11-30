@@ -33,6 +33,17 @@ struct KEY key[KEYWORDSIZE] = {
     {"write", TWRITE},
     {"writeln", TWRITELN}};
 
+/*! String of each token */
+char *tokenstr[NUMOFTOKEN + 1] = {
+    "", "NAME", "program", "var", "array", "of", "begin",
+    "end", "if", "then", "else", "procedure", "return", "call",
+    "while", "do", "not", "or", "div", "and", "char",
+    "integer", "boolean", "readln", "writeln", "true", "false", "NUMBER",
+    "STRING", "+", "-", "*", "=", "<>", "<",
+    "<=", ">", ">=", "(", ")", "[", "]",
+    ":=", ".", ",", ":", ";", "read", "write",
+    "break"};
+
 /*! the scanned token */
 int token;
 static char *file_name;
@@ -58,6 +69,7 @@ int main(int nc, char *np[]) {
         return EXIT_FAILURE;
     }
 
+    init_crtab();
     token = scan();
     ret = parse_program();
 
@@ -68,6 +80,7 @@ int main(int nc, char *np[]) {
     }
 
     fflush(stdout);
+    release_crtab();
     return ret;
 }
 
