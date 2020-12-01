@@ -1,6 +1,8 @@
 #include <CUnit/CUError.h>
 
 #include "mppl_compiler.h"
+#define true 1
+#define false 0
 
 static int parse_block(void);
 static int parse_variable_declaration(void);
@@ -10,7 +12,7 @@ static int parse_type(void);
 static int parse_standard_type(void);
 static int parse_array_type(void);
 static int parse_subprogram_declaration(void);
-static int parse_procedure_name(void);
+static int parse_procedure_name(int register_mode);
 static int parse_formal_parameters(void);
 
 static int parse_statement(void);
@@ -269,7 +271,7 @@ static int parse_subprogram_declaration(void) {
 
     token = scan();
 
-    if (parse_procedure_name() == ERROR) {
+    if (parse_procedure_name(true) == ERROR) {
         return ERROR;
     }
 
@@ -307,13 +309,17 @@ static int parse_subprogram_declaration(void) {
 
 /*!
  * @brief Parsing a procedure name
+ * @param[in] register_mode If 1, store the name of the procedure 
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_procedure_name(void) {
+static int parse_procedure_name(int register_mode) {
     if (token != TNAME) {
         return error("Procedure name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
+    if (register_mode) {
+        set_procedure_name(string_attr);
+    }
     token = scan();
 
     return NORMAL;
@@ -623,7 +629,7 @@ static int parse_call_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if (parse_procedure_name() == ERROR) {
+    if (parse_procedure_name(false) == ERROR) {
         return ERROR;
     }
 

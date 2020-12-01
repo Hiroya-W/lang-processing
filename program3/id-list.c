@@ -29,7 +29,18 @@ struct ID {
 } * globalidroot, *localidroot, *crtabroot; /*! Pointers to root of global only & local only & global + local symbol tables */
 
 /*! Release the ID struct */
-static void free_strcut(struct ID *);
+static void free_strcut(struct ID *root);
+
+/*! To set the procedure name */
+void set_procedure_name(char *name);
+
+/*! the procedure name currenty being parsed */
+static char current_procedure_name[MAXSTRSIZE];
+
+/*! To set the procedure name */
+void set_procedure_name(char *name) {
+    strncpy(current_procedure_name, name, MAXSTRSIZE);
+}
 
 /*! Initialise the table */
 void init_crtab() {

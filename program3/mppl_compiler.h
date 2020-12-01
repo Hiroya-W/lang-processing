@@ -155,6 +155,7 @@ extern int parse_program(void);
 /* @} */
 extern void init_crtab();
 extern void release_crtab();
+extern void set_procedure_name(char *name);
 
 /*! @name main.c */
 /* @{ */
