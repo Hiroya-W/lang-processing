@@ -1,30 +1,37 @@
 ﻿#include "mppl_compiler.h"
 
+/*!
+ * @brief Type for the name
+ */
 struct TYPE {
-    int ttype;           /* TPINT TPCHAR TPBOOL TPARRAY TPARRAYINT TPARRAYCHA RTPARRAYBOOL TPPROC */
-    int arraysize;       /* size of array, if TPARRAY */
-    struct TYPE *etp;    /* pointer to element type if TPARRAY */
-    struct TYPE *paratp; /* pointer to parameter's type list if ttype is TPPROC */
+    int ttype;           /*! TPINT TPCHAR TPBOOL TPARRAY TPARRAYINT TPARRAYCHA RTPARRAYBOOL TPPROC */
+    int arraysize;       /*! size of array, if TPARRAY */
+    struct TYPE *etp;    /*! pointer to element type if TPARRAY */
+    struct TYPE *paratp; /*! pointer to parameter's type list if ttype is TPPROC */
 };
 
+/*!
+ * @brief List to store the line number
+ */
 struct LINE {
-    int reflinenum;
-    struct LINE *nextlinep;
+    int reflinenum;         /*! the line number */
+    struct LINE *nextlinep; /*! pointer to next struct */
 };
 
 struct ID {
-    char *name;
-    char *procname; /* procedure name within which this name is defined */ /* NULL if global name */
-    struct TYPE *itp;
-    int ispara; /* 1:formal parameter, 0:else(variable) */
-    int deflinenum;
-    struct LINE *irefp;
-    struct ID *nextp;
-} * globalidroot, *localidroot, *crtabroot; /* Pointers to root of global & local symbol tables */
+    char *name;                             /*! name */
+    char *procname;                         /* procedure name within which this name is defined, NULL if global name */
+    struct TYPE *itp;                       /*! Type for the name */
+    int ispara;                             /*! 1:formal parameter, 0:else(variable) */
+    int deflinenum;                         /*! Name defined line number */
+    struct LINE *irefp;                     /*! List of line numbers where the name was referenced */
+    struct ID *nextp;                       /*! pointer next struct */
+} * globalidroot, *localidroot, *crtabroot; /*! Pointers to root of global only & local only & global + local symbol tables */
 
+/*! Release the ID struct */
 static void free_strcut(struct ID *);
 
-/* Initialise the table */
+/*! Initialise the table */
 void init_crtab() {
     globalidroot = NULL;
     localidroot = NULL;
@@ -32,7 +39,7 @@ void init_crtab() {
     return;
 }
 
-/* Output the cross reference table */
+/*! Output the cross reference table */
 void print_crtab() {
     struct ID *p;
     struct LINE *q;
@@ -56,7 +63,7 @@ void print_crtab() {
     return;
 }
 
-/* Release tha data structure */
+/*! Release tha data structure */
 void release_crtab() {
     free_strcut(globalidroot);
     free_strcut(localidroot);
@@ -66,6 +73,10 @@ void release_crtab() {
     return;
 }
 
+/*!
+ * @brief Release the data struct
+ * @param[in] root The root of the list struct
+ */
 static void free_strcut(struct ID *root) {
     struct ID *p, *q;
 
