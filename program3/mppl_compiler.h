@@ -117,6 +117,26 @@
 /*! number of tokens */
 #define NUMOFTOKEN 49
 
+/*! @name definition of Type code */
+/* @{ */
+/*! INT */
+#define TPINT 0
+/*! CHAR */
+#define TPCHAR 1
+/*! BOOL */
+#define TPBOOL 2
+/*! ARRAY */
+#define TPARRAY 3
+/*! INT ARRAY */
+#define TPARRAYINT 4
+/*! CHAR ARRAY */
+#define TPARRAYCHAR 5
+/*! BOOL ARRAY */
+#define TPARRAYBOOL 6
+/*! PROC */
+#define TPPROC 7
+/* @} */
+
 /*! maximum number of an unsigned integer */
 #define MAX_NUM_ATTR 32767
 
