@@ -29,7 +29,10 @@ struct ID {
 } * globalidroot, *localidroot, *crtabroot; /*! Pointers to root of global only & local only & global + local symbol tables */
 
 /*! Release the ID struct */
-static void free_strcut(struct ID *root);
+static void free_strcut(struct ID **root);
+
+/*! search the name pointed by name */
+static struct ID *search_tab(struct ID **root, char *name);
 
 /*! To set the procedure name */
 void set_procedure_name(char *name);
@@ -54,51 +57,72 @@ void init_crtab() {
 }
 
 /*! search the name pointed by name */
-struct ID *search_tab(struct ID *root, char *name) {
+static struct ID *search_tab(struct ID **root, char *name) {
     struct ID *p;
 
-    for (p = root; p != NULL; p = p->nextp) {
+    for (p = *root; p != NULL; p = p->nextp) {
         if (strcmp(name, p->name) == 0) return (p);
     }
     return (NULL);
 }
+
 /*! Register the name pointed by name global or local */
 int id_register(char *name) {
     if (in_subprogram_declaration) {
         return id_register_to_tab(&localidroot, name, current_procedure_name);
     } else {
-        return id_register_to_tab(&globalidroot, name, "");
+        return id_register_to_tab(&globalidroot, name, NULL);
     }
 }
 
 /*! Register the name pointed by name root */
 static int id_register_to_tab(struct ID **root, char *name, char *procname) {
-    struct ID *p;
+    struct ID *p_id;
+    struct TYPE *p_type;
     char *p_name;
     char *p_procname;
 
-    if ((p = search_tab(*root, name)) != NULL) {
+    if ((p_id = search_tab(root, name)) != NULL) {
         /*:TODO:*/
         /* print declared linenum */
-        fprintf(stderr, "%s is has already been declared.\n", name);
-        return error("duplicate registration.");
+        fprintf(stderr, "multiple definition of '%s'.\n", name);
+        return error("multiple definition");
+    }
+
+    /* struct ID */
+    if ((p_id = (struct ID *)malloc(sizeof(struct ID))) == NULL) {
+        return error("can not malloc1 for struct ID in id_register_to_tab\n");
+    }
+
+    /* struct ID ->name */
+    if ((p_name = (char *)malloc(strlen(name) + 1)) == NULL) {
+        return error("can not malloc2 for name in id_register_to_tab\n");
+    }
+    strcpy(p_name, name);
+    p_id->name = p_name;
+
+    /* struct ID ->procname */
+    if (procname == NULL) {
+        /* NULL if global name */
+        p_id->procname = NULL;
     } else {
-        if ((p = (struct ID *)malloc(sizeof(struct ID))) == NULL) {
-            return error("can not malloc1 for struct ID in id_register_to_tab\n");
-        }
-        if ((p_name = (char *)malloc(strlen(name) + 1)) == NULL) {
-            return error("can not malloc2 for name in id_register_to_tab\n");
-        }
+        /* Not NULL if local name */
         if ((p_procname = (char *)malloc(strlen(procname) + 1)) == NULL) {
             return error("can not malloc3 for procname in id_register_to_tab\n");
         }
-        strcpy(p_name, name);
         strcpy(p_procname, procname);
-        p->name = p_name;
-        p->procname = p_procname;
-        p->nextp = *root;
-        *root = p;
+        p_id->procname = p_procname;
     }
+
+    /* struct TYPE */
+    if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+        return error("can not malloc4 for struct TYPE in id_register_to_tab\n");
+    }
+
+    /* struct TYPE ->ttype */
+
+    p_id->nextp = *root;
+    *root = p_id;
     return 0;
 }
 
@@ -128,9 +152,9 @@ void print_tab(struct ID *root) {
 
 /*! Release tha data structure */
 void release_crtab() {
-    free_strcut(globalidroot);
-    free_strcut(localidroot);
-    free_strcut(crtabroot);
+    free_strcut(&globalidroot);
+    free_strcut(&localidroot);
+    free_strcut(&crtabroot);
 
     init_crtab();
     return;
@@ -140,15 +164,15 @@ void release_crtab() {
  * @brief Release the data struct
  * @param[in] root The root of the list struct
  */
-static void free_strcut(struct ID *root) {
+static void free_strcut(struct ID **root) {
     struct ID *p, *q;
 
-    for (p = root; p != NULL; p = q) {
+    for (p = *root; p != NULL; p = q) {
         free(p->name);
         free(p->procname);
-        free(p->itp);
-        free(p->irefp);
-        free(p->nextp);
+        /* free(p->itp);*/
+        /* free(p->irefp);*/
+        /* free(p->nextp);*/
         q = p->nextp;
         free(p);
     }
