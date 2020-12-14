@@ -44,6 +44,8 @@ static int exists_empty_statement = 0;
 static int indent_level = 0;
 /*! Indicates a nesting level of while statement */
 static int while_statement_level = 0;
+/*! When in subprogram declaration, it becomes 1 */
+int in_subprogram_declaration = 0;
 
 /*!
  * @brief Parsing a program
@@ -271,6 +273,8 @@ static int parse_subprogram_declaration(void) {
 
     token = scan();
 
+    in_subprogram_declaration = true;
+
     if (parse_procedure_name(true) == ERROR) {
         return ERROR;
     }
@@ -303,6 +307,7 @@ static int parse_subprogram_declaration(void) {
     fprintf(stdout, "\n");
     token = scan();
     indent_level--;
+    in_subprogram_declaration = false;
 
     return NORMAL;
 }

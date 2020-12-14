@@ -148,6 +148,7 @@ extern int end_scan(void);
 /*! @name cross_reference.c */
 /* @{ */
 extern int parse_program(void);
+extern int in_subprogram_declaration;
 /* @} */
 
 /*! @name id-list.c */
