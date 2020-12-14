@@ -37,16 +37,44 @@ int main() {
 }
 
 void id_register_to_tab_test(void) {
-    init_crtab();
-    id_register("GLOBAL NAME");
-    CU_ASSERT_STRING_EQUAL(globalidroot->name, "GLOBAL NAME");
-    CU_ASSERT_STRING_EQUAL(globalidroot->procname, "");
+    struct ID *root;
 
+    init_crtab();
+    /* global */
+    id_register("GLOBAL NAME1");
+    id_register("GLOBAL NAME2");
+
+    CU_ASSERT_PTR_NOT_NULL(search_tab(&globalidroot, "GLOBAL NAME1"));
+    CU_ASSERT_PTR_NOT_NULL(search_tab(&globalidroot, "GLOBAL NAME2"));
+
+    root = globalidroot;
+    CU_ASSERT_STRING_EQUAL(root->name, "GLOBAL NAME2");
+    CU_ASSERT_PTR_NULL(root->procname);
+    CU_ASSERT_PTR_NOT_NULL(root->nextp);
+
+    root = root->nextp;
+    CU_ASSERT_STRING_EQUAL(root->name, "GLOBAL NAME1");
+    CU_ASSERT_PTR_NULL(root->procname);
+    CU_ASSERT_PTR_NULL(root->nextp);
+
+    /* local */
     in_subprogram_declaration = true;
     set_procedure_name("procedure_name");
-    id_register("LOCAL NAME");
-    CU_ASSERT_STRING_EQUAL(localidroot->name, "LOCAL NAME");
-    CU_ASSERT_STRING_EQUAL(localidroot->procname, "procedure_name");
+    id_register("LOCAL NAME1");
+    id_register("LOCAL NAME2");
+
+    CU_ASSERT_PTR_NOT_NULL(search_tab(&localidroot, "LOCAL NAME1"));
+    CU_ASSERT_PTR_NOT_NULL(search_tab(&localidroot, "LOCAL NAME2"));
+
+    root = localidroot;
+    CU_ASSERT_STRING_EQUAL(root->name, "LOCAL NAME2");
+    CU_ASSERT_STRING_EQUAL(root->procname, "procedure_name");
+    CU_ASSERT_PTR_NOT_NULL(root->nextp);
+
+    root = root->nextp;
+    CU_ASSERT_STRING_EQUAL(root->name, "LOCAL NAME1");
+    CU_ASSERT_STRING_EQUAL(root->procname, "procedure_name");
+    CU_ASSERT_PTR_NULL(root->nextp);
 
     release_crtab();
     return;
