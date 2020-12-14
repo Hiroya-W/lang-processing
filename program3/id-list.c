@@ -35,7 +35,7 @@ static void free_strcut(struct ID *root);
 void set_procedure_name(char *name);
 
 /*! Register the name pointed by name root */
-static int id_register_to_tab(struct ID *root, char *name, char *procname);
+static int id_register_to_tab(struct ID **root, char *name, char *procname);
 
 /*! the procedure name currenty being parsed */
 static char current_procedure_name[MAXSTRSIZE];
@@ -65,19 +65,19 @@ struct ID *search_tab(struct ID *root, char *name) {
 /*! Register the name pointed by name global or local */
 int id_register(char *name) {
     if (in_subprogram_declaration) {
-        return id_register_to_tab(localidroot, name, current_procedure_name);
+        return id_register_to_tab(&localidroot, name, current_procedure_name);
     } else {
-        return id_register_to_tab(globalidroot, name, "");
+        return id_register_to_tab(&globalidroot, name, "");
     }
 }
 
 /*! Register the name pointed by name root */
-static int id_register_to_tab(struct ID *root, char *name, char *procname) {
+static int id_register_to_tab(struct ID **root, char *name, char *procname) {
     struct ID *p;
     char *p_name;
     char *p_procname;
 
-    if ((p = search_tab(root, name)) != NULL) {
+    if ((p = search_tab(*root, name)) != NULL) {
         /*:TODO:*/
         /* print declared linenum */
         fprintf(stderr, "%s is has already been declared.\n", name);
@@ -96,8 +96,8 @@ static int id_register_to_tab(struct ID *root, char *name, char *procname) {
         strcpy(p_procname, procname);
         p->name = p_name;
         p->procname = p_procname;
-        p->nextp = root;
-        root = p;
+        p->nextp = *root;
+        *root = p;
     }
     return 0;
 }
