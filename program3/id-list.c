@@ -103,13 +103,13 @@ static int id_register_to_tab(struct ID *root, char *name, char *procname) {
 }
 
 /*! Output the cross reference table */
-void print_crtab() {
+void print_tab(struct ID *root) {
     struct ID *p;
     struct LINE *q;
 
     fprintf(stdout, "--------------------\n");
     fprintf(stdout, "Name\tType\tDef. | Ref\n");
-    for (p = crtabroot; p != NULL; p = p->nextp) {
+    for (p = root; p != NULL; p = p->nextp) {
         fprintf(stdout, "%s", p->name);
         if (p->procname != NULL) {
             fprintf(stdout, ":%s", p->procname);
