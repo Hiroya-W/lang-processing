@@ -172,6 +172,11 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
         if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
             return error("can not malloc4 for struct TYPE in id_register_to_tab\n");
         }
+        p_type->ttype = (*type)->ttype;
+        p_type->arraysize = (*type)->arraysize;
+        p_type->etp = (*type)->etp;
+        p_type->paratp = (*type)->paratp;
+        p_id->itp = p_type;
     }
     p_id->ispara = ispara;
     p_id->deflinenum = deflinenum;
