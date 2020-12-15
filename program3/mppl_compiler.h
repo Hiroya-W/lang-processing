@@ -14,6 +14,8 @@
 
 /*! @name definition of token code */
 /* @{ */
+/*! number of tokens */
+#define NUMOFTOKEN 49
 /*! Name : Alphabet { Alphabet | Digit } */
 #define TNAME 1
 /*! program : Keyword */
@@ -114,11 +116,10 @@
 #define TBREAK 49
 /* @} */
 
-/*! number of tokens */
-#define NUMOFTOKEN 49
-
 /*! @name definition of Type code */
 /* @{ */
+/*! number of TYPE */
+#define NUMOFTYPE 7
 /*! INT */
 #define TPINT 0
 /*! CHAR */
@@ -182,6 +183,7 @@ extern void set_procedure_name(char *name);
 /*! @name main.c */
 /* @{ */
 extern char *tokenstr[NUMOFTOKEN + 1];
+extern char *typestr[NUMOFTYPE + 1];
 extern int token;
 /* @} */
 

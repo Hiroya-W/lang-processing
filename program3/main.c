@@ -44,6 +44,9 @@ char *tokenstr[NUMOFTOKEN + 1] = {
     ":=", ".", ",", ":", ";", "read", "write",
     "break"};
 
+/*! String of each type */
+char *typestr[NUMOFTYPE + 1] = {"integer", "char", "boolean", "array", "array of int", "array of char", "array of bool", "procedure"};
+
 /*! the scanned token */
 int token;
 static char *file_name;

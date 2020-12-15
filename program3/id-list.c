@@ -195,7 +195,7 @@ void print_tab(struct ID *root) {
             fprintf(stdout, ":%s", p->procname);
         }
         fprintf(stdout, "\t");
-        fprintf(stdout, "%s\t", tokenstr[p->itp->ttype]);
+        fprintf(stdout, "%s\t", typestr[p->itp->ttype]);
         fprintf(stdout, "%d ", p->deflinenum);
         for (q = p->irefp; q != NULL; q = q->nextlinep) {
             fprintf(stdout, "%d", q->reflinenum);
@@ -227,9 +227,8 @@ static void free_strcut(struct ID **root) {
     for (p = *root; p != NULL; p = q) {
         free(p->name);
         free(p->procname);
-        /* free(p->itp);*/
-        /* free(p->irefp);*/
-        /* free(p->nextp);*/
+        free(p->itp);
+        free(p->irefp);
         q = p->nextp;
         free(p);
     }
