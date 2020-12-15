@@ -74,12 +74,43 @@ static struct ID *search_tab(struct ID **root, char *name) {
 }
 
 /*! Register the name pointed by name global or local */
-int id_register(char *name) {
-    if (in_subprogram_declaration) {
-        return id_register_to_tab(&localidroot, name, current_procedure_name, NULL, 0, 0);
-    } else {
-        return id_register_to_tab(&globalidroot, name, NULL, NULL, 0, 0);
+int id_register_as_type(struct TYPE **type) {
+    int ret;
+    struct ID *p;
+
+    if (type == NULL) {
+        return error("struct TYPE is NULL\n");
     }
+
+    for (p = id_without_type_root; p != NULL; p = p->nextp) {
+        char *name = p->name;
+        char *current_procedure_name = p->procname;
+        int ispara = p->ispara;
+        int deflinenum = p->deflinenum;
+        if (in_subprogram_declaration) {
+            ret = id_register_to_tab(&localidroot, name, current_procedure_name, type, ispara, deflinenum);
+        } else {
+            ret = id_register_to_tab(&globalidroot, name, NULL, type, ispara, deflinenum);
+        }
+        if (ret == ERROR)
+            return ERROR;
+    }
+    return 0;
+}
+
+struct TYPE *std_type(int type) {
+    struct TYPE *p_type;
+    /* struct TYPE */
+    if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+        error("can not malloc for struct TYPE in std_type\n");
+        return (NULL);
+    }
+    /* set type only */
+    p_type->ttype = type;
+    p_type->arraysize = 0;
+    p_type->etp = NULL;
+    p_type->paratp = NULL;
+    return p_type;
 }
 
 /*! Register the name pointed by name global or local without type */
