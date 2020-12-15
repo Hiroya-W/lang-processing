@@ -19,14 +19,20 @@ struct LINE {
 };
 
 struct ID {
-    char *name;                             /*! name */
-    char *procname;                         /* procedure name within which this name is defined, NULL if global name */
-    struct TYPE *itp;                       /*! Type for the name */
-    int ispara;                             /*! 1:formal parameter, 0:else(variable) */
-    int deflinenum;                         /*! Name defined line number */
-    struct LINE *irefp;                     /*! List of line numbers where the name was referenced */
-    struct ID *nextp;                       /*! pointer next struct */
-} * globalidroot, *localidroot, *crtabroot; /*! Pointers to root of global only & local only & global + local symbol tables */
+    char *name;                 /*! name */
+    char *procname;             /* procedure name within which this name is defined, NULL if global name */
+    struct TYPE *itp;           /*! Type for the name */
+    int ispara;                 /*! 1:formal parameter, 0:else(variable) */
+    int deflinenum;             /*! Name defined line number */
+    struct LINE *irefp;         /*! List of line numbers where the name was referenced */
+    struct ID *nextp;           /*! pointer next struct */
+} * globalidroot, *localidroot; /*! Pointers to root of global only & local only & global + local symbol tables */
+
+/*! Pointers to root of global + local symbol tables */
+struct ID *crtabroot;
+
+/*! Pointers to root of id symbol tables without type */
+struct ID *id_without_type_root;
 
 /*! Release the ID struct */
 static void free_strcut(struct ID **root);
@@ -38,7 +44,7 @@ static struct ID *search_tab(struct ID **root, char *name);
 void set_procedure_name(char *name);
 
 /*! Register the name pointed by name root */
-static int id_register_to_tab(struct ID **root, char *name, char *procname);
+static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type);
 
 /*! the procedure name currenty being parsed */
 static char current_procedure_name[MAXSTRSIZE];
@@ -53,6 +59,7 @@ void init_crtab() {
     globalidroot = NULL;
     localidroot = NULL;
     crtabroot = NULL;
+    id_without_type_root = NULL;
     return;
 }
 
@@ -69,14 +76,23 @@ static struct ID *search_tab(struct ID **root, char *name) {
 /*! Register the name pointed by name global or local */
 int id_register(char *name) {
     if (in_subprogram_declaration) {
-        return id_register_to_tab(&localidroot, name, current_procedure_name);
+        return id_register_to_tab(&localidroot, name, current_procedure_name, NULL);
     } else {
-        return id_register_to_tab(&globalidroot, name, NULL);
+        return id_register_to_tab(&globalidroot, name, NULL, NULL);
+    }
+}
+
+/*! Register the name pointed by name global or local without type */
+int id_register_without_type(char *name) {
+    if (in_subprogram_declaration) {
+        return id_register_to_tab(&id_without_type_root, name, current_procedure_name, NULL);
+    } else {
+        return id_register_to_tab(&id_without_type_root, name, NULL, NULL);
     }
 }
 
 /*! Register the name pointed by name root */
-static int id_register_to_tab(struct ID **root, char *name, char *procname) {
+static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type) {
     struct ID *p_id;
     struct TYPE *p_type;
     char *p_name;
@@ -114,12 +130,16 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname) {
         p_id->procname = p_procname;
     }
 
-    /* struct TYPE */
-    if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
-        return error("can not malloc4 for struct TYPE in id_register_to_tab\n");
-    }
-
     /* struct TYPE ->ttype */
+    if (type == NULL) {
+        /* register id without type */
+        p_id->itp = NULL;
+    } else {
+        /* struct TYPE */
+        if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+            return error("can not malloc4 for struct TYPE in id_register_to_tab\n");
+        }
+    }
 
     p_id->nextp = *root;
     *root = p_id;
@@ -155,6 +175,7 @@ void release_crtab() {
     free_strcut(&globalidroot);
     free_strcut(&localidroot);
     free_strcut(&crtabroot);
+    free_strcut(&id_without_type_root);
 
     init_crtab();
     return;
