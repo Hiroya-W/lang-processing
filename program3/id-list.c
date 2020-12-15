@@ -204,8 +204,9 @@ void print_tab(struct ID *root) {
         fprintf(stdout, "%d ", p->deflinenum);
         for (q = p->irefp; q != NULL; q = q->nextlinep) {
             fprintf(stdout, "%d", q->reflinenum);
-            fprintf(stdout, "%s", q->nextlinep == NULL ? "\n" : ",");
+            fprintf(stdout, "%s", q->nextlinep == NULL ? "" : ",");
         }
+        fprintf(stdout, "\n");
     }
     fprintf(stdout, "--------------------\n");
     return;
