@@ -54,7 +54,9 @@ void set_procedure_name(char *name) {
     strncpy(current_procedure_name, name, MAXSTRSIZE);
 }
 
-/*! Initialise the table */
+/*!
+ * @brief Initialise the table
+ */
 void init_crtab() {
     globalidroot = NULL;
     localidroot = NULL;
@@ -63,7 +65,12 @@ void init_crtab() {
     return;
 }
 
-/*! search the name pointed by name */
+/*!
+ * @brief search the name pointed by name
+ * @param[in] root The root of the id-list
+ * @param[in] name Name you want to find
+ * @return struct TYPE * Return a pointer to the structure with matching name. 
+ */
 static struct ID *search_tab(struct ID **root, char *name) {
     struct ID *p;
 
@@ -73,7 +80,11 @@ static struct ID *search_tab(struct ID **root, char *name) {
     return (NULL);
 }
 
-/*! Register the name pointed by name global or local */
+/*!
+ * @brief Register the name pointed by name global or local
+ * @param[in] type type for a name to be registered
+ * @return int Return 0 on success and -1 on failure.
+ */
 int id_register_as_type(struct TYPE **type) {
     int ret;
     struct ID *p;
@@ -98,6 +109,11 @@ int id_register_as_type(struct TYPE **type) {
     return 0;
 }
 
+/*!
+ * @brief Create a structure of the standard type
+ * @param[in] type Code representing the type
+ * @return struct TYPE * Return a pointer to the created structure. 
+ */
 struct TYPE *std_type(int type) {
     struct TYPE *p_type;
     /* struct TYPE */
@@ -113,7 +129,11 @@ struct TYPE *std_type(int type) {
     return p_type;
 }
 
-/*! Register the name pointed by name global or local without type */
+/*!
+ * @brief Register the name pointed by name global or local without type
+ * @param[in] name Name to be registered
+ * @return int Return 0 on success and -1 on failure.
+ */
 int id_register_without_type(char *name) {
     int ispara = is_formal_parameter;
     int deflinenum = get_linenum();
@@ -124,7 +144,16 @@ int id_register_without_type(char *name) {
     }
 }
 
-/*! Register the name pointed by name root */
+/*!
+ * @brief Register the name pointed by name root
+ * @param[in] root The root of the list struct
+ * @param[in] name Name to be registered
+ * @param[in] procname procedure name
+ * @param[in] type type for a name
+ * @param[in] ispara If it is a formal parameter, then 1, otherwise 0
+ * @param[in] deflinenum The line number where the name is defined.
+ * @return int Return 0 on success and -1 on failure.
+ */
 static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type, int ispara, int deflinenum) {
     struct ID *p_id;
     struct TYPE *p_type;
@@ -187,7 +216,9 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
     return 0;
 }
 
-/*! Output the cross reference table */
+/*!
+ * @brief Output the cross reference table
+ */
 void print_tab(struct ID *root) {
     struct ID *p;
     struct LINE *q;
@@ -212,7 +243,9 @@ void print_tab(struct ID *root) {
     return;
 }
 
-/*! Release tha data structure */
+/*!
+ * @brief Release tha data structure
+ */
 void release_crtab() {
     free_strcut(&globalidroot);
     free_strcut(&localidroot);
