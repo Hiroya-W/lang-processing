@@ -44,6 +44,8 @@ static int indent_level = 0;
 static int while_statement_level = 0;
 /*! When in subprogram declaration, it becomes 1 */
 int in_subprogram_declaration = 0;
+/*! if id is formal parameter, it becomes 1 */
+int is_formal_parameter = 0;
 
 /*!
  * @brief Parsing a program

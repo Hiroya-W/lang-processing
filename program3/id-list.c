@@ -44,7 +44,7 @@ static struct ID *search_tab(struct ID **root, char *name);
 void set_procedure_name(char *name);
 
 /*! Register the name pointed by name root */
-static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type);
+static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type, int ispara, int deflinenum);
 
 /*! the procedure name currenty being parsed */
 static char current_procedure_name[MAXSTRSIZE];
@@ -76,23 +76,25 @@ static struct ID *search_tab(struct ID **root, char *name) {
 /*! Register the name pointed by name global or local */
 int id_register(char *name) {
     if (in_subprogram_declaration) {
-        return id_register_to_tab(&localidroot, name, current_procedure_name, NULL);
+        return id_register_to_tab(&localidroot, name, current_procedure_name, NULL, 0, 0);
     } else {
-        return id_register_to_tab(&globalidroot, name, NULL, NULL);
+        return id_register_to_tab(&globalidroot, name, NULL, NULL, 0, 0);
     }
 }
 
 /*! Register the name pointed by name global or local without type */
 int id_register_without_type(char *name) {
+    int ispara = is_formal_parameter;
+    int deflinenum = get_linenum();
     if (in_subprogram_declaration) {
-        return id_register_to_tab(&id_without_type_root, name, current_procedure_name, NULL);
+        return id_register_to_tab(&id_without_type_root, name, current_procedure_name, NULL, ispara, deflinenum);
     } else {
-        return id_register_to_tab(&id_without_type_root, name, NULL, NULL);
+        return id_register_to_tab(&id_without_type_root, name, NULL, NULL, ispara, deflinenum);
     }
 }
 
 /*! Register the name pointed by name root */
-static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type) {
+static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type, int ispara, int deflinenum) {
     struct ID *p_id;
     struct TYPE *p_type;
     char *p_name;
@@ -140,6 +142,9 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
             return error("can not malloc4 for struct TYPE in id_register_to_tab\n");
         }
     }
+    p_id->ispara = ispara;
+    p_id->deflinenum = deflinenum;
+    p_id->irefp = NULL;
 
     p_id->nextp = *root;
     *root = p_id;
