@@ -44,6 +44,8 @@ static int indent_level = 0;
 static int while_statement_level = 0;
 /*! When in subprogram declaration, it becomes 1 */
 int in_subprogram_declaration = 0;
+/*! When in variable declaration, it becomes 1 */
+int in_variable_declaration = 0;
 /*! if id is formal parameter, it becomes 1 */
 int is_formal_parameter = 0;
 
@@ -123,6 +125,8 @@ static int parse_variable_declaration(void) {
 
     token = scan();
 
+    in_variable_declaration = true;
+
     while (token == TNAME) {
         if (is_the_first_line == 0) {
             /* insert tab */
@@ -157,6 +161,9 @@ static int parse_variable_declaration(void) {
             indent_level--;
         }
     }
+
+    in_variable_declaration = false;
+
     return NORMAL;
 }
 
@@ -170,6 +177,12 @@ static int parse_variable_names(void) {
     }
     fprintf(stdout, "%s", string_attr);
     token = scan();
+
+    if (in_variable_declaration) {
+        if (id_register_without_type(string_attr) == ERROR) {
+            return ERROR;
+        }
+    }
 
     while (token == TCOMMA) {
         fprintf(stdout, "%s ", tokenstr[token]);

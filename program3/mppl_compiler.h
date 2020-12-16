@@ -179,7 +179,7 @@ extern int is_formal_parameter;
 extern void init_crtab();
 extern void release_crtab();
 extern void set_procedure_name(char *name);
-
+extern int id_register_without_type(char *name);
 /*! @name main.c */
 /* @{ */
 extern char *tokenstr[NUMOFTOKEN + 1];
