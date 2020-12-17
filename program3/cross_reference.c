@@ -50,6 +50,8 @@ int in_variable_declaration = 0;
 int is_array_type = 0;
 /*! if id is formal parameter, it becomes 1 */
 int is_formal_parameter = 0;
+/*! When defining procedure name, it becomes 1 */
+int definition_procedure_name = 0;
 
 /*!
  * @brief Parsing a program
@@ -309,10 +311,13 @@ static int parse_subprogram_declaration(void) {
     token = scan();
 
     in_subprogram_declaration = true;
+    definition_procedure_name = true;
 
     if (parse_procedure_name() == ERROR) {
         return ERROR;
     }
+
+    definition_procedure_name = false;
 
     if (token == TLPAREN && parse_formal_parameters() == ERROR) {
         return ERROR;
@@ -357,10 +362,11 @@ static int parse_procedure_name(void) {
         return error("Procedure name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
-    /* if (register_mode) {
-         set_procedure_name(string_attr);
-     }
-    */
+
+    if (definition_procedure_name) {
+        set_procedure_name(string_attr);
+    }
+
     token = scan();
 
     return NORMAL;
@@ -670,7 +676,7 @@ static int parse_call_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if (parse_procedure_name(false) == ERROR) {
+    if (parse_procedure_name() == ERROR) {
         return ERROR;
     }
 
