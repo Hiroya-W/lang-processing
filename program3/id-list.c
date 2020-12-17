@@ -80,6 +80,9 @@ int id_register_as_type(struct TYPE **type) {
         if (ret == ERROR)
             return ERROR;
     }
+    free_strcut(&id_without_type_root);
+    free(*type);
+    *type = NULL;
     return 0;
 }
 
@@ -245,5 +248,6 @@ static void free_strcut(struct ID **root) {
         q = p->nextp;
         free(p);
     }
+    *root = NULL;
     return;
 }
