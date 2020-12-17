@@ -9,7 +9,7 @@ struct ID *crtabroot;
 struct ID *id_without_type_root;
 
 /*! Release the ID struct */
-static void free_strcut(struct ID **root);
+static void free_strcut(struct ID *root);
 
 /*! search the name pointed by name */
 static struct ID *search_tab(struct ID **root, char *name);
@@ -80,7 +80,7 @@ int id_register_as_type(struct TYPE **type) {
         if (ret == ERROR)
             return ERROR;
     }
-    free_strcut(&id_without_type_root);
+    free_strcut(id_without_type_root);
     free(*type);
     *type = NULL;
     return 0;
@@ -223,11 +223,11 @@ void print_tab(struct ID *root) {
 /*!
  * @brief Release tha data structure
  */
-void release_crtab() {
-    free_strcut(&globalidroot);
-    free_strcut(&localidroot);
-    free_strcut(&crtabroot);
-    free_strcut(&id_without_type_root);
+void release_crtab(void) {
+    free_strcut(globalidroot);
+    free_strcut(localidroot);
+    free_strcut(crtabroot);
+    free_strcut(id_without_type_root);
 
     init_crtab();
     return;
@@ -237,10 +237,10 @@ void release_crtab() {
  * @brief Release the data struct
  * @param[in] root The root of the list struct
  */
-static void free_strcut(struct ID **root) {
+static void free_strcut(struct ID *root) {
     struct ID *p, *q;
 
-    for (p = *root; p != NULL; p = q) {
+    for (p = root; p != NULL; p = q) {
         free(p->name);
         free(p->procname);
         free(p->itp);
@@ -248,6 +248,6 @@ static void free_strcut(struct ID **root) {
         q = p->nextp;
         free(p);
     }
-    *root = NULL;
+    root = NULL;
     return;
 }
