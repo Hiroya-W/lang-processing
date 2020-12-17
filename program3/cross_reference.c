@@ -180,13 +180,14 @@ static int parse_variable_names(void) {
         return error("Name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
-    token = scan();
 
     if (in_variable_declaration) {
         if (id_register_without_type(string_attr) == ERROR) {
             return ERROR;
         }
     }
+
+    token = scan();
 
     while (token == TCOMMA) {
         fprintf(stdout, "%s ", tokenstr[token]);
@@ -390,6 +391,8 @@ static int parse_formal_parameters(void) {
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
+    is_formal_parameter = true;
+
     if (parse_variable_names() == ERROR) {
         return ERROR;
     }
@@ -433,6 +436,8 @@ static int parse_formal_parameters(void) {
     }
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
+
+    is_formal_parameter = false;
 
     return NORMAL;
 }
