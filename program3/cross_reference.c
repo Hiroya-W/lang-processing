@@ -183,7 +183,7 @@ static int parse_variable_names(void) {
     }
     fprintf(stdout, "%s", string_attr);
 
-    if (in_variable_declaration) {
+    if (in_variable_declaration || is_formal_parameter) {
         if (id_register_without_type(string_attr) == ERROR) {
             return ERROR;
         }
@@ -200,7 +200,7 @@ static int parse_variable_names(void) {
         }
         fprintf(stdout, "%s", string_attr);
 
-        if (in_variable_declaration) {
+        if (in_variable_declaration || is_formal_parameter) {
             if (id_register_without_type(string_attr) == ERROR) {
                 return ERROR;
             }
@@ -242,7 +242,7 @@ static int parse_standard_type(void) {
     fprintf(stdout, "%s", tokenstr[token]);
 
     /* regist id */
-    if (in_variable_declaration) {
+    if (in_variable_declaration || is_formal_parameter) {
         if (is_array_type) {
         } else {
             switch (token) {
