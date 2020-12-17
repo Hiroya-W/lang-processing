@@ -196,6 +196,13 @@ static int parse_variable_names(void) {
             return error("Name is not found.");
         }
         fprintf(stdout, "%s", string_attr);
+
+        if (in_variable_declaration) {
+            if (id_register_without_type(string_attr) == ERROR) {
+                return ERROR;
+            }
+        }
+
         token = scan();
     }
     return NORMAL;
