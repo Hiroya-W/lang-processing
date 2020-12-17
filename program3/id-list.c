@@ -12,7 +12,7 @@ struct ID *id_without_type_root;
 static void free_strcut(struct ID **root);
 
 /*! search the name pointed by name */
-static struct ID *search_tab(struct ID **root, char *name);
+static struct ID *search_tab(struct ID **root, char *name, char *procname);
 
 /*! To set the procedure name */
 void set_procedure_name(char *name);
@@ -42,16 +42,26 @@ void init_crtab() {
 }
 
 /*!
- * @brief search the name pointed by name
+ * @brief search the name pointed by name and procname
  * @param[in] root The root of the id-list
  * @param[in] name Name you want to find
+ * @param[in] procname procedure name you want to find
  * @return struct TYPE * Return a pointer to the structure with matching name. 
  */
-static struct ID *search_tab(struct ID **root, char *name) {
+static struct ID *search_tab(struct ID **root, char *name, char *procname) {
     struct ID *p;
 
     for (p = *root; p != NULL; p = p->nextp) {
-        if (strcmp(name, p->name) == 0) return (p);
+        if (strcmp(name, p->name) == 0) {
+            /* when name and p->name are globalid(= name and p->procname are NULL) */
+            if (procname == NULL && p->procname == NULL) {
+                return (p);
+            }
+            /* when name and p->name are localid(= procname and p->procname are not NULL) */
+            else if (procname != NULL && p->procname != NULL && strcmp(procname, p->procname) == 0) {
+                return (p);
+            }
+        }
     }
     return (NULL);
 }
@@ -139,7 +149,7 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
     char *p_name;
     char *p_procname;
 
-    if ((p_id = search_tab(root, name)) != NULL) {
+    if ((p_id = search_tab(root, name, procname)) != NULL) {
         /*:TODO:*/
         /* print declared linenum */
         fprintf(stderr, "multiple definition of '%s'.\n", name);
