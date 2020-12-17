@@ -23,6 +23,8 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
 /*! the procedure name currenty being parsed */
 static char current_procedure_name[MAXSTRSIZE];
 
+static int add_id_to_crtab(struct ID *root);
+
 /*! To set the procedure name */
 void set_procedure_name(char *name) {
     strncpy(current_procedure_name, name, MAXSTRSIZE);
@@ -231,6 +233,46 @@ void release_crtab(void) {
 
     init_crtab();
     return;
+}
+
+/*!
+ * @brief Release tha localidroot and add local id to crtab
+ * @return int Return 0 on success and -1 on failure.
+ */
+int release_localidroot(void) {
+    int ret = add_id_to_crtab(localidroot);
+    free_strcut(localidroot);
+    return ret;
+}
+
+/*!
+ * @brief Add id to crtab
+ * @param[in] root The root of the list struct
+ * @return int Return 0 on success and -1 on failure.
+ */
+static int add_id_to_crtab(struct ID *root) {
+    struct ID *p;
+    int ret;
+
+    for (p = root; p != NULL; p = p->nextp) {
+        char *name = p->name;
+        char *current_procedure_name = p->procname;
+        int ispara = p->ispara;
+        int deflinenum = p->deflinenum;
+        struct TYPE *type = p->itp;
+        ret = id_register_to_tab(&crtabroot, name, current_procedure_name, &type, ispara, deflinenum);
+        if (ret == ERROR)
+            return ERROR;
+    }
+    return 0;
+}
+
+/*!
+ * @brief Add global id to crtab
+ * @return int Return 0 on success and -1 on failure.
+ */
+int add_globalid_to_crtab(void) {
+    return add_id_to_crtab(globalidroot);
 }
 
 /*!

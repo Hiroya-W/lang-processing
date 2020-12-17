@@ -204,8 +204,10 @@ extern int is_formal_parameter;
 /*! @name id-list.c */
 /* @{ */
 /* @} */
-extern void init_crtab();
-extern void release_crtab();
+extern void init_crtab(void);
+extern void release_crtab(void);
+extern int release_localidroot(void);
+extern int add_globalid_to_crtab(void);
 extern void set_procedure_name(char *name);
 extern int id_register_without_type(char *name);
 extern int id_register_as_type(struct TYPE **type);
