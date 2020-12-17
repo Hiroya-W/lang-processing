@@ -228,7 +228,6 @@ static int parse_standard_type(void) {
         return error("Standard type is not found.");
     }
     fprintf(stdout, "%s", tokenstr[token]);
-    token = scan();
 
     /* regist id */
     if (in_variable_declaration) {
@@ -241,7 +240,7 @@ static int parse_standard_type(void) {
                 case TBOOLEAN:
                     type = std_type(TPBOOL);
                     break;
-                case TPCHAR:
+                case TCHAR:
                     type = std_type(TPCHAR);
                     break;
             }
@@ -249,6 +248,7 @@ static int parse_standard_type(void) {
         id_register_as_type(&type);
     }
 
+    token = scan();
     return NORMAL;
 }
 
