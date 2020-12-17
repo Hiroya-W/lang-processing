@@ -87,6 +87,8 @@ int parse_program(void) {
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
+    add_globalid_to_crtab();
+
     return NORMAL;
 }
 
@@ -355,7 +357,9 @@ static int parse_subprogram_declaration(void) {
     fprintf(stdout, "\n");
     token = scan();
     indent_level--;
+
     in_subprogram_declaration = false;
+    release_localidroot();
 
     return NORMAL;
 }
