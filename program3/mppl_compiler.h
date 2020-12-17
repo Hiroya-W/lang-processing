@@ -153,6 +153,34 @@ extern struct KEY {
     int keytoken;  /*! token codes for keywords */
 } key[KEYWORDSIZE];
 
+/*!
+ * @brief Type for the name
+ */
+struct TYPE {
+    int ttype;           /*! TPINT TPCHAR TPBOOL TPARRAY TPARRAYINT TPARRAYCHA RTPARRAYBOOL TPPROC */
+    int arraysize;       /*! size of array, if TPARRAY */
+    struct TYPE *etp;    /*! pointer to element type if TPARRAY */
+    struct TYPE *paratp; /*! pointer to parameter's type list if ttype is TPPROC */
+};
+
+/*!
+ * @brief List to store the line number
+ */
+struct LINE {
+    int reflinenum;         /*! the line number */
+    struct LINE *nextlinep; /*! pointer to next struct */
+};
+
+struct ID {
+    char *name;         /*! name */
+    char *procname;     /* procedure name within which this name is defined, NULL if global name */
+    struct TYPE *itp;   /*! Type for the name */
+    int ispara;         /*! 1:formal parameter, 0:else(variable) */
+    int deflinenum;     /*! Name defined line number */
+    struct LINE *irefp; /*! List of line numbers where the name was referenced */
+    struct ID *nextp;   /*! pointer next struct */
+};
+
 extern int error(char *mes);
 
 /*! @name scan.c */
@@ -180,6 +208,8 @@ extern void init_crtab();
 extern void release_crtab();
 extern void set_procedure_name(char *name);
 extern int id_register_without_type(char *name);
+extern int id_register_as_type(struct TYPE **type);
+extern struct TYPE *std_type(int type);
 /*! @name main.c */
 /* @{ */
 extern char *tokenstr[NUMOFTOKEN + 1];
