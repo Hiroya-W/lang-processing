@@ -46,6 +46,8 @@ static int while_statement_level = 0;
 int in_subprogram_declaration = 0;
 /*! When in variable declaration, it becomes 1 */
 int in_variable_declaration = 0;
+/*! if id's type is array, it becomes 1 */
+int is_array_type = 0;
 /*! if id is formal parameter, it becomes 1 */
 int is_formal_parameter = 0;
 
@@ -221,11 +223,31 @@ static int parse_type(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_standard_type(void) {
+    struct TYPE *type;
     if (token != TINTEGER && token != TBOOLEAN && token != TCHAR) {
         return error("Standard type is not found.");
     }
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
+
+    /* regist id */
+    if (in_variable_declaration) {
+        if (is_array_type) {
+        } else {
+            switch (token) {
+                case TINTEGER:
+                    type = std_type(TPINT);
+                    break;
+                case TBOOLEAN:
+                    type = std_type(TPBOOL);
+                    break;
+                case TPCHAR:
+                    type = std_type(TPCHAR);
+                    break;
+            }
+        }
+        id_register_as_type(&type);
+    }
 
     return NORMAL;
 }
