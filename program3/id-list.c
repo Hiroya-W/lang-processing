@@ -29,6 +29,8 @@ void set_procedure_name(char *name);
 /*! Register the name pointed by name root */
 static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type, int ispara, int deflinenum);
 
+static int add_type_to_parameter_list(char *procname, struct TYPE **type);
+
 /*! the procedure name currenty being parsed */
 static char current_procedure_name[MAXSTRSIZE];
 
@@ -94,21 +96,81 @@ int id_register_as_type(struct TYPE **type) {
         int ispara = p->ispara;
         int deflinenum = p->deflinenum;
         if (definition_procedure_name) {
+            /* regist procedure name */
             ret = id_register_to_tab(&globalidroot, name, NULL, type, ispara, deflinenum);
             ret1 = id_register_to_tab(&crtabroot, name, NULL, type, ispara, deflinenum);
         } else if (in_subprogram_declaration) {
+            /* regist local name and formal parameter */
             ret = id_register_to_tab(&localidroot, name, current_procedure_name, type, ispara, deflinenum);
             ret1 = id_register_to_tab(&crtabroot, name, current_procedure_name, type, ispara, deflinenum);
         } else {
+            /* regist global name */
             ret = id_register_to_tab(&globalidroot, name, NULL, type, ispara, deflinenum);
             ret1 = id_register_to_tab(&crtabroot, name, NULL, type, ispara, deflinenum);
         }
         if (ret == ERROR || ret1 == ERROR)
             return ERROR;
+
+        /* Add a type to the parameter list of a procedure name */
+        if (is_formal_parameter) {
+            add_type_to_parameter_list(current_procedure_name, type);
+        }
     }
     free_strcut_ID(&id_without_type_root);
     free(*type);
     type = NULL;
+    return 0;
+}
+
+/*!
+ * @brief Add a type to the parameter list of a procedure name
+ * @param[in] procname procedure name to add parameter to
+ * @param[in] type parameter's type
+ * @return int Return 0 on success and -1 on failure.
+ */
+static int add_type_to_parameter_list(char *procname, struct TYPE **type) {
+    struct ID *p_id;
+    struct TYPE *p_paratp;
+    /* search procedure name */
+    /* procedure name is global id */
+    if ((p_id = search_tab(&globalidroot, procname, NULL)) == NULL) {
+        fprintf(stderr, "'%s' is not found.", procname);
+        return error("procedure name is not found.");
+    }
+    /* Move to the end of the list */
+    p_paratp = p_id->itp;
+    while (p_paratp->paratp != NULL) {
+        p_paratp = p_paratp->paratp;
+    }
+    /* add type */
+    if ((p_paratp->paratp = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+        error("can not malloc1 for struct TYPE in add_type_to_parameter_list\n");
+        return ERROR;
+    }
+    p_paratp->paratp->ttype = (*type)->ttype;
+    /* printf("%s is registered as parameter\n", typestr[p_paratp->paratp->ttype]);*/
+    p_paratp->paratp->arraysize = (*type)->arraysize;
+
+    /* if parameter's type is TPARRAY, parameter's type has element type */
+    if ((*type)->ttype & TPARRAY) {
+        struct TYPE *p_etype;
+        if ((p_etype = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+            return error("can not malloc2 for struct TYPE in add_type_to_parameter_list\n");
+        }
+        p_etype->ttype = (*type)->ttype;
+        p_etype->arraysize = (*type)->arraysize;
+        /* element type must be standard type */
+        p_etype->etp = NULL;
+        p_etype->paratp = NULL;
+        /* register element type */
+        p_paratp->paratp->etp = p_etype;
+    } else {
+        /* parameter type is standard type */
+        p_paratp->paratp->etp = NULL;
+    }
+    /* parameter doesn't have parametor list */
+    p_paratp->paratp->paratp = NULL;
+
     return 0;
 }
 
