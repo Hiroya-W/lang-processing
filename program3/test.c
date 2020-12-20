@@ -154,8 +154,7 @@ void id_register_as_type_test(void) {
     CU_ASSERT_PTR_NULL(root->irefp);
     CU_ASSERT_PTR_NULL(root->nextp);
 
-    print_tab(globalidroot);
-    print_tab(localidroot);
+    print_tab(crtabroot);
 
     test_end();
 }
@@ -197,8 +196,7 @@ void id_register_as_type_std_test(void) {
     CU_ASSERT_EQUAL(root->deflinenum, 0);
     CU_ASSERT_PTR_NULL(root->irefp);
 
-    print_tab(globalidroot);
-    print_tab(localidroot);
+    print_tab(crtabroot);
 
     test_end();
 }
@@ -241,8 +239,7 @@ void id_register_as_type_array_test(void) {
     CU_ASSERT_EQUAL(root->deflinenum, 0);
     CU_ASSERT_PTR_NULL(root->irefp);
 
-    print_tab(globalidroot);
-    print_tab(localidroot);
+    print_tab(crtabroot);
 
     test_end();
 }
@@ -253,7 +250,7 @@ void integration_test_sample31p(void) {
     file_name = "./samples/sample31p.mpl";
     parse();
 
-    print_tab(globalidroot);
+    print_tab(crtabroot);
 
     test_end();
 }
