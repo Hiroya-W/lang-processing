@@ -14,7 +14,8 @@
 void id_register_without_type_test(void);
 void std_type_test(void);
 void id_register_as_type_test(void);
-void id_register_as_type_test1(void);
+void id_register_as_type_std_test(void);
+void id_register_as_type_array_test(void);
 void integration_test_sample31p(void);
 
 void test_init(void);
@@ -31,7 +32,8 @@ int main() {
     CU_add_test(suite, "id_register_to_tab_test", id_register_without_type_test);
     CU_add_test(suite, "std_type_test", std_type_test);
     CU_add_test(suite, "id_register_as_type_test", id_register_as_type_test);
-    CU_add_test(suite, "id_register_as_type_test", id_register_as_type_test1);
+    CU_add_test(suite, "id_register_as_type_std_test", id_register_as_type_std_test);
+    CU_add_test(suite, "id_register_as_type_array_test", id_register_as_type_array_test);
 
     suite = CU_add_suite("Integration Test", NULL, NULL);
     CU_add_test(suite, "integration_test_sample31p", integration_test_sample31p);
@@ -119,6 +121,7 @@ void std_type_test(void) {
 
 /*!
  * @brief 型情報を付加し、記号表に追加するテスト
+ * 2つの変数を同時に登録する
  */
 void id_register_as_type_test(void) {
     struct TYPE *type;
@@ -151,13 +154,17 @@ void id_register_as_type_test(void) {
     CU_ASSERT_PTR_NULL(root->irefp);
     CU_ASSERT_PTR_NULL(root->nextp);
 
-    release_localidroot();
-    add_globalid_to_crtab();
-    print_tab(crtabroot);
+    print_tab(globalidroot);
+    print_tab(localidroot);
 
     test_end();
 }
-void id_register_as_type_test1(void) {
+
+/*!
+ * @brief 型情報を付加し、記号表に追加するテスト
+ * 異なる標準型の変数を1つずつ追加する
+ */
+void id_register_as_type_std_test(void) {
     struct TYPE *type;
     struct ID *root;
 
@@ -190,9 +197,52 @@ void id_register_as_type_test1(void) {
     CU_ASSERT_EQUAL(root->deflinenum, 0);
     CU_ASSERT_PTR_NULL(root->irefp);
 
-    release_localidroot();
-    add_globalid_to_crtab();
-    print_tab(crtabroot);
+    print_tab(globalidroot);
+    print_tab(localidroot);
+
+    test_end();
+}
+
+/*!
+ * @brief 型情報を付加し、記号表に追加するテスト
+ * 異なる配列型の変数を1つずつ追加する
+ */
+void id_register_as_type_array_test(void) {
+    struct TYPE *type;
+    struct ID *root;
+
+    test_init();
+
+    /* global */
+    id_register_without_type("INT NAME1");
+    // INT型として記号表に登録
+    num_attr = 10;  // 配列の要素数
+    type = array_type(TPARRAYINT);
+    id_register_as_type(&type);
+
+    CU_ASSERT_PTR_NOT_NULL(search_tab(&globalidroot, "INT NAME1", NULL));
+    root = globalidroot;
+    CU_ASSERT_STRING_EQUAL(root->name, "INT NAME1");
+    CU_ASSERT_PTR_NULL(root->procname);
+    CU_ASSERT_EQUAL(root->ispara, 0);
+    CU_ASSERT_EQUAL(root->deflinenum, 0);
+    CU_ASSERT_PTR_NULL(root->irefp);
+
+    id_register_without_type("CHAR NAME2");
+    // CHAR型として記号表に登録
+    type = array_type(TPARRAYCHAR);
+    id_register_as_type(&type);
+    root = globalidroot;
+
+    CU_ASSERT_PTR_NOT_NULL(search_tab(&globalidroot, "CHAR NAME2", NULL));
+    CU_ASSERT_STRING_EQUAL(root->name, "CHAR NAME2");
+    CU_ASSERT_PTR_NULL(root->procname);
+    CU_ASSERT_EQUAL(root->ispara, 0);
+    CU_ASSERT_EQUAL(root->deflinenum, 0);
+    CU_ASSERT_PTR_NULL(root->irefp);
+
+    print_tab(globalidroot);
+    print_tab(localidroot);
 
     test_end();
 }
@@ -203,7 +253,7 @@ void integration_test_sample31p(void) {
     file_name = "./samples/sample31p.mpl";
     parse();
 
-    print_tab(crtabroot);
+    print_tab(globalidroot);
 
     test_end();
 }
