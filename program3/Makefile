@@ -2,8 +2,8 @@ CC := gcc
 OBJS := main.o scan.o cross_reference.o id-list.o
 TEST_OBJS := test.o
 SRC := main.c scan.c cross_reference.c id-list.c
-CFLAGS := -fno-common -W -Wall -g 
-TEST_CFLAGS := $(CFLAGS) -Dmain=_main_disabled -coverage -fprofile-arcs -ftest-coverage
+CFLAGS := -ansi -fno-common -W -Wall -g 
+TEST_CFLAGS := -fno-common -W -Wall -g -Dmain=_main_disabled -coverage -fprofile-arcs -ftest-coverage
 TEST_LIBDIR := -L/usr/lib 
 TEST_LIB := -lcunit
 
