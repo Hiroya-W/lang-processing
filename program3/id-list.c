@@ -119,6 +119,53 @@ struct TYPE *std_type(int type) {
 }
 
 /*!
+ * @brief Create a structure of the array type
+ * @param[in] type Code representing the type
+ * @return struct TYPE * Return a pointer to the created structure. 
+ */
+struct TYPE *array_type(int type) {
+    struct TYPE *p_type;
+    struct TYPE *p_etp;
+    /* struct TYPE */
+    if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+        error("can not malloc1 for struct TYPE in array_type\n");
+        return (NULL);
+    }
+    /* set array type */
+    p_type->ttype = type;
+    p_type->arraysize = num_attr;
+
+    /* struct TYPE ->etp */
+    if ((p_etp = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+        error("can not malloc2 for struct TYPE in array_type\n");
+        return (NULL);
+    }
+    /* set element type */
+    switch (type) {
+        case TPARRAYINT:
+            p_etp->ttype = TPINT;
+            break;
+        case TPARRAYCHAR:
+            p_etp->ttype = TPCHAR;
+            break;
+        case TPARRAYBOOL:
+            p_etp->ttype = TPBOOL;
+            break;
+        default:
+            fprintf(stderr, "[%d] is not array type code.\n", type);
+            error("type is not array type code.\n");
+            return (NULL);
+    }
+    p_etp->arraysize = 0;
+    p_etp->etp = NULL;
+    p_etp->paratp = NULL;
+
+    p_type->etp = p_etp;
+    p_type->paratp = NULL;
+    return p_type;
+}
+
+/*!
  * @brief Register the name pointed by name global or local without type
  * @param[in] name Name to be registered
  * @return int Return 0 on success and -1 on failure.

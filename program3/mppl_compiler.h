@@ -212,6 +212,7 @@ extern void set_procedure_name(char *name);
 extern int id_register_without_type(char *name);
 extern int id_register_as_type(struct TYPE **type);
 extern struct TYPE *std_type(int type);
+extern struct TYPE *array_type(int type);
 /*! @name main.c */
 /* @{ */
 extern char *tokenstr[NUMOFTOKEN + 1];

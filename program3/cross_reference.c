@@ -221,9 +221,11 @@ static int parse_type(void) {
             return ERROR;
         }
     } else if (token == TARRAY) {
+        is_array_type = true;
         if (parse_array_type() == ERROR) {
             return ERROR;
         }
+        is_array_type = false;
     } else {
         return error("Type is not found.");
     }
@@ -244,6 +246,17 @@ static int parse_standard_type(void) {
     /* regist id */
     if (in_variable_declaration || is_formal_parameter) {
         if (is_array_type) {
+            switch (token) {
+                case TINTEGER:
+                    type = array_type(TPARRAYINT);
+                    break;
+                case TBOOLEAN:
+                    type = array_type(TPARRAYBOOL);
+                    break;
+                case TCHAR:
+                    type = array_type(TPARRAYCHAR);
+                    break;
+            }
         } else {
             switch (token) {
                 case TINTEGER:
