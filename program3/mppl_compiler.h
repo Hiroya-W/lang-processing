@@ -119,23 +119,23 @@
 /*! @name definition of Type code */
 /* @{ */
 /*! number of TYPE */
-#define NUMOFTYPE 7
+#define NUMOFTYPE 8
 /*! INT */
-#define TPINT 0
+#define TPINT 1
 /*! CHAR */
-#define TPCHAR 1
+#define TPCHAR 2
 /*! BOOL */
-#define TPBOOL 2
+#define TPBOOL 3
 /*! ARRAY */
-#define TPARRAY 3
+#define TPARRAY 4
 /*! INT ARRAY */
-#define TPARRAYINT 4
+#define TPARRAYINT 5
 /*! CHAR ARRAY */
-#define TPARRAYCHAR 5
+#define TPARRAYCHAR 6
 /*! BOOL ARRAY */
-#define TPARRAYBOOL 6
+#define TPARRAYBOOL 7
 /*! PROC */
-#define TPPROC 7
+#define TPPROC 8
 /* @} */
 
 /*! maximum number of an unsigned integer */

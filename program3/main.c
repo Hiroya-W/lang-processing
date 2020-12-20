@@ -45,7 +45,7 @@ char *tokenstr[NUMOFTOKEN + 1] = {
     "break"};
 
 /*! String of each type */
-char *typestr[NUMOFTYPE + 1] = {"integer", "char", "boolean", "array", "array of int", "array of char", "array of bool", "procedure"};
+char *typestr[NUMOFTYPE + 1] = {"", "integer", "char", "boolean", "array", "integer", "char", "boolean", "procedure"};
 
 /*! the scanned token */
 int token;

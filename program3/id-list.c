@@ -270,7 +270,19 @@ void print_tab(struct ID *root) {
             fprintf(stdout, ":%s", p->procname);
         }
         fprintf(stdout, "\t");
-        fprintf(stdout, "%s\t", typestr[p->itp->ttype]);
+
+        if (p->itp->ttype == TPPROC) {
+            /* :TODO: */
+            /* print procedure name */
+        } else if (p->itp->ttype & TPARRAY) {
+            /* id is array type */
+            struct TYPE *p_type = p->itp;
+            fprintf(stdout, "array[%d] of %s\t", p_type->arraysize, typestr[p_type->ttype]);
+        } else {
+            /* id is standard type */
+            fprintf(stdout, "%s\t", typestr[p->itp->ttype]);
+        }
+
         fprintf(stdout, "%d ", p->deflinenum);
         for (q = p->irefp; q != NULL; q = q->nextlinep) {
             fprintf(stdout, "%d", q->reflinenum);
