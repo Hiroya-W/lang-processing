@@ -1,4 +1,6 @@
-﻿#include "mppl_compiler.h"
+﻿#include <stdio.h>
+
+#include "mppl_compiler.h"
 
 struct ID *globalidroot, *localidroot; /*! Pointers to root of global only & local only */
 
@@ -87,7 +89,10 @@ int id_register_as_type(struct TYPE **type) {
         char *current_procedure_name = p->procname;
         int ispara = p->ispara;
         int deflinenum = p->deflinenum;
-        if (in_subprogram_declaration) {
+        if (definition_procedure_name) {
+            ret = id_register_to_tab(&globalidroot, name, NULL, type, ispara, deflinenum);
+            ret1 = id_register_to_tab(&crtabroot, name, NULL, type, ispara, deflinenum);
+        } else if (in_subprogram_declaration) {
             ret = id_register_to_tab(&localidroot, name, current_procedure_name, type, ispara, deflinenum);
             ret1 = id_register_to_tab(&crtabroot, name, current_procedure_name, type, ispara, deflinenum);
         } else {
@@ -258,7 +263,7 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
             /* register element type */
             p_type->etp = p_etype;
         } else {
-            /* id is standard type */
+            /* id is standard type or procedure */
             p_type->etp = NULL;
         }
         p_type->paratp = NULL;
@@ -291,7 +296,7 @@ void print_tab(struct ID *root) {
 
         if (p->itp->ttype == TPPROC) {
             /* :TODO: */
-            /* print procedure name */
+            fprintf(stdout, "%s\t", typestr[p->itp->ttype]);
         } else if (p->itp->ttype & TPARRAY) {
             /* id is array type */
             struct TYPE *p_type = p->itp;

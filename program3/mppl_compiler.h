@@ -198,6 +198,7 @@ extern int end_scan(void);
 /* @{ */
 extern int parse_program(void);
 extern int in_subprogram_declaration;
+extern int definition_procedure_name;
 extern int is_formal_parameter;
 /* @} */
 

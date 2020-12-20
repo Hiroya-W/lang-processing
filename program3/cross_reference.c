@@ -390,6 +390,16 @@ static int parse_procedure_name(void) {
     fprintf(stdout, "%s", string_attr);
 
     if (definition_procedure_name) {
+        struct TYPE *type;
+        /* regist procedure name */
+        id_register_without_type(string_attr);
+        /* procedure name's type is TPPROC */
+        type = std_type(TPPROC);
+        /* error multiple definition or can not malloc */
+        if (id_register_as_type(&type) == ERROR) {
+            return ERROR;
+        }
+
         set_procedure_name(string_attr);
     }
 
