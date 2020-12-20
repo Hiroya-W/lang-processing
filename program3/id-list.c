@@ -8,8 +8,11 @@ struct ID *crtabroot;
 /*! Pointers to root of id symbol tables without type */
 struct ID *id_without_type_root;
 
-/*! Release the ID struct */
-static void free_strcut(struct ID **root);
+/*! Release the struct ID */
+static void free_strcut_ID(struct ID **root);
+
+/*! Release the struct TYPE */
+static void free_struct_TYPE(struct TYPE *root);
 
 /*! search the name pointed by name */
 static struct ID *search_tab(struct ID **root, char *name, char *procname);
@@ -92,7 +95,7 @@ int id_register_as_type(struct TYPE **type) {
         if (ret == ERROR)
             return ERROR;
     }
-    free_strcut(&id_without_type_root);
+    free_strcut_ID(&id_without_type_root);
     free(*type);
     type = NULL;
     return 0;
@@ -283,10 +286,10 @@ void print_tab(struct ID *root) {
  * @brief Release tha data structure
  */
 void release_crtab(void) {
-    free_strcut(&globalidroot);
-    free_strcut(&localidroot);
-    free_strcut(&crtabroot);
-    free_strcut(&id_without_type_root);
+    free_strcut_ID(&globalidroot);
+    free_strcut_ID(&localidroot);
+    free_strcut_ID(&crtabroot);
+    free_strcut_ID(&id_without_type_root);
 
     init_crtab();
     return;
@@ -298,7 +301,7 @@ void release_crtab(void) {
  */
 int release_localidroot(void) {
     int ret = add_id_to_crtab(localidroot);
-    free_strcut(&localidroot);
+    free_strcut_ID(&localidroot);
     return ret;
 }
 
@@ -333,20 +336,42 @@ int add_globalid_to_crtab(void) {
 }
 
 /*!
- * @brief Release the data struct
+ * @brief Release the struct ID
  * @param[in] root The root of the list struct
  */
-static void free_strcut(struct ID **root) {
+static void free_strcut_ID(struct ID **root) {
     struct ID *p, *q;
 
     for (p = *root; p != NULL; p = q) {
         free(p->name);
         free(p->procname);
-        free(p->itp);
+        free_struct_TYPE(p->itp);
         free(p->irefp);
         q = p->nextp;
         free(p);
     }
     *root = NULL;
+    return;
+}
+
+/*!
+ * @brief Release the struct TYPE
+ * @param[in] root The root of the list struct
+ */
+static void free_struct_TYPE(struct TYPE *root) {
+    struct TYPE *p, *q;
+
+    if (root == NULL) {
+        return;
+    }
+
+    p = root;
+
+    free(p->etp);
+    for (p = root->paratp; p != NULL; p = q) {
+        q = p->paratp;
+        free(p);
+    }
+    root = NULL;
     return;
 }
