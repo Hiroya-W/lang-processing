@@ -312,9 +312,10 @@ void release_crtab(void) {
  * @return int Return 0 on success and -1 on failure.
  */
 int release_localidroot(void) {
-    int ret = add_id_to_crtab(localidroot);
+    /* int ret = add_id_to_crtab(localidroot); */
     free_strcut_ID(&localidroot);
-    return ret;
+    /* return ret; */
+    return 0;
 }
 
 /*!
