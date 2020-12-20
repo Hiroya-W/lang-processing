@@ -257,7 +257,10 @@ static int parse_standard_type(void) {
                     break;
             }
         }
-        id_register_as_type(&type);
+        /* error multiple definition or can not malloc */
+        if (id_register_as_type(&type) == ERROR) {
+            return ERROR;
+        }
     }
 
     token = scan();
