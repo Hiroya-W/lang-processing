@@ -2,6 +2,10 @@
 
 #include "mppl_compiler.h"
 
+#define INDENT_SIZE_NAME 20
+#define INDENT_SIZE_TYPE 30
+#define INDENT_SIZE_DEF 4
+
 struct ID *globalidroot, *localidroot; /*! Pointers to root of global only & local only */
 
 /*! Pointers to root of global + local symbol tables */
@@ -285,35 +289,48 @@ void print_tab(struct ID *root) {
     struct ID *p;
     struct LINE *q;
 
-    fprintf(stdout, "--------------------\n");
-    fprintf(stdout, "Name\tType\tDef. | Ref\n");
+    fprintf(stdout, "--------------------------------------------------------------------------\n");
+    fprintf(stdout, "%-*s", INDENT_SIZE_NAME, "Name");
+    fprintf(stdout, "%-*s", INDENT_SIZE_TYPE, "Type");
+    fprintf(stdout, "Def. | Ref.\n");
     for (p = root; p != NULL; p = p->nextp) {
-        fprintf(stdout, "%s", p->name);
+        /* Name */
         if (p->procname != NULL) {
-            fprintf(stdout, ":%s", p->procname);
+            char name_procname[INDENT_SIZE_NAME];
+            snprintf(name_procname, INDENT_SIZE_NAME, "%s:%s", p->name, p->procname);
+            fprintf(stdout, "%-*s", INDENT_SIZE_NAME, name_procname);
+        } else {
+            fprintf(stdout, "%-*s", INDENT_SIZE_NAME, p->name);
         }
-        fprintf(stdout, "\t");
 
+        /* Type */
         if (p->itp->ttype == TPPROC) {
+            fprintf(stdout, "%-*s", INDENT_SIZE_TYPE, typestr[p->itp->ttype]);
             /* :TODO: */
-            fprintf(stdout, "%s\t", typestr[p->itp->ttype]);
+            /* print formal parameters */
         } else if (p->itp->ttype & TPARRAY) {
             /* id is array type */
             struct TYPE *p_type = p->itp;
-            fprintf(stdout, "array[%d] of %s\t", p_type->arraysize, typestr[p_type->ttype]);
+            char str_array_of_type[INDENT_SIZE_TYPE];
+            snprintf(str_array_of_type, INDENT_SIZE_TYPE, "array[%d] of %s", p_type->arraysize, typestr[p_type->ttype]);
+            fprintf(stdout, "%-*s", INDENT_SIZE_TYPE, str_array_of_type);
         } else {
             /* id is standard type */
-            fprintf(stdout, "%s\t", typestr[p->itp->ttype]);
+            fprintf(stdout, "%-*s", INDENT_SIZE_TYPE, typestr[p->itp->ttype]);
         }
 
-        fprintf(stdout, "%d ", p->deflinenum);
+        /* Def. */
+        fprintf(stdout, "%*d", INDENT_SIZE_DEF, p->deflinenum);
+        /* separator */
+        fprintf(stdout, " | ");
+        /* Ref. */
         for (q = p->irefp; q != NULL; q = q->nextlinep) {
             fprintf(stdout, "%d", q->reflinenum);
             fprintf(stdout, "%s", q->nextlinep == NULL ? "" : ",");
         }
         fprintf(stdout, "\n");
     }
-    fprintf(stdout, "--------------------\n");
+    fprintf(stdout, "--------------------------------------------------------------------------\n");
     return;
 }
 
