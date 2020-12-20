@@ -222,10 +222,10 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
 
     /* struct ID ->procname */
     if (procname == NULL) {
-        /* NULL if global name */
+        /* id is global name */
         p_id->procname = NULL;
     } else {
-        /* Not NULL if local name */
+        /* procedure name is registered because id is local name */
         if ((p_procname = (char *)malloc(strlen(procname) + 1)) == NULL) {
             return error("can not malloc3 for procname in id_register_to_tab\n");
         }
@@ -233,19 +233,35 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
         p_id->procname = p_procname;
     }
 
-    /* struct TYPE ->ttype */
+    /* struct TYPE ->itp */
     if (type == NULL) {
         /* register id without type */
         p_id->itp = NULL;
     } else {
-        /* struct TYPE */
+        /* register id with type */
         if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
             return error("can not malloc4 for struct TYPE in id_register_to_tab\n");
         }
         p_type->ttype = (*type)->ttype;
         p_type->arraysize = (*type)->arraysize;
-        p_type->etp = (*type)->etp;
-        p_type->paratp = (*type)->paratp;
+        /* if id's type is TPARRAY, id's type has element type */
+        if ((*type)->ttype & TPARRAY) {
+            struct TYPE *p_etype;
+            if ((p_etype = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+                return error("can not malloc5 for struct TYPE in id_register_to_tab\n");
+            }
+            p_etype->ttype = (*type)->ttype;
+            p_etype->arraysize = (*type)->arraysize;
+            /* element type must be standard type */
+            p_etype->etp = NULL;
+            p_etype->paratp = NULL;
+            /* register element type */
+            p_type->etp = p_etype;
+        } else {
+            /* id is standard type */
+            p_type->etp = NULL;
+        }
+        p_type->paratp = NULL;
         p_id->itp = p_type;
     }
     p_id->ispara = ispara;
