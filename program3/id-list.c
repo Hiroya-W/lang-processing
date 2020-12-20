@@ -359,7 +359,8 @@ void print_tab(struct ID *root) {
         /* Name */
         if (p->procname != NULL) {
             char name_procname[INDENT_SIZE_NAME];
-            snprintf(name_procname, INDENT_SIZE_NAME, "%s:%s", p->name, p->procname);
+            /* snprintf(name_procname, INDENT_SIZE_NAME, "%s:%s", p->name, p->procname); */
+            sprintf(name_procname, "%s:%s", p->name, p->procname);
             fprintf(stdout, "%-*s", INDENT_SIZE_NAME, name_procname);
         } else {
             fprintf(stdout, "%-*s", INDENT_SIZE_NAME, p->name);
@@ -367,14 +368,22 @@ void print_tab(struct ID *root) {
 
         /* Type */
         if (p->itp->ttype == TPPROC) {
+            struct TYPE *paratp;
             fprintf(stdout, "%-*s", INDENT_SIZE_TYPE, typestr[p->itp->ttype]);
             /* :TODO: */
-            /* print formal parameters */
+            fprintf(stdout, "(");
+
+            for (paratp = p->itp->paratp; paratp != NULL; paratp = paratp->paratp) {
+                fprintf(stdout, "%s", typestr[paratp->ttype]);
+                fprintf(stdout, "%s", paratp->paratp == NULL ? "" : ",");
+            }
+            fprintf(stdout, ")");
         } else if (p->itp->ttype & TPARRAY) {
             /* id is array type */
             struct TYPE *p_type = p->itp;
             char str_array_of_type[INDENT_SIZE_TYPE];
-            snprintf(str_array_of_type, INDENT_SIZE_TYPE, "array[%d] of %s", p_type->arraysize, typestr[p_type->ttype]);
+            /* snprintf(str_array_of_type, INDENT_SIZE_TYPE, "array[%d] of %s", p_type->arraysize, typestr[p_type->ttype]); */
+            sprintf(str_array_of_type, "array[%d] of %s", p_type->arraysize, typestr[p_type->ttype]);
             fprintf(stdout, "%-*s", INDENT_SIZE_TYPE, str_array_of_type);
         } else {
             /* id is standard type */
