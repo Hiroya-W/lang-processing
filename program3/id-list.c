@@ -75,7 +75,7 @@ static struct ID *search_tab(struct ID **root, char *name, char *procname) {
  * @return int Return 0 on success and -1 on failure.
  */
 int id_register_as_type(struct TYPE **type) {
-    int ret;
+    int ret, ret1;
     struct ID *p;
 
     if (type == NULL) {
@@ -89,10 +89,12 @@ int id_register_as_type(struct TYPE **type) {
         int deflinenum = p->deflinenum;
         if (in_subprogram_declaration) {
             ret = id_register_to_tab(&localidroot, name, current_procedure_name, type, ispara, deflinenum);
+            ret1 = id_register_to_tab(&crtabroot, name, current_procedure_name, type, ispara, deflinenum);
         } else {
             ret = id_register_to_tab(&globalidroot, name, NULL, type, ispara, deflinenum);
+            ret1 = id_register_to_tab(&crtabroot, name, NULL, type, ispara, deflinenum);
         }
-        if (ret == ERROR)
+        if (ret == ERROR || ret1 == ERROR)
             return ERROR;
     }
     free_strcut_ID(&id_without_type_root);

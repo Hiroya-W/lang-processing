@@ -87,8 +87,6 @@ int parse_program(void) {
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
-    add_globalid_to_crtab();
-
     return NORMAL;
 }
 
