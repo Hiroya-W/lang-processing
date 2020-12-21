@@ -21,6 +21,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - name: Compile Check - Program1
+            cd $GITHUB_WORKSPACE
+            cd program1
+            make token-list
+      - name: Compile Check - Program2
+            cd $GITHUB_WORKSPACE
+            cd program2
+            make main
+      - name: Compile Check - Program3
+            cd $GITHUB_WORKSPACE
+            cd program3
+            make main
 
       - name: Install CUnit
         run: |
@@ -29,6 +41,7 @@ jobs:
 
       - name: CUnit Test - Program1
         run: |
+            cd $GITHUB_WORKSPACE
             cd program1
             make check
       - name: CUnit Test - Program2
