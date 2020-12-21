@@ -181,10 +181,15 @@ static int parse_variable_names(void) {
     }
     fprintf(stdout, "%s", string_attr);
 
+    /* declaration */
     if (in_variable_declaration || is_formal_parameter) {
         if (id_register_without_type(string_attr) == ERROR) {
             return ERROR;
         }
+    }
+    /* reference */
+    else if (register_linenum(string_attr) == ERROR) {
+        return ERROR;
     }
 
     token = scan();
@@ -198,10 +203,15 @@ static int parse_variable_names(void) {
         }
         fprintf(stdout, "%s", string_attr);
 
+        /* definition */
         if (in_variable_declaration || is_formal_parameter) {
             if (id_register_without_type(string_attr) == ERROR) {
                 return ERROR;
             }
+        }
+        /* reference */
+        else if (register_linenum(string_attr) == ERROR) {
+            return ERROR;
         }
 
         token = scan();
@@ -389,6 +399,7 @@ static int parse_procedure_name(void) {
     }
     fprintf(stdout, "%s", string_attr);
 
+    /* definition */
     if (definition_procedure_name) {
         struct TYPE *type;
         /* regist procedure name */
@@ -401,6 +412,10 @@ static int parse_procedure_name(void) {
         }
 
         set_procedure_name(string_attr);
+    }
+    /* reference */
+    else if (register_linenum(string_attr) == ERROR) {
+        return ERROR;
     }
 
     token = scan();
@@ -767,6 +782,9 @@ static int parse_variable(void) {
         return error("Name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
+
+    register_linenum(string_attr);
+
     token = scan();
 
     return NORMAL;
