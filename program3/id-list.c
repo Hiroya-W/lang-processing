@@ -62,7 +62,7 @@ static struct ID *search_tab(struct ID **root, char *name, char *procname) {
 
     for (p = *root; p != NULL; p = p->nextp) {
         if (strcmp(name, p->name) == 0) {
-            /* when name and p->name are globalid(= name and p->procname are NULL) */
+            /* when name and p->name are globalid(= procname and p->procname are NULL) */
             if (procname == NULL && p->procname == NULL) {
                 return (p);
             }
@@ -147,7 +147,6 @@ static int add_type_to_parameter_list(struct ID **root, char *procname, struct T
         return ERROR;
     }
     p_paratp->paratp->ttype = (*type)->ttype;
-    /* printf("%s is registered as parameter\n", typestr[p_paratp->paratp->ttype]);*/
     p_paratp->paratp->arraysize = (*type)->arraysize;
 
     /* if parameter's type is TPARRAY, parameter's type has element type */
@@ -275,8 +274,6 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
     char *p_procname;
 
     if ((p_id = search_tab(root, name, procname)) != NULL) {
-        /*:TODO:*/
-        /* print declared linenum */
         fprintf(stderr, "multiple definition of '%s'.\n", name);
         return error("multiple definition");
     }
@@ -436,7 +433,6 @@ void print_tab(struct ID *root) {
         /* Name */
         if (p->procname != NULL) {
             char name_procname[INDENT_SIZE_NAME];
-            /* snprintf(name_procname, INDENT_SIZE_NAME, "%s:%s", p->name, p->procname); */
             sprintf(name_procname, "%s:%s", p->name, p->procname);
             fprintf(stdout, "%-*s", INDENT_SIZE_NAME, name_procname);
         } else {
@@ -507,9 +503,7 @@ void release_crtab(void) {
  * @return int Return 0 on success and -1 on failure.
  */
 int release_localidroot(void) {
-    /* int ret = add_id_to_crtab(localidroot); */
     free_strcut_ID(&localidroot);
-    /* return ret; */
     return 0;
 }
 
