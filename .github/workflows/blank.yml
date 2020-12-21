@@ -21,15 +21,19 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
       - name: Compile Check - Program1
+        run: |
             cd $GITHUB_WORKSPACE
             cd program1
             make token-list
       - name: Compile Check - Program2
+        run: |
             cd $GITHUB_WORKSPACE
             cd program2
             make main
       - name: Compile Check - Program3
+        run: |
             cd $GITHUB_WORKSPACE
             cd program3
             make main
