@@ -348,6 +348,81 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
 
 /*!
  * @brief Output the cross reference table
+ * @param[in] root pointer cross reference table
+ * @return int Return 0 on success and -1 on failure.
+ */
+int register_linenum(char *name) {
+    struct ID *p_id;
+    struct ID *p_crtab_id;
+    struct LINE *p_line;
+    struct LINE *p_crtab_line;
+    struct LINE *p_line_tail;
+    struct LINE *p_crtab_line_tail;
+    if (in_subprogram_declaration) {
+        char *procname = current_procedure_name;
+        /* search local */
+        if ((p_id = search_tab(&localidroot, name, procname)) == NULL) {
+            /* search global */
+            if ((p_id = search_tab(&globalidroot, name, NULL)) == NULL) {
+                fprintf(stdout, "%s is not registered.", name);
+                return error("name is not registered.");
+            } else {
+                p_crtab_id = search_tab(&crtabroot, name, procname);
+            }
+        } else {
+            p_crtab_id = search_tab(&crtabroot, name, procname);
+        }
+    } else {
+        /* search global */
+        if ((p_id = search_tab(&globalidroot, name, NULL)) == NULL) {
+            fprintf(stdout, "%s is not registered.", name);
+            return error("name is not registered.");
+        } else {
+            p_crtab_id = search_tab(&crtabroot, name, NULL);
+        }
+    }
+
+    if ((p_line = (struct LINE *)malloc(sizeof(struct LINE))) == NULL) {
+        return error("can not malloc1 for struct LINE in register_linenum\n");
+    }
+    p_line->reflinenum = get_linenum();
+    p_line->nextlinep = NULL;
+
+    /* Move to the end of the list */
+    /* and register linenum */
+    p_line_tail = p_id->irefp;
+    if (p_line_tail == NULL) {
+        p_id->irefp = p_line;
+    } else {
+        while (p_line_tail->nextlinep != NULL) {
+            p_line_tail = p_line_tail->nextlinep;
+        }
+        p_line_tail->nextlinep = p_line;
+    }
+
+    /* for crtab */
+    if ((p_crtab_line = (struct LINE *)malloc(sizeof(struct LINE))) == NULL) {
+        return error("can not malloc2 for struct LINE in register_linenum\n");
+    }
+    p_crtab_line->reflinenum = get_linenum();
+    p_crtab_line->nextlinep = NULL;
+
+    p_crtab_line_tail = p_crtab_id->irefp;
+    if (p_crtab_line_tail == NULL) {
+        p_crtab_id->irefp = p_crtab_line;
+    } else {
+        while (p_crtab_line_tail->nextlinep != NULL) {
+            p_crtab_line_tail = p_crtab_line_tail->nextlinep;
+        }
+        p_crtab_line_tail->nextlinep = p_crtab_line;
+    }
+
+    return 0;
+}
+
+/*!
+ * @brief Output the cross reference table
+ * @param[in] root pointer cross reference table
  */
 void print_tab(struct ID *root) {
     struct ID *p;

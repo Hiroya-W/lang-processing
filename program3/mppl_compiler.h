@@ -212,6 +212,7 @@ extern int add_globalid_to_crtab(void);
 extern void set_procedure_name(char *name);
 extern int id_register_without_type(char *name);
 extern int id_register_as_type(struct TYPE **type);
+extern int register_linenum(char *name);
 extern struct TYPE *std_type(int type);
 extern struct TYPE *array_type(int type);
 /*! @name main.c */
