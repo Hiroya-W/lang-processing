@@ -2,6 +2,7 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/TestDB.h>
 #include <CUnit/TestRun.h>
+#include <stdio.h>
 
 // clang-format off
 #include "mppl_compiler.h"
@@ -16,6 +17,8 @@ void std_type_test(void);
 void id_register_as_type_test(void);
 void id_register_as_type_std_test(void);
 void id_register_as_type_array_test(void);
+void id_register_parameter_list(void);
+
 void integration_test_sample31p(void);
 
 void test_init(void);
@@ -34,6 +37,7 @@ int main() {
     CU_add_test(suite, "id_register_as_type_test", id_register_as_type_test);
     CU_add_test(suite, "id_register_as_type_std_test", id_register_as_type_std_test);
     CU_add_test(suite, "id_register_as_type_array_test", id_register_as_type_array_test);
+    CU_add_test(suite, "id_register_parameter_list", id_register_parameter_list);
 
     suite = CU_add_suite("Integration Test", NULL, NULL);
     CU_add_test(suite, "integration_test_sample31p", integration_test_sample31p);
@@ -238,6 +242,41 @@ void id_register_as_type_array_test(void) {
     CU_ASSERT_EQUAL(root->ispara, 0);
     CU_ASSERT_EQUAL(root->deflinenum, 0);
     CU_ASSERT_PTR_NULL(root->irefp);
+
+    print_tab(crtabroot);
+
+    test_end();
+}
+
+/*!
+ * @brief 型情報を付加し、記号表に追加するテスト
+ * 手続き名の型リストを作る
+ */
+void id_register_parameter_list(void) {
+    struct TYPE *type;
+
+    test_init();
+
+    // 手続き名を登録する
+    definition_procedure_name = true;
+    id_register_without_type("procedure name");
+    type = std_type(TPPROC);
+    id_register_as_type(&type);
+    definition_procedure_name = false;
+
+    // 仮引数リストをつくる
+    in_subprogram_declaration = true;
+    set_procedure_name("procedure name");
+    is_formal_parameter = true;
+    id_register_without_type("INT1");
+    type = std_type(TPINT);
+    id_register_as_type(&type);
+
+    id_register_without_type("CHAR1");
+    type = std_type(TPCHAR);
+    id_register_as_type(&type);
+
+    CU_ASSERT_PTR_NOT_NULL(globalidroot->itp->paratp);
 
     print_tab(crtabroot);
 
