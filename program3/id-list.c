@@ -361,8 +361,8 @@ int register_linenum(char *name) {
         if ((p_id = search_tab(&localidroot, name, procname)) == NULL) {
             /* search global */
             if ((p_id = search_tab(&globalidroot, name, NULL)) == NULL) {
-                fprintf(stdout, "%s is not registered.", name);
-                return error("name is not registered.");
+                fprintf(stderr, "%s was not declared in this scope.", name);
+                return error("An undefined name was detected.");
             } else {
                 p_crtab_id = search_tab(&crtabroot, name, procname);
             }
@@ -372,8 +372,8 @@ int register_linenum(char *name) {
     } else {
         /* search global */
         if ((p_id = search_tab(&globalidroot, name, NULL)) == NULL) {
-            fprintf(stdout, "%s is not registered.", name);
-            return error("name is not registered.");
+            fprintf(stderr, "%s was not declared in this scope.", name);
+            return error("An undefined name was detected.");
         } else {
             p_crtab_id = search_tab(&crtabroot, name, NULL);
         }
