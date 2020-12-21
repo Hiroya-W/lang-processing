@@ -1,6 +1,4 @@
-﻿#include <stdio.h>
-
-#include "mppl_compiler.h"
+﻿#include "mppl_compiler.h"
 
 #define INDENT_SIZE_NAME 20
 #define INDENT_SIZE_TYPE 30
@@ -29,7 +27,7 @@ void set_procedure_name(char *name);
 /*! Register the name pointed by name root */
 static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type, int ispara, int deflinenum);
 
-static int add_type_to_parameter_list(char *procname, struct TYPE **type);
+static int add_type_to_parameter_list(struct ID **root, char *procname, struct TYPE **type);
 
 /*! the procedure name currenty being parsed */
 static char current_procedure_name[MAXSTRSIZE];
@@ -113,7 +111,8 @@ int id_register_as_type(struct TYPE **type) {
 
         /* Add a type to the parameter list of a procedure name */
         if (is_formal_parameter) {
-            add_type_to_parameter_list(current_procedure_name, type);
+            add_type_to_parameter_list(&globalidroot, current_procedure_name, type);
+            add_type_to_parameter_list(&crtabroot, current_procedure_name, type);
         }
     }
     free_strcut_ID(&id_without_type_root);
@@ -128,12 +127,12 @@ int id_register_as_type(struct TYPE **type) {
  * @param[in] type parameter's type
  * @return int Return 0 on success and -1 on failure.
  */
-static int add_type_to_parameter_list(char *procname, struct TYPE **type) {
+static int add_type_to_parameter_list(struct ID **root, char *procname, struct TYPE **type) {
     struct ID *p_id;
     struct TYPE *p_paratp;
     /* search procedure name */
     /* procedure name is global id */
-    if ((p_id = search_tab(&globalidroot, procname, NULL)) == NULL) {
+    if ((p_id = search_tab(root, procname, NULL)) == NULL) {
         fprintf(stderr, "'%s' is not found.", procname);
         return error("procedure name is not found.");
     }
@@ -159,16 +158,19 @@ static int add_type_to_parameter_list(char *procname, struct TYPE **type) {
         }
         p_etype->ttype = (*type)->ttype;
         p_etype->arraysize = (*type)->arraysize;
-        /* element type must be standard type */
+        /* element type must be standard type(etp == NULL) */
         p_etype->etp = NULL;
+        /* element type doesn't have parameter list */
         p_etype->paratp = NULL;
         /* register element type */
         p_paratp->paratp->etp = p_etype;
     } else {
         /* parameter type is standard type */
+        /* standard type doesn't have element type */
         p_paratp->paratp->etp = NULL;
     }
-    /* parameter doesn't have parametor list */
+    /* another parameter */
+    /* next pointer of parameter list is NULL */
     p_paratp->paratp->paratp = NULL;
 
     return 0;
