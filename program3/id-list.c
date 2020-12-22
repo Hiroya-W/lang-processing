@@ -371,6 +371,12 @@ int register_linenum(char *name) {
             /* id found in local */
             p_crtab_id = search_tab(&crtabroot, name, procname);
         }
+
+        /* recursively called error */
+        if (strcmp(name, procname) == 0 && p_id->itp->ttype == TPPROC) {
+            fprintf(stderr, "%s is recursively called.", procname);
+            return error("procedure is recursively called.");
+        }
     } else {
         /* search global */
         if ((p_id = search_tab(&globalidroot, name, NULL)) == NULL) {
