@@ -181,6 +181,8 @@ struct ID {
     struct ID *nextp;   /*! pointer next struct */
 };
 
+extern struct ID *crtabroot;
+
 extern int error(char *mes);
 
 /*! @name scan.c */
@@ -215,6 +217,7 @@ extern int id_register_as_type(struct TYPE **type);
 extern int register_linenum(char *name);
 extern struct TYPE *std_type(int type);
 extern struct TYPE *array_type(int type);
+void print_tab(struct ID *root);
 /*! @name main.c */
 /* @{ */
 extern char *tokenstr[NUMOFTOKEN + 1];
