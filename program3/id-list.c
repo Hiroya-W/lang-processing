@@ -364,9 +364,11 @@ int register_linenum(char *name) {
                 fprintf(stderr, "%s was not declared in this scope.", name);
                 return error("An undefined name was detected.");
             } else {
-                p_crtab_id = search_tab(&crtabroot, name, procname);
+                /* id found in global */
+                p_crtab_id = search_tab(&crtabroot, name, NULL);
             }
         } else {
+            /* id found in local */
             p_crtab_id = search_tab(&crtabroot, name, procname);
         }
     } else {
