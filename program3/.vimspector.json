@@ -6,8 +6,10 @@
                 "name": "(gdb) Launch",
                 "type": "cppdbg",
                 "request": "launch",
-                "program": "${workspaceFolder}/test",
-                "args": [],
+                "program": "${workspaceFolder}/main",
+                "args": [
+                    "./samples/sample032p.mpl"
+                ],
                 "stopAtEntry": false,
                 "cwd": "${workspaceFolder}",
                 "environment": [],

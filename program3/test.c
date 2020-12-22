@@ -21,6 +21,7 @@ void id_register_parameter_list(void);
 void register_linenum_test(void);
 
 void integration_test_sample31p(void);
+void integration_test_sample032p(void);
 void integration_test_sample33p(void);
 void integration_test_sample34(void);
 void integration_test_sample35(void);
@@ -46,6 +47,7 @@ int main() {
 
     suite = CU_add_suite("Integration Test", NULL, NULL);
     CU_add_test(suite, "integration_test_sample31p", integration_test_sample31p);
+    CU_add_test(suite, "integration_test_sample032p", integration_test_sample032p);
     CU_add_test(suite, "integration_test_sample33p", integration_test_sample33p);
     CU_add_test(suite, "integration_test_sample34", integration_test_sample34);
     CU_add_test(suite, "integration_test_sample35", integration_test_sample35);
@@ -341,6 +343,17 @@ void integration_test_sample31p(void) {
     test_init();
 
     file_name = "./samples/sample31p.mpl";
+    parse();
+
+    print_tab(crtabroot);
+
+    test_end();
+}
+
+void integration_test_sample032p(void) {
+    test_init();
+
+    file_name = "./samples/sample032p.mpl";
     parse();
 
     print_tab(crtabroot);
