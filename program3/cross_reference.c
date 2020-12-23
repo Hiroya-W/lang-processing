@@ -1100,6 +1100,9 @@ static int parse_constant(void) {
             fprintf(stdout, "%s", tokenstr[token]);
             break;
         case TSTRING:
+            if (strlen(string_attr) != 1) {
+                return error("Constant string length != 1");
+            }
             fprintf(stdout, "'%s'", string_attr);
             break;
         default:
