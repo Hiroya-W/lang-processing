@@ -959,6 +959,7 @@ static int parse_output_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_output_format(void) {
+    int exp_type = TPNONE;
     if (token == TSTRING && strlen(string_attr) > 1) {
         fprintf(stdout, "'%s'", string_attr);
         token = scan();
@@ -989,8 +990,11 @@ static int parse_output_format(void) {
         case TBOOLEAN:
             /* FALLTHROUGH */
         case TCHAR:
-            if (parse_expression() == ERROR) {
+            if ((exp_type = parse_expression()) == ERROR) {
                 return ERROR;
+            }
+            if (exp_type & TPARRAY) {
+                return error("The type must be a standard type.");
             }
 
             if (token == TCOLON) {
