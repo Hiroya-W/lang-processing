@@ -883,19 +883,28 @@ static int parse_input_statement(void) {
     token = scan();
 
     if (token == TLPAREN) {
+        int var_type = TPNONE;
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
-        if (parse_variable() == ERROR) {
+        if ((var_type = parse_variable()) == ERROR) {
             return ERROR;
+        }
+
+        if (var_type != TPINT && var_type != TPCHAR) {
+            return error("The type of the variable must be integer or char.");
         }
 
         while (token == TCOMMA) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if (parse_variable() == ERROR) {
+            if ((var_type = parse_variable()) == ERROR) {
                 return ERROR;
+            }
+
+            if (var_type != TPINT && var_type != TPCHAR) {
+                return error("The type of the variable must be integer or char.");
             }
         }
         if (token != TRPAREN) {
