@@ -614,6 +614,12 @@ static int parse_iteration_statement(void) {
     fprintf(stdout, "\n");
     token = scan();
 
+    if (token != TBEGIN) {
+        indent_level++;
+        insert_indent();
+        indent_level--;
+    }
+
     if (parse_statement() == ERROR) {
         return ERROR;
     }
