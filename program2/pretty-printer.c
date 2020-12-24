@@ -682,8 +682,25 @@ static int parse_variable(void) {
     if (token != TNAME) {
         return error("Name is not found.");
     }
+
     fprintf(stdout, "%s", string_attr);
     token = scan();
+
+    if (token == TLSQPAREN) {
+        /* name is array type */
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
+
+        if (parse_expression() == ERROR) {
+            return ERROR;
+        }
+
+        if (token != TRSQPAREN) {
+            return error("Sybmol ']' is not found.");
+        }
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
+    }
 
     return NORMAL;
 }
