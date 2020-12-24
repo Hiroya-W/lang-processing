@@ -1181,31 +1181,31 @@ static int parse_factor(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_constant(void) {
-    int token_type = NORMAL;
+    int constant_type = NORMAL;
 
     switch (token) {
         case TNUMBER:
             fprintf(stdout, "%s", string_attr);
-            token_type = TPINT;
+            constant_type = TPINT;
             break;
         case TFALSE:
             /* FALLTHROUGH */
         case TTRUE:
             fprintf(stdout, "%s", tokenstr[token]);
-            token_type = TPBOOL;
+            constant_type = TPBOOL;
             break;
         case TSTRING:
             if (strlen(string_attr) != 1) {
                 return error("Constant string length != 1");
             }
             fprintf(stdout, "'%s'", string_attr);
-            token_type = TPCHAR;
+            constant_type = TPCHAR;
             break;
         default:
             return error("Constant is not found.");
     }
     token = scan();
-    return token_type;
+    return constant_type;
 }
 
 /*!
