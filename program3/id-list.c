@@ -355,6 +355,8 @@ int register_linenum(char *name) {
     struct LINE *p_crtab_line;
     struct LINE *p_line_tail;
     struct LINE *p_crtab_line_tail;
+    int id_type;
+
     if (in_subprogram_declaration) {
         char *procname = current_procedure_name;
         /* search local */
@@ -402,6 +404,9 @@ int register_linenum(char *name) {
         }
     }
 
+    /* the type of the variable. */
+    id_type = p_id->itp->ttype;
+
     if ((p_line = (struct LINE *)malloc(sizeof(struct LINE))) == NULL) {
         return error("can not malloc1 for struct LINE in register_linenum\n");
     }
@@ -437,7 +442,7 @@ int register_linenum(char *name) {
         p_crtab_line_tail->nextlinep = p_crtab_line;
     }
 
-    return 0;
+    return id_type;
 }
 
 /*!
