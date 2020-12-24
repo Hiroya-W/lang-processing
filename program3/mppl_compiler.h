@@ -120,6 +120,8 @@
 /* @{ */
 /*! number of TYPE */
 #define NUMOFTYPE 8
+/*! NONE */
+#define TPNONE 0
 /*! INT */
 #define TPINT 1
 /*! CHAR */
