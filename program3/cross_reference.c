@@ -229,6 +229,9 @@ static int parse_type(void) {
             return ERROR;
         }
     } else if (token == TARRAY) {
+        if (is_formal_parameter) {
+            return error("Array types cannot be defined in the formal parameter");
+        }
         is_array_type = true;
         if (parse_array_type() == ERROR) {
             return ERROR;
@@ -252,7 +255,7 @@ static int parse_standard_type(void) {
     fprintf(stdout, "%s", tokenstr[token]);
 
     /* regist id */
-    if (in_variable_declaration || is_formal_parameter) {
+    if (in_variable_declaration) {
         if (is_array_type) {
             switch (token) {
                 case TINTEGER:
@@ -311,7 +314,7 @@ static int parse_array_type(void) {
     fprintf(stdout, "%s", string_attr);
 
     /* array size */
-    if (in_variable_declaration || is_formal_parameter) {
+    if (in_variable_declaration) {
         /* The size of the array that can be defined is 1 <= 'array size' */
         if (num_attr < 1) {
             return error("The size of the array that can be defined is 1 <= 'array size'.");
