@@ -998,24 +998,53 @@ static int is_relational_operator(int _token) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_simple_expression(void) {
+    int given_type = TPNONE;
+    int term_type1 = TPNONE;
     if (token == TPLUS || token == TMINUS) {
+        given_type = TPINT;
+
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
 
-    if (parse_term() == ERROR) {
+    term_type1 = parse_term();
+    if (term_type1 == ERROR) {
         return ERROR;
     }
 
+    if (given_type == TPNONE) {
+        /* if there are no + or -, the type is term_type */
+        given_type = term_type1;
+    } else if (term_type1 != TPINT) {
+        /* if there are + or -, the type must be integer  */
+        return error("The type of the term must be integer.");
+    }
+
     while (token == TPLUS || token == TMINUS || token == TOR) {
+        int term_type2 = TPNONE;
         fprintf(stdout, " %s ", tokenstr[token]);
+
+        if ((token == TPLUS || token == TMINUS) && term_type1 != TPINT) {
+            return error("The type of the operand must be integer.");
+        } else if (token == TOR && term_type1 != TPBOOL) {
+            return error("The type of the operand must be boolean.");
+        }
+
         token = scan();
 
-        if (parse_term() == ERROR) {
+        term_type2 = parse_term();
+
+        if (term_type2 == ERROR) {
             return ERROR;
         }
+
+        if (term_type1 == TPINT && term_type2 != TPINT) {
+            return error("The type of the operand must be integer.");
+        } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
+            return error("The type of the operand must be boolean.");
+        }
     }
-    return NORMAL;
+    return given_type;
 }
 
 /*!
