@@ -20,6 +20,7 @@ void id_register_as_type_array_test1(void);
 void id_register_as_type_array_test2(void);
 void id_register_parameter_list(void);
 void register_linenum_test(void);
+void ref_array_index_test(void);
 
 void integration_test_sample31p(void);
 void integration_test_sample032p(void);
@@ -46,6 +47,7 @@ int main() {
     CU_add_test(suite, "id_register_as_type_array_test2", id_register_as_type_array_test2);
     CU_add_test(suite, "id_register_parameter_list", id_register_parameter_list);
     CU_add_test(suite, "register_linenum_test", register_linenum_test);
+    CU_add_test(suite, "ref_array_index_test", ref_array_index_test);
 
     suite = CU_add_suite("Integration Test", NULL, NULL);
     CU_add_test(suite, "integration_test_sample31p", integration_test_sample31p);
@@ -360,6 +362,32 @@ void register_linenum_test(void) {
     in_subprogram_declaration = false;
     token_linenum = 4;
     register_linenum("procedure name");
+
+    print_tab(crtabroot);
+
+    test_end();
+}
+
+/*!
+ * @brief 配列の要素にアクセスするテスト
+ * 型の範囲内におさまっていればOK
+ */
+void ref_array_index_test(void) {
+    struct TYPE *type;
+
+    test_init();
+
+    id_register_without_type("ARRAY INT");
+    // INT型として記号表に登録
+    num_attr = 10;  // 配列の要素数
+    type = array_type(TPARRAYINT);
+    id_register_as_type(&type);
+
+    token_linenum = 4;
+    num_attr = 0;
+    CU_ASSERT_EQUAL(register_linenum("ARRAY INT"), 0);
+    num_attr = 10;
+    CU_ASSERT_EQUAL(register_linenum("ARRAY INT"), -1);
 
     print_tab(crtabroot);
 
