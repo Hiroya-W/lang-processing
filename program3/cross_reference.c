@@ -255,7 +255,7 @@ static int parse_standard_type(void) {
     fprintf(stdout, "%s", tokenstr[token]);
 
     /* regist id */
-    if (in_variable_declaration) {
+    if (in_variable_declaration || is_formal_parameter) {
         if (is_array_type) {
             switch (token) {
                 case TINTEGER:
