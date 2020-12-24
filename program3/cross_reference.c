@@ -785,6 +785,22 @@ static int parse_variable(void) {
 
     register_linenum(string_attr);
 
+    if (token == TLSQPAREN) {
+        /* name is array type */
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
+
+        if (parse_expression() == ERROR) {
+            return ERROR;
+        }
+
+        if (token != TRSQPAREN) {
+            return error("Sybmol ']' is not found.");
+        }
+        fprintf(stdout, "%s", tokenstr[token]);
+        token = scan();
+    }
+
     token = scan();
 
     return NORMAL;
