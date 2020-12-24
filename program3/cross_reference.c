@@ -309,6 +309,15 @@ static int parse_array_type(void) {
         return error("Number is not found.");
     }
     fprintf(stdout, "%s", string_attr);
+
+    /* array size */
+    if (in_variable_declaration || is_formal_parameter) {
+        /* The size of the array that can be defined is 1 <= 'array size' */
+        if (num_attr < 1) {
+            return error("The size of the array that can be defined is 1 <= 'array size'.");
+        }
+    }
+
     token = scan();
 
     if (token != TRSQPAREN) {
