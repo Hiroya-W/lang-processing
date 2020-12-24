@@ -16,7 +16,8 @@ void id_register_without_type_test(void);
 void std_type_test(void);
 void id_register_as_type_test(void);
 void id_register_as_type_std_test(void);
-void id_register_as_type_array_test(void);
+void id_register_as_type_array_test1(void);
+void id_register_as_type_array_test2(void);
 void id_register_parameter_list(void);
 void register_linenum_test(void);
 
@@ -41,7 +42,8 @@ int main() {
     CU_add_test(suite, "std_type_test", std_type_test);
     CU_add_test(suite, "id_register_as_type_test", id_register_as_type_test);
     CU_add_test(suite, "id_register_as_type_std_test", id_register_as_type_std_test);
-    CU_add_test(suite, "id_register_as_type_array_test", id_register_as_type_array_test);
+    CU_add_test(suite, "id_register_as_type_array_test1", id_register_as_type_array_test1);
+    CU_add_test(suite, "id_register_as_type_array_test2", id_register_as_type_array_test2);
     CU_add_test(suite, "id_register_parameter_list", id_register_parameter_list);
     CU_add_test(suite, "register_linenum_test", register_linenum_test);
 
@@ -219,7 +221,7 @@ void id_register_as_type_std_test(void) {
  * @brief 型情報を付加し、記号表に追加するテスト
  * 異なる配列型の変数を1つずつ追加する
  */
-void id_register_as_type_array_test(void) {
+void id_register_as_type_array_test1(void) {
     struct TYPE *type;
     struct ID *root;
 
@@ -252,6 +254,31 @@ void id_register_as_type_array_test(void) {
     CU_ASSERT_EQUAL(root->ispara, 0);
     CU_ASSERT_EQUAL(root->deflinenum, 0);
     CU_ASSERT_PTR_NULL(root->irefp);
+
+    print_tab(crtabroot);
+
+    test_end();
+}
+
+/*!
+ * @brief 型情報を付加し、記号表に追加するテスト
+ * 要素数が1未満の時の宣言はエラー
+ */
+void id_register_as_type_array_test2(void) {
+    test_init();
+
+    file_name = "./samples/id_register_as_type_array_test2.mpl";
+
+    init_scan(file_name);
+    indent_level = 0;
+    linenum = 1;
+    token_linenum = 0;
+
+    token = scan();
+    CU_ASSERT_EQUAL(parse_program(), ERROR);
+    end_scan();
+    fprintf(stdout, "\n");
+    fflush(stdout);
 
     print_tab(crtabroot);
 
