@@ -636,7 +636,9 @@ static int parse_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_assignment_statement(void) {
-    if (parse_variable() == ERROR) {
+    int var_type = TPNONE;
+    int exp_type = TPNONE;
+    if ((var_type = parse_variable()) == ERROR) {
         return ERROR;
     }
 
@@ -646,8 +648,12 @@ static int parse_assignment_statement(void) {
     fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
-    if (parse_expression() == ERROR) {
+    if ((exp_type = parse_expression()) == ERROR) {
         return ERROR;
+    }
+
+    if (var_type != exp_type) {
+        return error("The types of the operand1 and operand2 do not match");
     }
 
     return NORMAL;
