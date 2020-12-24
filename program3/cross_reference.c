@@ -790,20 +790,31 @@ static int parse_expressions(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_variable(void) {
+    int id_type = TPNONE;
     if (token != TNAME) {
         return error("Name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
 
-    register_linenum(string_attr);
+    if ((id_type = register_linenum(string_attr)) == ERROR) {
+        return ERROR;
+    }
 
     if (token == TLSQPAREN) {
+        int exp_type = TPNONE;
+        if (!(id_type & TPARRAY)) {
+            fprintf(stderr, "%s is not Array type.", string_attr);
+            return error("id is not Array type.");
+        }
+
         /* name is array type */
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
-        if (parse_expression() == ERROR) {
+        if ((exp_type = parse_expression()) == ERROR) {
             return ERROR;
+        } else if (exp_type != TPINT) {
+            return error("The array index type must be an integer.");
         }
 
         if (token != TRSQPAREN) {
@@ -811,11 +822,24 @@ static int parse_variable(void) {
         }
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
+
+        /* the type of the array elements */
+        switch (id_type) {
+            case TPARRAYINT:
+                id_type = TPINT;
+                break;
+            case TPARRAYCHAR:
+                id_type = TPCHAR;
+                break;
+            case TPARRAYBOOL:
+                id_type = TPBOOL;
+                break;
+        }
     }
 
     token = scan();
 
-    return NORMAL;
+    return id_type;
 }
 
 /*!
