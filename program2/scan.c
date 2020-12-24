@@ -218,6 +218,10 @@ static int scan_string() {
         }
 
         if (current_char == '\'' && next_char == '\'') {
+            if (string_attr_push_back(current_char) == -1) {
+                error("function scan_string()");
+                return -1;
+            }
             look_ahead();
         }
 
