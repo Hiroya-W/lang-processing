@@ -248,6 +248,7 @@ static int parse_type(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_standard_type(void) {
+    int standard_type = TPNONE;
     struct TYPE *type;
     if (token != TINTEGER && token != TBOOLEAN && token != TCHAR) {
         return error("Standard type is not found.");
@@ -287,8 +288,20 @@ static int parse_standard_type(void) {
         }
     }
 
+    switch (token) {
+        case TINTEGER:
+            standard_type = TPINT;
+            break;
+        case TBOOLEAN:
+            standard_type = TPBOOL;
+            break;
+        case TPCHAR:
+            standard_type = TPCHAR;
+            break;
+    }
+
     token = scan();
-    return NORMAL;
+    return standard_type;
 }
 
 /*!
