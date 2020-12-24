@@ -658,14 +658,19 @@ static int parse_assignment_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_condition_statement(void) {
+    int exp_type = TPNONE;
     if (token != TIF) {
         return error("Keyword 'if' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if (parse_expression() == ERROR) {
+    if ((exp_type = parse_expression()) == ERROR) {
         return ERROR;
+    }
+
+    if (exp_type != TPBOOL) {
+        return error("The type of the condition must be boolean.");
     }
 
     if (token != TTHEN) {
