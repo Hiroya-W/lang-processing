@@ -1118,9 +1118,11 @@ static int parse_term(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_factor(void) {
+    int factor_type = TPNONE;
+    int exp_type = TPNONE;
     switch (token) {
         case TNAME:
-            if (parse_variable() == ERROR) {
+            if ((factor_type = parse_variable()) == ERROR) {
                 return ERROR;
             }
             break;
@@ -1131,7 +1133,7 @@ static int parse_factor(void) {
         case TTRUE:
             /* FALLTHROUGH */
         case TSTRING:
-            if (parse_constant() == ERROR) {
+            if ((factor_type = parse_constant()) == ERROR) {
                 return ERROR;
             }
             break;
@@ -1139,7 +1141,7 @@ static int parse_factor(void) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if (parse_expression() == ERROR) {
+            if ((factor_type = parse_expression()) == ERROR) {
                 return ERROR;
             }
 
@@ -1153,8 +1155,11 @@ static int parse_factor(void) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if (parse_factor() == ERROR) {
+            if ((factor_type = parse_factor()) == ERROR) {
                 return ERROR;
+            }
+            if (factor_type != TPBOOL) {
+                return error("The type of the operand must be boolean.");
             }
             break;
         case TINTEGER:
@@ -1162,7 +1167,7 @@ static int parse_factor(void) {
         case TBOOLEAN:
             /* FALLTHROUGH */
         case TCHAR:
-            if (parse_standard_type() == ERROR) {
+            if ((factor_type = parse_standard_type()) == ERROR) {
                 return ERROR;
             }
 
@@ -1172,8 +1177,11 @@ static int parse_factor(void) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if (parse_expression() == ERROR) {
+            if ((exp_type = parse_expression()) == ERROR) {
                 return ERROR;
+            }
+            if (exp_type & TPARRAY) {
+                return error("The type must be a standard type.");
             }
 
             if (token != TRPAREN) {
@@ -1185,7 +1193,7 @@ static int parse_factor(void) {
         default:
             return error("Factor is not found.");
     }
-    return NORMAL;
+    return factor_type;
 }
 
 /*!
