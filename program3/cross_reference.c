@@ -977,20 +977,32 @@ static int parse_output_format(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_expression(void) {
-    if (parse_simple_expression() == ERROR) {
+    int exp_type1 = TPNONE;
+
+    if ((exp_type1 = parse_simple_expression()) == ERROR) {
         return ERROR;
     }
 
     while (is_relational_operator(token)) {
+        int exp_type2 = TPNONE;
+        /* The type of the result of a relational operator is a boolean. */
+
         fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
-        if (parse_simple_expression() == ERROR) {
+        if ((exp_type2 = parse_simple_expression()) == ERROR) {
             return ERROR;
         }
+
+        if (exp_type1 != exp_type2) {
+            return error("The types of the operand1 and operand2 do not match");
+        }
+
+        /* The type of the result of a relational operator is a boolean. */
+        exp_type1 = TPBOOL;
     }
 
-    return NORMAL;
+    return exp_type1;
 }
 
 /*!
