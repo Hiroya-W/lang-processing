@@ -1007,8 +1007,7 @@ static int parse_simple_expression(void) {
         token = scan();
     }
 
-    term_type1 = parse_term();
-    if (term_type1 == ERROR) {
+    if ((term_type1 = parse_term()) == ERROR) {
         return ERROR;
     }
 
@@ -1032,9 +1031,7 @@ static int parse_simple_expression(void) {
 
         token = scan();
 
-        term_type2 = parse_term();
-
-        if (term_type2 == ERROR) {
+        if ((term_type2 = parse_term()) == ERROR) {
             return ERROR;
         }
 
