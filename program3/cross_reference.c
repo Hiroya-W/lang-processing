@@ -998,29 +998,26 @@ static int is_relational_operator(int _token) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_simple_expression(void) {
-    int given_type = TPNONE;
     int term_type1 = TPNONE;
+    int term_type2 = TPNONE;
     if (token == TPLUS || token == TMINUS) {
-        given_type = TPINT;
+        term_type1 = TPINT;
 
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
 
-    if ((term_type1 = parse_term()) == ERROR) {
+    if ((term_type2 = parse_term()) == ERROR) {
         return ERROR;
     }
 
-    if (given_type == TPNONE) {
-        /* if there are no + or -, the type is term_type */
-        given_type = term_type1;
-    } else if (term_type1 != TPINT) {
+    if (term_type1 == TPINT && term_type2 != TPINT) {
         /* if there are + or -, the type must be integer  */
         return error("The type of the term must be integer.");
     }
+    term_type1 = term_type2;
 
     while (token == TPLUS || token == TMINUS || token == TOR) {
-        int term_type2 = TPNONE;
         fprintf(stdout, " %s ", tokenstr[token]);
 
         if ((token == TPLUS || token == TMINUS) && term_type1 != TPINT) {
@@ -1041,7 +1038,7 @@ static int parse_simple_expression(void) {
             return error("The type of the operand must be boolean.");
         }
     }
-    return given_type;
+    return term_type1;
 }
 
 /*!
