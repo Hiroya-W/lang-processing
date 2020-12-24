@@ -1046,19 +1046,35 @@ static int parse_simple_expression(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_term(void) {
-    if (parse_factor() == ERROR) {
+    int term_type1 = TPNONE;
+    int term_type2 = TPNONE;
+
+    if ((term_type1 = parse_factor()) == ERROR) {
         return ERROR;
     }
 
     while (token == TSTAR || token == TDIV || token == TAND) {
         fprintf(stdout, " %s ", tokenstr[token]);
+
+        if ((token == TSTAR || token == TDIV) && term_type1 != TPINT) {
+            return error("The type of the operand must be integer.");
+        } else if (token == TAND && term_type1 != TPBOOL) {
+            return error("The type of the operand must be boolean.");
+        }
+
         token = scan();
 
-        if (parse_factor() == ERROR) {
+        if ((term_type2 = parse_factor()) == ERROR) {
             return ERROR;
         }
+
+        if (term_type1 == TPINT && term_type2 != TPINT) {
+            return error("The type of the operand must be integer.");
+        } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
+            return error("The type of the operand must be boolean.");
+        }
     }
-    return NORMAL;
+    return term_type1;
 }
 
 /*!
