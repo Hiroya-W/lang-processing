@@ -385,7 +385,7 @@ void ref_array_index_test(void) {
 
     token_linenum = 4;
     num_attr = 0;
-    CU_ASSERT_EQUAL(register_linenum("ARRAY INT"), 0);
+    CU_ASSERT_EQUAL(register_linenum("ARRAY INT"), TPARRAYINT);
     num_attr = 10;
     CU_ASSERT_EQUAL(register_linenum("ARRAY INT"), -1);
 
