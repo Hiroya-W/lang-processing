@@ -725,6 +725,7 @@ static int parse_condition_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_iteration_statement(void) {
+    int exp_type = TPNONE;
     if (token != TWHILE) {
         return error("Keyword 'while' is not found.");
     }
@@ -732,8 +733,12 @@ static int parse_iteration_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if (parse_expression() == ERROR) {
+    if ((exp_type = parse_expression()) == ERROR) {
         return ERROR;
+    }
+
+    if (exp_type != TPBOOL) {
+        return error("The type of the condition must be boolean.");
     }
 
     if (token != TDO) {
