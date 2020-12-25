@@ -46,12 +46,16 @@ static int while_statement_level = 0;
 int in_subprogram_declaration = 0;
 /*! When in variable declaration, it becomes 1 */
 int in_variable_declaration = 0;
+/*! When in call statement, it becomes 1 */
+int in_call_statement = 0;
 /*! if id's type is array, it becomes 1 */
 int is_array_type = 0;
 /*! if id is formal parameter, it becomes 1 */
 int is_formal_parameter = 0;
 /*! When defining procedure name, it becomes 1 */
 int definition_procedure_name = 0;
+
+struct ID *id_procedure = NULL;
 
 /*!
  * @brief Parsing a program
@@ -439,10 +443,12 @@ static int parse_procedure_name(void) {
         set_procedure_name(string_attr);
     }
     /* reference */
-    else if (register_linenum(string_attr) == ERROR) {
-        return ERROR;
+    else {
+        if (register_linenum(string_attr) == ERROR) {
+            return ERROR;
+        }
+        id_procedure = search_procedure(string_attr);
     }
-
     token = scan();
 
     return NORMAL;
@@ -772,6 +778,7 @@ static int parse_call_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
+    in_call_statement = true;
     if (parse_procedure_name() == ERROR) {
         return ERROR;
     }
@@ -789,7 +796,13 @@ static int parse_call_statement(void) {
         }
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
+    } else {
+        struct TYPE *para_type = id_procedure->itp->paratp;
+        if (para_type != NULL) {
+            return error("There are a few arguments.");
+        }
     }
+    in_call_statement = false;
 
     return NORMAL;
 }
@@ -799,18 +812,49 @@ static int parse_call_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_expressions(void) {
-    if (parse_expression() == ERROR) {
+    int exp_type = TPNONE;
+    int num_of_exp = 0;
+    struct TYPE *para_type = id_procedure->itp->paratp;
+    if ((exp_type = parse_expression()) == ERROR) {
         return ERROR;
     }
+    num_of_exp++;
 
+    if (in_call_statement) {
+        if (para_type == NULL) {
+            return error("This procedure takes no arguments.");
+        }
+        if (para_type->ttype != exp_type) {
+            return error("The type of the argument1 does not match.");
+        }
+    }
     while (token == TCOMMA) {
         fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
-        if (parse_expression() == ERROR) {
+        if ((exp_type = parse_expression()) == ERROR) {
             return ERROR;
         }
+
+        num_of_exp++;
+        if (in_call_statement) {
+            para_type = para_type->paratp;
+            if (para_type == NULL) {
+                return error("There are a lot of arguments.");
+            }
+            if (para_type->ttype != exp_type) {
+                fprintf(stderr, "The type of the argument%d does not match.", num_of_exp);
+                return error("The type of the argument does not match.");
+            }
+        }
     }
+
+    if (in_call_statement) {
+        if (para_type->paratp != NULL) {
+            return error("There are a few arguments.");
+        }
+    }
+
     return NORMAL;
 }
 
