@@ -27,6 +27,7 @@ void integration_test_sample032p(void);
 void integration_test_sample33p(void);
 void integration_test_sample34(void);
 void integration_test_sample35(void);
+void integration_test(void);
 
 void test_init(void);
 void test_end(void);
@@ -55,6 +56,7 @@ int main() {
     CU_add_test(suite, "integration_test_sample33p", integration_test_sample33p);
     CU_add_test(suite, "integration_test_sample34", integration_test_sample34);
     CU_add_test(suite, "integration_test_sample35", integration_test_sample35);
+    CU_add_test(suite, "integration_test", integration_test);
 
     CU_basic_run_tests();
     /* CU_console_run_tests(); */
@@ -447,6 +449,63 @@ void integration_test_sample35(void) {
     print_tab(crtabroot);
 
     test_end();
+}
+
+void integration_test(void) {
+    int len_samples = 38;
+    char *samples[38] = {
+        "program1/sample11.mpl",
+        "program1/sample11p.mpl",
+        "program1/sample11.mpl",
+        "program1/sample11p.mpl",
+        "program1/sample11pp.mpl",
+        "program1/sample12.mpl",
+        "program1/sample13.mpl",
+        "program1/sample14.mpl",
+        "program1/sample14p.mpl",
+        "program1/sample15.mpl",
+        "program1/sample15a.mpl",
+        "program1/sample16.mpl",
+        "program1/sample17.mpl",
+        "program1/sample18.mpl",
+        "program1/sample19p.mpl",
+        "program2/sample021.mpl",
+        "program2/sample022.mpl",
+        "program2/sample023.mpl",
+        "program2/sample024.mpl",
+        "program2/sample025.mpl",
+        "program2/sample026.mpl",
+        "program2/sample02a.mpl",
+        "program2/sample21.mpl",
+        "program2/sample22.mpl",
+        "program2/sample23.mpl",
+        "program2/sample24.mpl",
+        "program2/sample25.mpl",
+        "program2/sample25t.mpl",
+        "program2/sample26.mpl",
+        "program2/sample27.mpl",
+        "program2/sample28p.mpl",
+        "program2/sample29p.mpl",
+        "program2/sample2a.mpl",
+        "program3/sample032p.mpl",
+        "program3/sample31p.mpl",
+        "program3/sample33p.mpl",
+        "program3/sample34.mpl",
+        "program3/sample35.mpl"};
+
+    int i;
+    for (i = 0; i < len_samples; i++) {
+        char sample_file[256];
+        snprintf(sample_file, 256, "../samples/%s", samples[i]);
+        file_name = sample_file;
+        test_init();
+
+        parse();
+
+        print_tab(crtabroot);
+
+        test_end();
+    }
 }
 
 void test_init(void) {
