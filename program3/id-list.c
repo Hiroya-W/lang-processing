@@ -75,6 +75,12 @@ static struct ID *search_tab(struct ID **root, char *name, char *procname) {
     return (NULL);
 }
 
+struct ID *search_procedure(char *procname) {
+    struct ID *p;
+    p = search_tab(&globalidroot, procname, NULL);
+    return p;
+}
+
 /*!
  * @brief Register the name pointed by name global or local
  * @param[in] type type for a name to be registered

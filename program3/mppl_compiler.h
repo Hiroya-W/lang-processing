@@ -214,6 +214,7 @@ extern void release_crtab(void);
 extern int release_localidroot(void);
 extern int add_globalid_to_crtab(void);
 extern void set_procedure_name(char *name);
+struct ID *search_procedure(char *procname);
 extern int id_register_without_type(char *name);
 extern int id_register_as_type(struct TYPE **type);
 extern int register_linenum(char *name);
