@@ -12,15 +12,11 @@
 
 /*! search the name pointed by name */
 static struct ID *search_tab(struct ID **root, char *name, char *procname);
-
 /*! Register the name pointed by name root */
 static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type, int ispara, int deflinenum);
-
+/*! Add a type to the parameter list of a procedure name */
 static int add_type_to_parameter_list(struct ID **root, char *procname, struct TYPE **type);
-
-/*! the procedure name currenty being parsed */
-static char current_procedure_name[MAXSTRSIZE];
-
+/*! Add id to crtab */
 static int add_id_to_crtab(struct ID *root);
 /*! Release the struct ID */
 static void free_strcut_ID(struct ID **root);
@@ -33,6 +29,8 @@ struct ID *globalidroot, *localidroot;
 struct ID *crtabroot;
 /*! Pointers to root of id symbol tables without type */
 struct ID *id_without_type_root;
+/*! the procedure name currenty being parsed */
+static char current_procedure_name[MAXSTRSIZE];
 
 /*! To set the procedure name */
 void set_procedure_name(char *name) {
@@ -142,6 +140,73 @@ int id_register_as_type(struct TYPE **type) {
 }
 
 /*!
+ * @brief Create a structure of the standard type
+ * @param[in] type Code representing the type
+ * @return struct TYPE * Return a pointer to the created structure. 
+ */
+struct TYPE *std_type(int type) {
+    struct TYPE *p_type;
+    /* struct TYPE */
+    if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+        error("can not malloc for struct TYPE in std_type\n");
+        return (NULL);
+    }
+    /* set type only */
+    p_type->ttype = type;
+    p_type->arraysize = 0;
+    p_type->etp = NULL;
+    p_type->paratp = NULL;
+    return p_type;
+}
+
+/*!
+ * @brief Create a structure of the array type
+ * @param[in] type Code representing the type
+ * @return struct TYPE * Return a pointer to the created structure. 
+ */
+struct TYPE *array_type(int type) {
+    struct TYPE *p_type;
+    struct TYPE *p_etp;
+    /* struct TYPE */
+    if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+        error("can not malloc1 for struct TYPE in array_type\n");
+        return (NULL);
+    }
+    /* set array type */
+    p_type->ttype = type;
+    p_type->arraysize = num_attr;
+
+    /* struct TYPE ->etp */
+    if ((p_etp = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
+        error("can not malloc2 for struct TYPE in array_type\n");
+        return (NULL);
+    }
+    /* set element type */
+    switch (type) {
+        case TPARRAYINT:
+            p_etp->ttype = TPINT;
+            break;
+        case TPARRAYCHAR:
+            p_etp->ttype = TPCHAR;
+            break;
+        case TPARRAYBOOL:
+            p_etp->ttype = TPBOOL;
+            break;
+        default:
+            fprintf(stderr, "[%d] is not array type code.\n", type);
+            error("type is not array type code.\n");
+            return (NULL);
+    }
+    p_etp->arraysize = 0;
+    p_etp->etp = NULL;
+    p_etp->paratp = NULL;
+
+    p_type->etp = p_etp;
+    p_type->paratp = NULL;
+    return p_type;
+}
+
+/*!
  * @brief Output the cross reference table
  * @param[in] root pointer cross reference table
  * @return int Return 0 on success and -1 on failure.
@@ -244,6 +309,17 @@ int register_linenum(char *name) {
 }
 
 /*!
+ * @brief search ID pointed by procname
+ * @param[in] procname procedure name you want to find
+ * @return struct ID * Return a pointer to the structure with matching procname.
+ */
+struct ID *search_procedure(char *procname) {
+    struct ID *p;
+    p = search_tab(&globalidroot, procname, NULL);
+    return p;
+}
+
+/*!
  * @brief Output the cross reference table
  * @param[in] root pointer cross reference table
  */
@@ -336,12 +412,6 @@ static struct ID *search_tab(struct ID **root, char *name, char *procname) {
     return (NULL);
 }
 
-struct ID *search_procedure(char *procname) {
-    struct ID *p;
-    p = search_tab(&globalidroot, procname, NULL);
-    return p;
-}
-
 /*!
  * @brief Add a type to the parameter list of a procedure name
  * @param[in] procname procedure name to add parameter to
@@ -394,73 +464,6 @@ static int add_type_to_parameter_list(struct ID **root, char *procname, struct T
     p_paratp->paratp->paratp = NULL;
 
     return 0;
-}
-
-/*!
- * @brief Create a structure of the standard type
- * @param[in] type Code representing the type
- * @return struct TYPE * Return a pointer to the created structure. 
- */
-struct TYPE *std_type(int type) {
-    struct TYPE *p_type;
-    /* struct TYPE */
-    if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
-        error("can not malloc for struct TYPE in std_type\n");
-        return (NULL);
-    }
-    /* set type only */
-    p_type->ttype = type;
-    p_type->arraysize = 0;
-    p_type->etp = NULL;
-    p_type->paratp = NULL;
-    return p_type;
-}
-
-/*!
- * @brief Create a structure of the array type
- * @param[in] type Code representing the type
- * @return struct TYPE * Return a pointer to the created structure. 
- */
-struct TYPE *array_type(int type) {
-    struct TYPE *p_type;
-    struct TYPE *p_etp;
-    /* struct TYPE */
-    if ((p_type = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
-        error("can not malloc1 for struct TYPE in array_type\n");
-        return (NULL);
-    }
-    /* set array type */
-    p_type->ttype = type;
-    p_type->arraysize = num_attr;
-
-    /* struct TYPE ->etp */
-    if ((p_etp = (struct TYPE *)malloc(sizeof(struct TYPE))) == NULL) {
-        error("can not malloc2 for struct TYPE in array_type\n");
-        return (NULL);
-    }
-    /* set element type */
-    switch (type) {
-        case TPARRAYINT:
-            p_etp->ttype = TPINT;
-            break;
-        case TPARRAYCHAR:
-            p_etp->ttype = TPCHAR;
-            break;
-        case TPARRAYBOOL:
-            p_etp->ttype = TPBOOL;
-            break;
-        default:
-            fprintf(stderr, "[%d] is not array type code.\n", type);
-            error("type is not array type code.\n");
-            return (NULL);
-    }
-    p_etp->arraysize = 0;
-    p_etp->etp = NULL;
-    p_etp->paratp = NULL;
-
-    p_type->etp = p_etp;
-    p_type->paratp = NULL;
-    return p_type;
 }
 
 /*!
