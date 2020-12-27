@@ -208,19 +208,20 @@ extern int is_formal_parameter;
 
 /*! @name id-list.c */
 /* @{ */
-/* @} */
+extern void set_procedure_name(char *name);
+extern int add_globalid_to_crtab(void);
 extern void init_crtab(void);
 extern void release_crtab(void);
 extern int release_localidroot(void);
-extern int add_globalid_to_crtab(void);
-extern void set_procedure_name(char *name);
-struct ID *search_procedure(char *procname);
 extern int id_register_without_type(char *name);
 extern int id_register_as_type(struct TYPE **type);
-extern int register_linenum(char *name);
 extern struct TYPE *std_type(int type);
 extern struct TYPE *array_type(int type);
-void print_tab(struct ID *root);
+extern int register_linenum(char *name);
+extern struct ID *search_procedure(char *procname);
+extern void print_tab(struct ID *root);
+/* @} */
+
 /*! @name main.c */
 /* @{ */
 extern char *tokenstr[NUMOFTOKEN + 1];
