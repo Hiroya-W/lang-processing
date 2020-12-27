@@ -305,7 +305,7 @@ static int parse_standard_type(void) {
         case TBOOLEAN:
             standard_type = TPBOOL;
             break;
-        case TPCHAR:
+        case TCHAR:
             standard_type = TPCHAR;
             break;
     }
@@ -879,6 +879,8 @@ static int parse_variable(void) {
         return ERROR;
     }
 
+    token = scan();
+
     if (token == TLSQPAREN) {
         int exp_type = TPNONE;
         if (!(id_type & TPARRAY)) {
@@ -915,8 +917,6 @@ static int parse_variable(void) {
                 break;
         }
     }
-
-    token = scan();
 
     return id_type;
 }

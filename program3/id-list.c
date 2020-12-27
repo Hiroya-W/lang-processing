@@ -252,21 +252,6 @@ int register_linenum(char *name) {
         }
     }
 
-    /* Check for correct array index. */
-    if (p_id->itp->ttype & TPARRAY) {
-        int index = num_attr;
-        if (!(0 <= index && index < p_id->itp->arraysize - 1)) {
-            /* out of bounds */
-            fprintf(stderr, "array index %d is past the end of the array\n", index);
-            fprintf(stderr, "%s", p_id->name);
-            if (p_id->procname != NULL) {
-                fprintf(stderr, ":%s", p_id->procname);
-            };
-            fprintf(stderr, " : array[%d] of %s\n", p_id->itp->arraysize, typestr[p_id->itp->ttype]);
-            return error("array index is past the end of the array");
-        }
-    }
-
     /* the type of the variable. */
     id_type = p_id->itp->ttype;
 
