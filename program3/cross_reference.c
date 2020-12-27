@@ -1,6 +1,12 @@
 #include "mppl_compiler.h"
+
+/*! @name Boolean value */
+/* @{ */
+/*! True */
 #define true 1
+/*! False */
 #define false 0
+/* @} */
 
 static int parse_block(void);
 static int parse_variable_declaration(void);
@@ -54,7 +60,7 @@ int is_array_type = 0;
 int is_formal_parameter = 0;
 /*! When defining procedure name, it becomes 1 */
 int definition_procedure_name = 0;
-
+/*! Pointer to id of procedure name*/
 struct ID *id_procedure = NULL;
 
 /*!

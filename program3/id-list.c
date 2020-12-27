@@ -1,7 +1,12 @@
 ﻿#include "mppl_compiler.h"
 
+/*! @name Indent size for cross reference table */
+/* @{ */
+/*! Width of the Name column */
 #define INDENT_SIZE_NAME 20
+/*! Width of the Type column */
 #define INDENT_SIZE_TYPE 30
+/*! Width of the Def column */
 #define INDENT_SIZE_DEF 4
 
 struct ID *globalidroot, *localidroot; /*! Pointers to root of global only & local only */
