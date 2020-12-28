@@ -1,5 +1,5 @@
-﻿#ifndef _PRETTY_PRINTER_H_
-#define _PRETTY_PRINTER_H_
+﻿#ifndef _MPPL_COMPILER_H_
+#define _MPPL_COMPILER_H_
 
 /* pretty-printer.h  */
 #include <stdio.h>
