@@ -1,0 +1,17 @@
+# binary
+main
+test
+
+# coverage
+*.gcno 
+*.gcov 
+*.gcda 
+*.gch
+
+# output
+output.txt
+outputs/
+
+# documents
+docs/
+Doxyfile.bak
