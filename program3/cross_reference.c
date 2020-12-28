@@ -1,15 +1,12 @@
 #include "mppl_compiler.h"
 
-/*! String of each token */
-char *tokenstr[NUMOFTOKEN + 1] = {
-    "", "NAME", "program", "var", "array", "of", "begin",
-    "end", "if", "then", "else", "procedure", "return", "call",
-    "while", "do", "not", "or", "div", "and", "char",
-    "integer", "boolean", "readln", "writeln", "true", "false", "NUMBER",
-    "STRING", "+", "-", "*", "=", "<>", "<",
-    "<=", ">", ">=", "(", ")", "[", "]",
-    ":=", ".", ",", ":", ";", "read", "write",
-    "break"};
+/*! @name Boolean value */
+/* @{ */
+/*! True */
+#define true 1
+/*! False */
+#define false 0
+/* @} */
 
 static int parse_block(void);
 static int parse_variable_declaration(void);
@@ -51,6 +48,20 @@ static int exists_empty_statement = 0;
 static int indent_level = 0;
 /*! Indicates a nesting level of while statement */
 static int while_statement_level = 0;
+/*! When in subprogram declaration, it becomes 1 */
+int in_subprogram_declaration = 0;
+/*! When in variable declaration, it becomes 1 */
+int in_variable_declaration = 0;
+/*! When in call statement, it becomes 1 */
+int in_call_statement = 0;
+/*! if id's type is array, it becomes 1 */
+int is_array_type = 0;
+/*! if id is formal parameter, it becomes 1 */
+int is_formal_parameter = 0;
+/*! When defining procedure name, it becomes 1 */
+int definition_procedure_name = 0;
+/*! Pointer to id of procedure name*/
+struct ID *id_procedure = NULL;
 
 /*!
  * @brief Parsing a program
@@ -128,6 +139,8 @@ static int parse_variable_declaration(void) {
 
     token = scan();
 
+    in_variable_declaration = true;
+
     while (token == TNAME) {
         if (is_the_first_line == 0) {
             /* insert tab */
@@ -162,6 +175,9 @@ static int parse_variable_declaration(void) {
             indent_level--;
         }
     }
+
+    in_variable_declaration = false;
+
     return NORMAL;
 }
 
@@ -174,6 +190,18 @@ static int parse_variable_names(void) {
         return error("Name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
+
+    /* declaration */
+    if (in_variable_declaration || is_formal_parameter) {
+        if (id_register_without_type(string_attr) == ERROR) {
+            return ERROR;
+        }
+    }
+    /* reference */
+    else if (register_linenum(string_attr) == ERROR) {
+        return ERROR;
+    }
+
     token = scan();
 
     while (token == TCOMMA) {
@@ -184,6 +212,18 @@ static int parse_variable_names(void) {
             return error("Name is not found.");
         }
         fprintf(stdout, "%s", string_attr);
+
+        /* definition */
+        if (in_variable_declaration || is_formal_parameter) {
+            if (id_register_without_type(string_attr) == ERROR) {
+                return ERROR;
+            }
+        }
+        /* reference */
+        else if (register_linenum(string_attr) == ERROR) {
+            return ERROR;
+        }
+
         token = scan();
     }
     return NORMAL;
@@ -199,9 +239,14 @@ static int parse_type(void) {
             return ERROR;
         }
     } else if (token == TARRAY) {
+        if (is_formal_parameter) {
+            return error("Array types cannot be defined in the formal parameter");
+        }
+        is_array_type = true;
         if (parse_array_type() == ERROR) {
             return ERROR;
         }
+        is_array_type = false;
     } else {
         return error("Type is not found.");
     }
@@ -213,13 +258,60 @@ static int parse_type(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_standard_type(void) {
+    int standard_type = TPNONE;
+    struct TYPE *type;
     if (token != TINTEGER && token != TBOOLEAN && token != TCHAR) {
         return error("Standard type is not found.");
     }
     fprintf(stdout, "%s", tokenstr[token]);
-    token = scan();
 
-    return NORMAL;
+    /* regist id */
+    if (in_variable_declaration || is_formal_parameter) {
+        if (is_array_type) {
+            switch (token) {
+                case TINTEGER:
+                    type = array_type(TPARRAYINT);
+                    break;
+                case TBOOLEAN:
+                    type = array_type(TPARRAYBOOL);
+                    break;
+                case TCHAR:
+                    type = array_type(TPARRAYCHAR);
+                    break;
+            }
+        } else {
+            switch (token) {
+                case TINTEGER:
+                    type = std_type(TPINT);
+                    break;
+                case TBOOLEAN:
+                    type = std_type(TPBOOL);
+                    break;
+                case TCHAR:
+                    type = std_type(TPCHAR);
+                    break;
+            }
+        }
+        /* error multiple definition or can not malloc */
+        if (id_register_as_type(&type) == ERROR) {
+            return ERROR;
+        }
+    }
+
+    switch (token) {
+        case TINTEGER:
+            standard_type = TPINT;
+            break;
+        case TBOOLEAN:
+            standard_type = TPBOOL;
+            break;
+        case TCHAR:
+            standard_type = TPCHAR;
+            break;
+    }
+
+    token = scan();
+    return standard_type;
 }
 
 /*!
@@ -243,6 +335,15 @@ static int parse_array_type(void) {
         return error("Number is not found.");
     }
     fprintf(stdout, "%s", string_attr);
+
+    /* array size */
+    if (in_variable_declaration) {
+        /* The size of the array that can be defined is 1 <= 'array size' */
+        if (num_attr < 1) {
+            return error("The size of the array that can be defined is 1 <= 'array size'.");
+        }
+    }
+
     token = scan();
 
     if (token != TRSQPAREN) {
@@ -278,9 +379,14 @@ static int parse_subprogram_declaration(void) {
 
     token = scan();
 
+    in_subprogram_declaration = true;
+    definition_procedure_name = true;
+
     if (parse_procedure_name() == ERROR) {
         return ERROR;
     }
+
+    definition_procedure_name = false;
 
     if (token == TLPAREN && parse_formal_parameters() == ERROR) {
         return ERROR;
@@ -311,11 +417,15 @@ static int parse_subprogram_declaration(void) {
     token = scan();
     indent_level--;
 
+    in_subprogram_declaration = false;
+    release_localidroot();
+
     return NORMAL;
 }
 
 /*!
  * @brief Parsing a procedure name
+ * @param[in] register_mode If 1, store the name of the procedure 
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_procedure_name(void) {
@@ -323,6 +433,28 @@ static int parse_procedure_name(void) {
         return error("Procedure name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
+
+    /* definition */
+    if (definition_procedure_name) {
+        struct TYPE *type;
+        /* regist procedure name */
+        id_register_without_type(string_attr);
+        /* procedure name's type is TPPROC */
+        type = std_type(TPPROC);
+        /* error multiple definition or can not malloc */
+        if (id_register_as_type(&type) == ERROR) {
+            return ERROR;
+        }
+
+        set_procedure_name(string_attr);
+    }
+    /* reference */
+    else {
+        if (register_linenum(string_attr) == ERROR) {
+            return ERROR;
+        }
+        id_procedure = search_procedure(string_attr);
+    }
     token = scan();
 
     return NORMAL;
@@ -338,6 +470,8 @@ static int parse_formal_parameters(void) {
     }
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
+
+    is_formal_parameter = true;
 
     if (parse_variable_names() == ERROR) {
         return ERROR;
@@ -382,6 +516,8 @@ static int parse_formal_parameters(void) {
     }
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
+
+    is_formal_parameter = false;
 
     return NORMAL;
 }
@@ -512,7 +648,9 @@ static int parse_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_assignment_statement(void) {
-    if (parse_variable() == ERROR) {
+    int var_type = TPNONE;
+    int exp_type = TPNONE;
+    if ((var_type = parse_variable()) == ERROR) {
         return ERROR;
     }
 
@@ -522,8 +660,12 @@ static int parse_assignment_statement(void) {
     fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
-    if (parse_expression() == ERROR) {
+    if ((exp_type = parse_expression()) == ERROR) {
         return ERROR;
+    }
+
+    if (var_type != exp_type) {
+        return error("The types of the operand1 and operand2 do not match");
     }
 
     return NORMAL;
@@ -534,14 +676,19 @@ static int parse_assignment_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_condition_statement(void) {
+    int exp_type = TPNONE;
     if (token != TIF) {
         return error("Keyword 'if' is not found.");
     }
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if (parse_expression() == ERROR) {
+    if ((exp_type = parse_expression()) == ERROR) {
         return ERROR;
+    }
+
+    if (exp_type != TPBOOL) {
+        return error("The type of the condition must be boolean.");
     }
 
     if (token != TTHEN) {
@@ -596,6 +743,7 @@ static int parse_condition_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_iteration_statement(void) {
+    int exp_type = TPNONE;
     if (token != TWHILE) {
         return error("Keyword 'while' is not found.");
     }
@@ -603,8 +751,12 @@ static int parse_iteration_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if (parse_expression() == ERROR) {
+    if ((exp_type = parse_expression()) == ERROR) {
         return ERROR;
+    }
+
+    if (exp_type != TPBOOL) {
+        return error("The type of the condition must be boolean.");
     }
 
     if (token != TDO) {
@@ -613,12 +765,6 @@ static int parse_iteration_statement(void) {
     fprintf(stdout, " %s", tokenstr[token]);
     fprintf(stdout, "\n");
     token = scan();
-
-    if (token != TBEGIN) {
-        indent_level++;
-        insert_indent();
-        indent_level--;
-    }
 
     if (parse_statement() == ERROR) {
         return ERROR;
@@ -638,6 +784,7 @@ static int parse_call_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
+    in_call_statement = true;
     if (parse_procedure_name() == ERROR) {
         return ERROR;
     }
@@ -655,7 +802,13 @@ static int parse_call_statement(void) {
         }
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
+    } else {
+        struct TYPE *para_type = id_procedure->itp->paratp;
+        if (para_type != NULL) {
+            return error("There are a few arguments.");
+        }
     }
+    in_call_statement = false;
 
     return NORMAL;
 }
@@ -665,18 +818,49 @@ static int parse_call_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_expressions(void) {
-    if (parse_expression() == ERROR) {
+    int exp_type = TPNONE;
+    int num_of_exp = 0;
+    struct TYPE *para_type = id_procedure->itp->paratp;
+    if ((exp_type = parse_expression()) == ERROR) {
         return ERROR;
     }
+    num_of_exp++;
 
+    if (in_call_statement) {
+        if (para_type == NULL) {
+            return error("This procedure takes no arguments.");
+        }
+        if (para_type->ttype != exp_type) {
+            return error("The type of the argument1 does not match.");
+        }
+    }
     while (token == TCOMMA) {
         fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
-        if (parse_expression() == ERROR) {
+        if ((exp_type = parse_expression()) == ERROR) {
             return ERROR;
         }
+
+        num_of_exp++;
+        if (in_call_statement) {
+            para_type = para_type->paratp;
+            if (para_type == NULL) {
+                return error("There are a lot of arguments.");
+            }
+            if (para_type->ttype != exp_type) {
+                fprintf(stderr, "The type of the argument%d does not match.", num_of_exp);
+                return error("The type of the argument does not match.");
+            }
+        }
     }
+
+    if (in_call_statement) {
+        if (para_type->paratp != NULL) {
+            return error("There are a few arguments.");
+        }
+    }
+
     return NORMAL;
 }
 
@@ -685,20 +869,33 @@ static int parse_expressions(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_variable(void) {
+    int id_type = TPNONE;
     if (token != TNAME) {
         return error("Name is not found.");
     }
-
     fprintf(stdout, "%s", string_attr);
+
+    if ((id_type = register_linenum(string_attr)) == ERROR) {
+        return ERROR;
+    }
+
     token = scan();
 
     if (token == TLSQPAREN) {
+        int exp_type = TPNONE;
+        if (!(id_type & TPARRAY)) {
+            fprintf(stderr, "%s is not Array type.", string_attr);
+            return error("id is not Array type.");
+        }
+
         /* name is array type */
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
-        if (parse_expression() == ERROR) {
+        if ((exp_type = parse_expression()) == ERROR) {
             return ERROR;
+        } else if (exp_type != TPINT) {
+            return error("The array index type must be an integer.");
         }
 
         if (token != TRSQPAREN) {
@@ -706,9 +903,22 @@ static int parse_variable(void) {
         }
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
+
+        /* the type of the array elements */
+        switch (id_type) {
+            case TPARRAYINT:
+                id_type = TPINT;
+                break;
+            case TPARRAYCHAR:
+                id_type = TPCHAR;
+                break;
+            case TPARRAYBOOL:
+                id_type = TPBOOL;
+                break;
+        }
     }
 
-    return NORMAL;
+    return id_type;
 }
 
 /*!
@@ -723,19 +933,28 @@ static int parse_input_statement(void) {
     token = scan();
 
     if (token == TLPAREN) {
+        int var_type = TPNONE;
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
-        if (parse_variable() == ERROR) {
+        if ((var_type = parse_variable()) == ERROR) {
             return ERROR;
+        }
+
+        if (var_type != TPINT && var_type != TPCHAR) {
+            return error("The type of the variable must be integer or char.");
         }
 
         while (token == TCOMMA) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if (parse_variable() == ERROR) {
+            if ((var_type = parse_variable()) == ERROR) {
                 return ERROR;
+            }
+
+            if (var_type != TPINT && var_type != TPCHAR) {
+                return error("The type of the variable must be integer or char.");
             }
         }
         if (token != TRPAREN) {
@@ -790,6 +1009,7 @@ static int parse_output_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_output_format(void) {
+    int exp_type = TPNONE;
     if (token == TSTRING && strlen(string_attr) > 1) {
         fprintf(stdout, "'%s'", string_attr);
         token = scan();
@@ -820,8 +1040,11 @@ static int parse_output_format(void) {
         case TBOOLEAN:
             /* FALLTHROUGH */
         case TCHAR:
-            if (parse_expression() == ERROR) {
+            if ((exp_type = parse_expression()) == ERROR) {
                 return ERROR;
+            }
+            if (exp_type & TPARRAY) {
+                return error("The type must be a standard type.");
             }
 
             if (token == TCOLON) {
@@ -846,20 +1069,32 @@ static int parse_output_format(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_expression(void) {
-    if (parse_simple_expression() == ERROR) {
+    int exp_type1 = TPNONE;
+
+    if ((exp_type1 = parse_simple_expression()) == ERROR) {
         return ERROR;
     }
 
     while (is_relational_operator(token)) {
+        int exp_type2 = TPNONE;
+        /* The type of the result of a relational operator is a boolean. */
+
         fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
-        if (parse_simple_expression() == ERROR) {
+        if ((exp_type2 = parse_simple_expression()) == ERROR) {
             return ERROR;
         }
+
+        if (exp_type1 != exp_type2) {
+            return error("The types of the operand1 and operand2 do not match");
+        }
+
+        /* The type of the result of a relational operator is a boolean. */
+        exp_type1 = TPBOOL;
     }
 
-    return NORMAL;
+    return exp_type1;
 }
 
 /*!
@@ -891,24 +1126,47 @@ static int is_relational_operator(int _token) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_simple_expression(void) {
+    int term_type1 = TPNONE;
+    int term_type2 = TPNONE;
     if (token == TPLUS || token == TMINUS) {
+        term_type1 = TPINT;
+
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
 
-    if (parse_term() == ERROR) {
+    if ((term_type2 = parse_term()) == ERROR) {
         return ERROR;
     }
 
+    if (term_type1 == TPINT && term_type2 != TPINT) {
+        /* if there are + or -, the type must be integer  */
+        return error("The type of the term must be integer.");
+    }
+    term_type1 = term_type2;
+
     while (token == TPLUS || token == TMINUS || token == TOR) {
         fprintf(stdout, " %s ", tokenstr[token]);
+
+        if ((token == TPLUS || token == TMINUS) && term_type1 != TPINT) {
+            return error("The type of the operand must be integer.");
+        } else if (token == TOR && term_type1 != TPBOOL) {
+            return error("The type of the operand must be boolean.");
+        }
+
         token = scan();
 
-        if (parse_term() == ERROR) {
+        if ((term_type2 = parse_term()) == ERROR) {
             return ERROR;
         }
+
+        if (term_type1 == TPINT && term_type2 != TPINT) {
+            return error("The type of the operand must be integer.");
+        } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
+            return error("The type of the operand must be boolean.");
+        }
     }
-    return NORMAL;
+    return term_type1;
 }
 
 /*!
@@ -916,19 +1174,35 @@ static int parse_simple_expression(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_term(void) {
-    if (parse_factor() == ERROR) {
+    int term_type1 = TPNONE;
+    int term_type2 = TPNONE;
+
+    if ((term_type1 = parse_factor()) == ERROR) {
         return ERROR;
     }
 
     while (token == TSTAR || token == TDIV || token == TAND) {
         fprintf(stdout, " %s ", tokenstr[token]);
+
+        if ((token == TSTAR || token == TDIV) && term_type1 != TPINT) {
+            return error("The type of the operand must be integer.");
+        } else if (token == TAND && term_type1 != TPBOOL) {
+            return error("The type of the operand must be boolean.");
+        }
+
         token = scan();
 
-        if (parse_factor() == ERROR) {
+        if ((term_type2 = parse_factor()) == ERROR) {
             return ERROR;
         }
+
+        if (term_type1 == TPINT && term_type2 != TPINT) {
+            return error("The type of the operand must be integer.");
+        } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
+            return error("The type of the operand must be boolean.");
+        }
     }
-    return NORMAL;
+    return term_type1;
 }
 
 /*!
@@ -936,9 +1210,11 @@ static int parse_term(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_factor(void) {
+    int factor_type = TPNONE;
+    int exp_type = TPNONE;
     switch (token) {
         case TNAME:
-            if (parse_variable() == ERROR) {
+            if ((factor_type = parse_variable()) == ERROR) {
                 return ERROR;
             }
             break;
@@ -949,7 +1225,7 @@ static int parse_factor(void) {
         case TTRUE:
             /* FALLTHROUGH */
         case TSTRING:
-            if (parse_constant() == ERROR) {
+            if ((factor_type = parse_constant()) == ERROR) {
                 return ERROR;
             }
             break;
@@ -957,7 +1233,7 @@ static int parse_factor(void) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if (parse_expression() == ERROR) {
+            if ((factor_type = parse_expression()) == ERROR) {
                 return ERROR;
             }
 
@@ -971,8 +1247,11 @@ static int parse_factor(void) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if (parse_factor() == ERROR) {
+            if ((factor_type = parse_factor()) == ERROR) {
                 return ERROR;
+            }
+            if (factor_type != TPBOOL) {
+                return error("The type of the operand must be boolean.");
             }
             break;
         case TINTEGER:
@@ -980,7 +1259,7 @@ static int parse_factor(void) {
         case TBOOLEAN:
             /* FALLTHROUGH */
         case TCHAR:
-            if (parse_standard_type() == ERROR) {
+            if ((factor_type = parse_standard_type()) == ERROR) {
                 return ERROR;
             }
 
@@ -990,8 +1269,11 @@ static int parse_factor(void) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if (parse_expression() == ERROR) {
+            if ((exp_type = parse_expression()) == ERROR) {
                 return ERROR;
+            }
+            if (exp_type & TPARRAY) {
+                return error("The type must be a standard type.");
             }
 
             if (token != TRPAREN) {
@@ -1003,7 +1285,7 @@ static int parse_factor(void) {
         default:
             return error("Factor is not found.");
     }
-    return NORMAL;
+    return factor_type;
 }
 
 /*!
@@ -1011,26 +1293,31 @@ static int parse_factor(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_constant(void) {
+    int constant_type = NORMAL;
+
     switch (token) {
         case TNUMBER:
             fprintf(stdout, "%s", string_attr);
+            constant_type = TPINT;
             break;
         case TFALSE:
             /* FALLTHROUGH */
         case TTRUE:
             fprintf(stdout, "%s", tokenstr[token]);
+            constant_type = TPBOOL;
             break;
         case TSTRING:
             if (strlen(string_attr) != 1) {
                 return error("Constant string length != 1");
             }
             fprintf(stdout, "'%s'", string_attr);
+            constant_type = TPCHAR;
             break;
         default:
             return error("Constant is not found.");
     }
     token = scan();
-    return NORMAL;
+    return constant_type;
 }
 
 /*!

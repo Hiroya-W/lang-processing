@@ -1,4 +1,4 @@
 program parseoutputformat;
 begin
-    writeln(char('M') : 10)
+    writeln(char('MESSAGE') : 10)
 end.
