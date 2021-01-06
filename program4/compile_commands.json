@@ -1,0 +1,155 @@
+[
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program2",
+  "arguments": [
+   "gcc",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "main.o",
+   "main.c"
+  ],
+  "file": "main.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program2",
+  "arguments": [
+   "gcc",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "scan.o",
+   "scan.c"
+  ],
+  "file": "scan.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program2",
+  "arguments": [
+   "gcc",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "pretty-printer.o",
+   "pretty-printer.c"
+  ],
+  "file": "pretty-printer.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program2",
+  "arguments": [
+   "gcc",
+   "test.c",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-Dmain=_main_disabled",
+   "-coverage",
+   "-fprofile-arcs",
+   "-ftest-coverage",
+   "-L/usr/lib",
+   "-lcunit",
+   "-o",
+   "test"
+  ],
+  "file": "test.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program3",
+  "arguments": [
+   "gcc",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "main.o",
+   "main.c"
+  ],
+  "file": "main.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program3",
+  "arguments": [
+   "gcc",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "scan.o",
+   "scan.c"
+  ],
+  "file": "scan.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program3",
+  "arguments": [
+   "gcc",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "cross_reference.o",
+   "cross_reference.c"
+  ],
+  "file": "cross_reference.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program3",
+  "arguments": [
+   "gcc",
+   "-ansi",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-c",
+   "-o",
+   "id-list.o",
+   "id-list.c"
+  ],
+  "file": "id-list.c"
+ },
+ {
+  "directory": "/home/hiroya/Documents/git-repos/lang-processing/program3",
+  "arguments": [
+   "gcc",
+   "test.c",
+   "-fno-common",
+   "-W",
+   "-Wall",
+   "-g",
+   "-Dmain=_main_disabled",
+   "-coverage",
+   "-fprofile-arcs",
+   "-ftest-coverage",
+   "-L/usr/lib",
+   "-lcunit",
+   "-o",
+   "test"
+  ],
+  "file": "test.c"
+ }
+]
