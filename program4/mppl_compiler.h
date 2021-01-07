@@ -222,6 +222,13 @@ extern struct ID *search_procedure(char *procname);
 extern void print_tab(struct ID *root);
 /* @} */
 
+/*! @name assembler.c */
+/* @{ */
+extern FILE *out_fp;
+extern int init_assemble(char *filename_mppl);
+extern int end_assemble(void);
+/* @} */
+
 /*! @name main.c */
 /* @{ */
 extern char *tokenstr[NUMOFTOKEN + 1];

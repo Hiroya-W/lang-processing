@@ -72,6 +72,11 @@ int main(int nc, char *np[]) {
         return EXIT_FAILURE;
     }
 
+    if (init_assemble(file_name) < 0) {
+        fprintf(stderr, "File %s can not open.\n", file_name);
+        return EXIT_FAILURE;
+    }
+
     init_crtab();
     token = scan();
     ret = parse_program();
@@ -79,6 +84,12 @@ int main(int nc, char *np[]) {
     if (end_scan() < 0) {
         error("function main()");
         fprintf(stderr, "File %s can not close.\n", file_name);
+        return EXIT_FAILURE;
+    }
+
+    if (end_assemble() < 0) {
+        error("function main()");
+        fprintf(stderr, "csl File can not close.\n");
         return EXIT_FAILURE;
     }
 
