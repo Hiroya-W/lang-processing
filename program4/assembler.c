@@ -88,6 +88,7 @@ int create_newlabel(char **out) {
  * @return int Returns 0 on success and -1 on failure.
  */
 void assemble_if_condition(char *else_label) {
+    fprintf(out_fp, ";if condition\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tCPA \tgr1, \tgr0\n");
     fprintf(out_fp, "\tJZE \t%s\n", else_label);
