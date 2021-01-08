@@ -88,7 +88,7 @@ void assemble_procedure_definition() {
 }
 
 void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type) {
-    fprintf(out_fp, ";variable declaration\n");
+    /* fprintf(out_fp, ";variable declaration\n"); */
     fprintf(out_fp, "$%s", variable_name);
     if (procname != NULL) {
         fprintf(out_fp, "%c%s", '%', procname);
@@ -106,34 +106,34 @@ void assemble_variable_declaration(char *variable_name, char *procname, struct T
  * @return int Returns 0 on success and -1 on failure.
  */
 void assemble_if_condition(char *else_label) {
-    fprintf(out_fp, ";if condition\n");
+    /* fprintf(out_fp, ";if condition\n"); */
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tCPA \tgr1, \tgr0\n");
     fprintf(out_fp, "\tJZE \t%s\n", else_label);
 }
 
 void assemble_else(char *if_end_label, char *else_label) {
-    fprintf(out_fp, ";else\n");
+    /* fprintf(out_fp, ";else\n"); */
     fprintf(out_fp, "\tJUMP \t%s\n", if_end_label);
     fprintf(out_fp, "%s\n", else_label);
 }
 
 void assemble_MULA() {
-    fprintf(out_fp, ";MULA\n");
+    /* fprintf(out_fp, ";MULA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tMULA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 void assemble_DIVA() {
-    fprintf(out_fp, ";DIVA\n");
+    /* fprintf(out_fp, ";DIVA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tDIVA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 void assemble_AND() {
-    fprintf(out_fp, ";DIVA\n");
+    /* fprintf(out_fp, ";DIVA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tAND \tgr1, \tgr2\n");
