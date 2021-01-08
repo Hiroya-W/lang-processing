@@ -119,10 +119,12 @@ int id_register_as_type(struct TYPE **type) {
             /* regist local name and formal parameter */
             ret = id_register_to_tab(&localidroot, name, current_procedure_name, type, ispara, deflinenum);
             ret1 = id_register_to_tab(&crtabroot, name, current_procedure_name, type, ispara, deflinenum);
+            assemble_variable_declaration(name, current_procedure_name, type);
         } else {
             /* regist global name */
             ret = id_register_to_tab(&globalidroot, name, NULL, type, ispara, deflinenum);
             ret1 = id_register_to_tab(&crtabroot, name, NULL, type, ispara, deflinenum);
+            assemble_variable_declaration(name, NULL, type);
         }
         if (ret == ERROR || ret1 == ERROR)
             return ERROR;

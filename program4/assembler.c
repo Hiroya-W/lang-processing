@@ -82,6 +82,19 @@ int create_newlabel(char **out) {
     return 0;
 }
 
+void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type) {
+    fprintf(out_fp, ";variable declaration\n");
+    fprintf(out_fp, "$%s", variable_name);
+    if (procname != NULL) {
+        fprintf(out_fp, "%c%s", '%', procname);
+    }
+    if ((*type)->ttype & TPARRAY) {
+        fprintf(out_fp, " \tDS \t%d\n", (*type)->arraysize);
+    } else {
+        fprintf(out_fp, " \tDC \t0\n");
+    }
+}
+
 /*!
  * @brief Generating assembly code for if condition
  * @param[in] Label to jump to else
