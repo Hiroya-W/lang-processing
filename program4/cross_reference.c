@@ -78,6 +78,11 @@ int parse_program(void) {
         return error("Program name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
+
+    if (assemble_start(string_attr) == ERROR) {
+        return ERROR;
+    }
+
     token = scan();
 
     if (token != TSEMI) {
