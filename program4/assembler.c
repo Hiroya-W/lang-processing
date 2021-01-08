@@ -1,6 +1,12 @@
 #include "mppl_compiler.h"
 
+/*! maximum length of a label */
+#define LABEL_SIZE 128
+
+/*! File pointer of the output file */
 FILE *out_fp;
+/*! Count the number of labels created */
+int label_counter = 0;
 
 /*!
  * @brief Initialize the output file
@@ -13,7 +19,7 @@ int init_assemble(char *filename_mppl) {
     /* hoge.mpl -> hoge.csl */
     sprintf(filename_csl, "%s.csl", filename);
 
-    if ((out_fp = fopen(filename, "w")) == NULL) {
+    if ((out_fp = fopen(filename_csl, "w")) == NULL) {
         error("fopen() returns NULL");
         error("function init_assemble()");
         return -1;
@@ -32,5 +38,24 @@ int end_assemble(void) {
         fprintf(stderr, "fclose() returns EOF.");
         return -1;
     }
+    return 0;
+}
+
+/*!
+ * @brief Create a new label.
+ */
+int create_newlabel(char **out) {
+    char *newlabel;
+
+    /* struct ID */
+    if ((newlabel = (char *)malloc(sizeof(char) * (LABEL_SIZE + 1))) == NULL) {
+        return error("can not malloc in create_newlabel\n");
+    }
+
+    label_counter++;
+
+    sprintf(newlabel, "L%04d", label_counter);
+    *out = newlabel;
+
     return 0;
 }

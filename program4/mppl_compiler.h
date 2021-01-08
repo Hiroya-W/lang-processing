@@ -227,6 +227,7 @@ extern void print_tab(struct ID *root);
 extern FILE *out_fp;
 extern int init_assemble(char *filename_mppl);
 extern int end_assemble(void);
+extern int create_newlabel(char **out);
 /* @} */
 
 /*! @name main.c */
