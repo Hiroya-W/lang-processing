@@ -63,7 +63,7 @@ int assemble_start(char *program_name) {
 
 /*!
  * @brief Create a new label.
- * @param[in] out Pointer to return the label that was created
+ * @param[out] out Pointer to return the label that was created
  * @return int Returns 0 on success and -1 on failure.
  */
 int create_newlabel(char **out) {
@@ -82,11 +82,18 @@ int create_newlabel(char **out) {
     return 0;
 }
 
+/*!
+ * @brief Generating assembly code for procedure definition
+ */
 void assemble_procedure_definition() {
     /* fprintf(out_fp, ";procedure declaration\n"); */
     fprintf(out_fp, "$%s\n", current_procedure_name);
 }
 
+/*!
+ * @brief Generating assembly code for variable declaration
+ * @param[in] else_label Label to jump to else
+ */
 void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type) {
     /* fprintf(out_fp, ";variable declaration\n"); */
     fprintf(out_fp, "$%s", variable_name);
@@ -102,8 +109,7 @@ void assemble_variable_declaration(char *variable_name, char *procname, struct T
 
 /*!
  * @brief Generating assembly code for if condition
- * @param[in] Label to jump to else
- * @return int Returns 0 on success and -1 on failure.
+ * @param[in] else_label Label to jump to else
  */
 void assemble_if_condition(char *else_label) {
     /* fprintf(out_fp, ";if condition\n"); */
@@ -112,12 +118,20 @@ void assemble_if_condition(char *else_label) {
     fprintf(out_fp, "\tJZE \t%s\n", else_label);
 }
 
+/*!
+ * @brief Generating assembly code for else section
+ * @param[in] if_end_label Label to jump to end of condition_statement
+ * @param[in] else_label Label to start of else section
+ */
 void assemble_else(char *if_end_label, char *else_label) {
     /* fprintf(out_fp, ";else\n"); */
     fprintf(out_fp, "\tJUMP \t%s\n", if_end_label);
     fprintf(out_fp, "%s\n", else_label);
 }
 
+/*!
+ * @brief Generating assembly code for product operation
+ */
 void assemble_MULA() {
     /* fprintf(out_fp, ";MULA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
@@ -125,6 +139,10 @@ void assemble_MULA() {
     fprintf(out_fp, "\tMULA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
+
+/*!
+ * @brief Generating assembly code for division operation
+ */
 void assemble_DIVA() {
     /* fprintf(out_fp, ";DIVA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
@@ -132,6 +150,10 @@ void assemble_DIVA() {
     fprintf(out_fp, "\tDIVA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
+
+/*!
+ * @brief Generating assembly code for AND operation
+ */
 void assemble_AND() {
     /* fprintf(out_fp, ";DIVA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
