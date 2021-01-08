@@ -378,8 +378,6 @@ static int parse_subprogram_declaration(void) {
         return error("Keyword 'procedure' is not found.");
     }
 
-    indent_level++;
-    insert_indent();
     fprintf(stdout, "%s ", tokenstr[token]);
 
     token = scan();
@@ -409,6 +407,8 @@ static int parse_subprogram_declaration(void) {
             return ERROR;
         }
     }
+
+    indent_level++;
 
     if (parse_compound_statement() == ERROR) {
         return ERROR;
