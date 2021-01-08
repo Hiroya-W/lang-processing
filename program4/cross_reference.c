@@ -677,6 +677,8 @@ static int parse_assignment_statement(void) {
  */
 static int parse_condition_statement(void) {
     int exp_type = TPNONE;
+    char *else_label = NULL;
+
     if (token != TIF) {
         return error("Keyword 'if' is not found.");
     }
@@ -690,6 +692,11 @@ static int parse_condition_statement(void) {
     if (exp_type != TPBOOL) {
         return error("The type of the condition must be boolean.");
     }
+
+    if (create_newlabel(&else_label) == ERROR) {
+        return ERROR;
+    }
+    assemble_if_condition(else_label);
 
     if (token != TTHEN) {
         return error("Keyword 'then' is not found.");

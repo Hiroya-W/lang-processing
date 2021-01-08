@@ -228,6 +228,7 @@ extern FILE *out_fp;
 extern int init_assemble(char *filename_mppl);
 extern int end_assemble(void);
 extern int create_newlabel(char **out);
+extern void assemble_if_condition(char *else_label);
 /* @} */
 
 /*! @name main.c */

@@ -43,6 +43,8 @@ int end_assemble(void) {
 
 /*!
  * @brief Create a new label.
+ * @param[in] out Pointer to return the label that was created
+ * @return int Returns 0 on success and -1 on failure.
  */
 int create_newlabel(char **out) {
     char *newlabel;
@@ -58,4 +60,10 @@ int create_newlabel(char **out) {
     *out = newlabel;
 
     return 0;
+}
+
+void assemble_if_condition(char *else_label) {
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tCPA \tgr1, \tgr0\n");
+    fprintf(out_fp, "\tJZE \t%s\n", else_label);
 }
