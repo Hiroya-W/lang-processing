@@ -409,6 +409,7 @@ static int parse_subprogram_declaration(void) {
     }
 
     indent_level++;
+    assemble_procedure_definition();
 
     if (parse_compound_statement() == ERROR) {
         return ERROR;

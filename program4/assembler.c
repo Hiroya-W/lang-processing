@@ -82,6 +82,11 @@ int create_newlabel(char **out) {
     return 0;
 }
 
+void assemble_procedure_definition() {
+    /* fprintf(out_fp, ";procedure declaration\n"); */
+    fprintf(out_fp, "$%s\n", current_procedure_name);
+}
+
 void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type) {
     fprintf(out_fp, ";variable declaration\n");
     fprintf(out_fp, "$%s", variable_name);

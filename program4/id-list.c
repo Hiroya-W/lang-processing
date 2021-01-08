@@ -30,7 +30,7 @@ struct ID *crtabroot;
 /*! Pointers to root of id symbol tables without type */
 struct ID *id_without_type_root;
 /*! the procedure name currenty being parsed */
-static char current_procedure_name[MAXSTRSIZE];
+char current_procedure_name[MAXSTRSIZE];
 
 /*! To set the procedure name */
 void set_procedure_name(char *name) {

@@ -208,6 +208,7 @@ extern int is_formal_parameter;
 
 /*! @name id-list.c */
 /* @{ */
+extern char current_procedure_name[MAXSTRSIZE];
 extern void set_procedure_name(char *name);
 extern int add_globalid_to_crtab(void);
 extern void init_crtab(void);
@@ -229,6 +230,7 @@ extern int init_assemble(char *filename_mppl);
 extern int end_assemble(void);
 extern int assemble_start(char *program_name);
 extern int create_newlabel(char **out);
+extern void assemble_procedure_definition();
 extern void assemble_if_condition(char *else_label);
 extern void assemble_else(char *if_end_label, char *else_label);
 extern void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type);
