@@ -93,3 +93,9 @@ void assemble_if_condition(char *else_label) {
     fprintf(out_fp, "\tCPA \tgr1, \tgr0\n");
     fprintf(out_fp, "\tJZE \t%s\n", else_label);
 }
+
+void assemble_else(char *if_end_label, char *else_label) {
+    fprintf(out_fp, ";else\n");
+    fprintf(out_fp, "\tJUMP \t%s\n", if_end_label);
+    fprintf(out_fp, "%s\n", else_label);
+}

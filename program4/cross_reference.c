@@ -683,6 +683,7 @@ static int parse_assignment_statement(void) {
 static int parse_condition_statement(void) {
     int exp_type = TPNONE;
     char *else_label = NULL;
+    char *if_end_label = NULL;
 
     if (token != TIF) {
         return error("Keyword 'if' is not found.");
@@ -722,7 +723,12 @@ static int parse_condition_statement(void) {
 
     indent_level--;
 
+    if (create_newlabel(&if_end_label) == ERROR) {
+        return ERROR;
+    }
+
     if (token == TELSE) {
+        assemble_else(if_end_label, else_label);
         fprintf(stdout, "\n");
         insert_indent();
 
@@ -745,6 +751,9 @@ static int parse_condition_statement(void) {
                 return ERROR;
             }
         }
+        fprintf(out_fp, "%s\n", if_end_label);
+    } else {
+        fprintf(out_fp, "%s\n", else_label);
     }
 
     return NORMAL;
