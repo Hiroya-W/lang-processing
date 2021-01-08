@@ -67,17 +67,17 @@ int assemble_start(char *program_name) {
  * @return int Returns 0 on success and -1 on failure.
  */
 int create_newlabel(char **out) {
-    char *newlabel;
+    char *new_label;
 
-    /* struct ID */
-    if ((newlabel = (char *)malloc(sizeof(char) * (LABEL_SIZE + 1))) == NULL) {
+    /* char for newlabel */
+    if ((new_label = (char *)malloc(sizeof(char) * (LABEL_SIZE + 1))) == NULL) {
         return error("can not malloc in create_newlabel\n");
     }
 
     label_counter++;
 
-    sprintf(newlabel, "L%04d", label_counter);
-    *out = newlabel;
+    sprintf(new_label, "L%04d", label_counter);
+    *out = new_label;
 
     return 0;
 }
