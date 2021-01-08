@@ -47,14 +47,9 @@ int end_assemble(void) {
  * @return int Returns 0 on success and -1 on failure.
  */
 int assemble_start(char *program_name) {
-    char *label;
     fprintf(out_fp, "$$%s \tSTART\n", program_name);
     fprintf(out_fp, "\tLAD \tgr0, \t0\n");
-    if (create_newlabel(&label) == ERROR) {
-        error("function assemble_start()");
-        return ERROR;
-    }
-    fprintf(out_fp, "\tCALL \t%s\n", label);
+    fprintf(out_fp, "\tCALL \tL0001\n");
     fprintf(out_fp, "\tCALL \tFLUSH\n");
     fprintf(out_fp, "\tSVC \t0\n");
 

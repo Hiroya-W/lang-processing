@@ -110,6 +110,11 @@ int parse_program(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_block(void) {
+    char *L0001 = NULL;
+    if (create_newlabel(&L0001) == ERROR) {
+        return ERROR;
+    }
+
     while (token == TVAR || token == TPROCEDURE) {
         if (token == TVAR) {
             /* paragraph */
@@ -123,6 +128,8 @@ static int parse_block(void) {
             }
         }
     }
+
+    fprintf(out_fp, "%s\n", L0001);
     if (parse_compound_statement() == ERROR) {
         return ERROR;
     }
