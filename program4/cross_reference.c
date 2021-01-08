@@ -1197,6 +1197,7 @@ static int parse_simple_expression(void) {
 static int parse_term(void) {
     int term_type1 = TPNONE;
     int term_type2 = TPNONE;
+    int opr;
 
     if ((term_type1 = parse_factor()) == ERROR) {
         return ERROR;
@@ -1210,6 +1211,7 @@ static int parse_term(void) {
         } else if (token == TAND && term_type1 != TPBOOL) {
             return error("The type of the operand must be boolean.");
         }
+        opr = token;
 
         token = scan();
 
@@ -1221,6 +1223,14 @@ static int parse_term(void) {
             return error("The type of the operand must be integer.");
         } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
             return error("The type of the operand must be boolean.");
+        }
+
+        if (opr == TSTAR) {
+            assemble_MULA();
+        } else if (opr == TDIV) {
+            assemble_DIVA();
+        } else if (opr == TAND) {
+            assemble_AND();
         }
     }
     return term_type1;

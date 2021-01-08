@@ -99,3 +99,25 @@ void assemble_else(char *if_end_label, char *else_label) {
     fprintf(out_fp, "\tJUMP \t%s\n", if_end_label);
     fprintf(out_fp, "%s\n", else_label);
 }
+
+void assemble_MULA() {
+    fprintf(out_fp, ";MULA\n");
+    fprintf(out_fp, "\tPOP \tgr2\n");
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tMULA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+}
+void assemble_DIVA() {
+    fprintf(out_fp, ";DIVA\n");
+    fprintf(out_fp, "\tPOP \tgr2\n");
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tDIVA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+}
+void assemble_AND() {
+    fprintf(out_fp, ";DIVA\n");
+    fprintf(out_fp, "\tPOP \tgr2\n");
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tAND \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+}
