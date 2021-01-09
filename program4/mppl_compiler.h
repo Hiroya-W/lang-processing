@@ -183,6 +183,15 @@ struct ID {
     struct ID *nextp;   /*! pointer next struct */
 };
 
+/*!
+ * @brief List to store the literals
+ */
+struct LITERAL {
+    char *label;           /*! label */
+    char *value;           /*! strings, unsigned int */
+    struct LITERAL *nextp; /*! pointer next struct */
+};
+
 extern struct ID *crtabroot;
 extern struct ID *localidroot;
 
