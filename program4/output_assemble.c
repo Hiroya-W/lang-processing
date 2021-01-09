@@ -150,7 +150,7 @@ void assemble_else(char *if_end_label, char *else_label) {
 }
 
 void assemble_call(struct ID *id_procedure) {
-    fprintf(out_fp, "CALL $%s\n", id_procedure->name);
+    fprintf(out_fp, "\tCALL $%s\n", id_procedure->name);
 }
 
 /*!
