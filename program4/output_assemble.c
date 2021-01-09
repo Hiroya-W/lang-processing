@@ -190,6 +190,11 @@ void assemble_AND() {
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
+/*!
+ * @brief Generating assembly code for output strings
+ * @param [in] strings the output strings 
+ * @return int Returns 0 on success and -1 on failure.
+ */
 int assemble_output_format_string(char *strings) {
     char *label;
     char *surrounded_strings;
@@ -207,10 +212,16 @@ int assemble_output_format_string(char *strings) {
     return 0;
 }
 
+/*!
+ * @brief Generating assembly code for newline
+ */
 void assemble_output_line() {
     fprintf(out_fp, "\tCALL \tWRITELINE\n");
 }
 
+/*!
+ * @brief Generating library
+ */
 void assemble_library() {
     fprintf(out_fp, ";-- Library --\n");
     fprintf(out_fp, "EOVF\n");
