@@ -438,6 +438,8 @@ static int parse_subprogram_declaration(void) {
     in_subprogram_declaration = false;
     release_localidroot();
 
+    assemble_procedure_end();
+
     return NORMAL;
 }
 

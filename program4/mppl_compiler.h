@@ -243,6 +243,7 @@ extern int assemble_start(char *program_name);
 extern int create_newlabel(char **out);
 extern void assemble_procedure_definition();
 extern void assemble_procedure_begin();
+extern void assemble_procedure_end();
 extern void assemble_if_condition(char *else_label);
 extern void assemble_else(char *if_end_label, char *else_label);
 extern void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type);

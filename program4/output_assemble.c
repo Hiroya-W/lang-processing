@@ -105,6 +105,10 @@ void assemble_procedure_begin() {
     fprintf(out_fp, "\tPUSH \t0, \tgr2\n");
 }
 
+void assemble_procedure_end() {
+    fprintf(out_fp, "\tRET\n");
+}
+
 /*!
  * @brief Generating assembly code for variable declaration
  * @param[in] else_label Label to jump to else
