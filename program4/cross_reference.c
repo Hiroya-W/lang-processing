@@ -102,6 +102,8 @@ int parse_program(void) {
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
+    assemble_library();
+
     return NORMAL;
 }
 

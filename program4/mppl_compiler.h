@@ -241,6 +241,7 @@ extern void assemble_call(struct ID *id_procedure);
 extern void assemble_MULA();
 extern void assemble_DIVA();
 extern void assemble_AND();
+extern void assemble_library();
 
 /* @} */
 
