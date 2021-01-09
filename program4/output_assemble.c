@@ -122,8 +122,12 @@ void assemble_variable_declaration(char *variable_name, char *procname, struct T
     }
 }
 
-void assemble_variable_reference(char *variable_name) {
-    fprintf(out_fp, "\tLAD \tgr1, \t$%s\n", variable_name);
+void assemble_variable_reference(struct ID *referenced_variable) {
+    if (referenced_variable->procname == NULL) {
+        fprintf(out_fp, "\tLAD \tgr1, \t$%s\n", referenced_variable->name);
+    } else {
+        fprintf(out_fp, "\tLAD \tgr1, \t$%s%c%s\n", referenced_variable->name, '%', referenced_variable->procname);
+    }
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 

@@ -62,6 +62,8 @@ int is_formal_parameter = 0;
 int definition_procedure_name = 0;
 /*! Pointer to id of procedure name*/
 struct ID *id_procedure = NULL;
+/*! Pointer to id of referenced variable */
+struct ID *id_variable = NULL;
 
 /*!
  * @brief Parsing a program
@@ -908,16 +910,18 @@ static int parse_expressions(void) {
  */
 static int parse_variable(void) {
     int id_type = TPNONE;
-    char variable_name[MAXSTRSIZE];
+    struct ID *id_referenced_variable;
+
     if (token != TNAME) {
         return error("Name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
-    strcpy(variable_name, string_attr);
 
     if ((id_type = register_linenum(string_attr)) == ERROR) {
         return ERROR;
     }
+
+    id_referenced_variable = id_variable;
 
     token = scan();
 
@@ -957,7 +961,7 @@ static int parse_variable(void) {
                 break;
         }
     } else {
-        assemble_variable_reference(variable_name);
+        assemble_variable_reference(id_referenced_variable);
     }
 
     return id_type;

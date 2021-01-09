@@ -254,6 +254,9 @@ int register_linenum(char *name) {
         }
     }
 
+    /* get referenced variable */
+    id_variable = p_id;
+
     /* the type of the variable. */
     id_type = p_id->itp->ttype;
 

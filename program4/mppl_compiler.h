@@ -205,6 +205,7 @@ extern int parse_program(void);
 extern int in_subprogram_declaration;
 extern int definition_procedure_name;
 extern int is_formal_parameter;
+extern struct ID *id_variable;
 /* @} */
 
 /*! @name id-list.c */
@@ -236,7 +237,7 @@ extern void assemble_procedure_begin();
 extern void assemble_if_condition(char *else_label);
 extern void assemble_else(char *if_end_label, char *else_label);
 extern void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type);
-extern void assemble_variable_reference(char *variable_name);
+extern void assemble_variable_reference(struct ID *referenced_variable);
 extern void assemble_call(struct ID *id_procedure);
 extern void assemble_MULA();
 extern void assemble_DIVA();
