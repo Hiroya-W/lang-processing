@@ -1014,9 +1014,12 @@ static int parse_input_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_output_statement(void) {
+    int write_token;
     if (token != TWRITE && token != TWRITELN) {
         return error("Keyword 'write' or 'writeln' is not found.");
     }
+    write_token = token;
+
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
@@ -1043,6 +1046,11 @@ static int parse_output_statement(void) {
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
+
+    if (write_token == TWRITELN) {
+        assemble_output_line();
+    }
+
     return NORMAL;
 }
 
@@ -1054,6 +1062,9 @@ static int parse_output_format(void) {
     int exp_type = TPNONE;
     if (token == TSTRING && strlen(string_attr) > 1) {
         fprintf(stdout, "'%s'", string_attr);
+
+        assemble_output_format_string(string_attr);
+
         token = scan();
         return NORMAL;
     }
