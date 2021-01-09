@@ -190,14 +190,23 @@ void assemble_AND() {
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
-void assemble_output_format_string(char *strings) {
+int assemble_output_format_string(char *strings) {
     char *label;
+    char *surrounded_strings;
+
+    if ((surrounded_strings = (char *)malloc(sizeof(char) * strlen(strings) + 2)) == NULL) {
+        return error("Can not malloc for char in assemble_output_format_string.\n");
+    }
     create_newlabel(&label);
-    fprintf(out_fp, "%s \tDC \t'%s'\n", label, strings);
+    sprintf(surrounded_strings, "'%s'", strings);
+    add_literal(label, surrounded_strings);
+
     fprintf(out_fp, "\tLAD \tgr1, %s\n", label);
     fprintf(out_fp, "\tLD \tgr2, \tgr0\n");
     fprintf(out_fp, "\tCALL \tWRITESTR\n");
+    return 0;
 }
+
 void assemble_output_line() {
     fprintf(out_fp, "\tCALL \tWRITELINE\n");
 }

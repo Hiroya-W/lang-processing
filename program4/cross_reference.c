@@ -1067,7 +1067,9 @@ static int parse_output_format(void) {
     if (token == TSTRING && strlen(string_attr) > 1) {
         fprintf(stdout, "'%s'", string_attr);
 
-        assemble_output_format_string(string_attr);
+        if (assemble_output_format_string(string_attr) == ERROR) {
+            return ERROR;
+        }
 
         token = scan();
         return NORMAL;
