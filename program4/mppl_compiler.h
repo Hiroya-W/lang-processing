@@ -224,7 +224,7 @@ extern struct ID *search_procedure(char *procname);
 extern void print_tab(struct ID *root);
 /* @} */
 
-/*! @name assembler.c */
+/*! @name output_assemble.c */
 /* @{ */
 extern FILE *out_fp;
 extern int init_assemble(char *filename_mppl);
