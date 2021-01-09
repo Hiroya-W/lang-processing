@@ -865,6 +865,7 @@ static int parse_expressions(void) {
             return error("The type of the argument1 does not match.");
         }
     }
+
     while (token == TCOMMA) {
         fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
@@ -901,10 +902,12 @@ static int parse_expressions(void) {
  */
 static int parse_variable(void) {
     int id_type = TPNONE;
+    char variable_name[MAXSTRSIZE];
     if (token != TNAME) {
         return error("Name is not found.");
     }
     fprintf(stdout, "%s", string_attr);
+    strcpy(variable_name, string_attr);
 
     if ((id_type = register_linenum(string_attr)) == ERROR) {
         return ERROR;
@@ -947,6 +950,8 @@ static int parse_variable(void) {
                 id_type = TPBOOL;
                 break;
         }
+    } else {
+        assemble_variable_reference(variable_name);
     }
 
     return id_type;

@@ -102,6 +102,11 @@ void assemble_variable_declaration(char *variable_name, char *procname, struct T
     }
 }
 
+void assemble_variable_reference(char *variable_name) {
+    fprintf(out_fp, "\tLAD \tgr1, \t$%s\n", variable_name);
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+}
+
 /*!
  * @brief Generating assembly code for if condition
  * @param[in] else_label Label to jump to else
