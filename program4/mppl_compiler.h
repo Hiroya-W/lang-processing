@@ -188,8 +188,7 @@ struct ID {
  */
 struct LITERAL {
     char *label;           /*! label */
-    char *value;           /*! strings, unsigned int */
-    int is_string;         /*! 1:string, 0:unsigned int */
+    char *value;           /*! strings */
     struct LITERAL *nextp; /*! pointer next struct */
 };
 
