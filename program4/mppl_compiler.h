@@ -189,6 +189,7 @@ struct ID {
 struct LITERAL {
     char *label;           /*! label */
     char *value;           /*! strings, unsigned int */
+    int is_string;         /*! 1:string, 0:unsigned int */
     struct LITERAL *nextp; /*! pointer next struct */
 };
 
@@ -251,10 +252,17 @@ extern void assemble_call(struct ID *id_procedure);
 extern void assemble_MULA();
 extern void assemble_DIVA();
 extern void assemble_AND();
-extern void assemble_output_format_string(char *strings);
+extern int assemble_output_format_string(char *strings);
 extern void assemble_output_line();
 extern void assemble_library();
+/* @} */
 
+/*! @name literal_list.c */
+/* @{ */
+extern void init_literal_list();
+extern int add_literal(char *label, char *value);
+extern void release_literal(void);
+extern void assemble_literals(void);
 /* @} */
 
 /*! @name main.c */

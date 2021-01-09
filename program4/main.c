@@ -78,6 +78,8 @@ int main(int nc, char *np[]) {
     }
 
     init_crtab();
+    init_literal_list();
+
     token = scan();
     ret = parse_program();
 
@@ -95,7 +97,9 @@ int main(int nc, char *np[]) {
 
     print_tab(crtabroot);
     fflush(stdout);
+
     release_crtab();
+    release_literal();
     return ret;
 }
 
