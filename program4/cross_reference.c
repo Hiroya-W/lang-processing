@@ -973,9 +973,13 @@ static int parse_variable(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_input_statement(void) {
+    int read_token;
+
     if (token != TREAD && token != TREADLN) {
         return error("Keyword 'read' or 'readln' is not found.");
     }
+    read_token = token;
+
     fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
@@ -992,6 +996,8 @@ static int parse_input_statement(void) {
             return error("The type of the variable must be integer or char.");
         }
 
+        assemble_read(var_type);
+
         while (token == TCOMMA) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
@@ -1003,12 +1009,18 @@ static int parse_input_statement(void) {
             if (var_type != TPINT && var_type != TPCHAR) {
                 return error("The type of the variable must be integer or char.");
             }
+
+            assemble_read(var_type);
         }
         if (token != TRPAREN) {
             return error("Sybmol ')' is not found.");
         }
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
+    }
+
+    if (read_token == TREADLN) {
+        assemble_read_line();
     }
 
     return NORMAL;

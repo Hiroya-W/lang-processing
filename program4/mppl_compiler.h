@@ -254,6 +254,8 @@ extern void assemble_DIVA();
 extern void assemble_AND();
 extern int assemble_output_format_string(char *strings);
 extern void assemble_output_line();
+extern void assemble_read(int type);
+extern void assemble_read_line();
 extern void assemble_library();
 /* @} */
 

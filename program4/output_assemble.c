@@ -219,6 +219,21 @@ void assemble_output_line() {
     fprintf(out_fp, "\tCALL \tWRITELINE\n");
 }
 
+void assemble_read(int type) {
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    switch (type) {
+        case TPINT:
+            fprintf(out_fp, "\tCALL \tREADINT\n");
+            break;
+        case TPCHAR:
+            fprintf(out_fp, "\tCALL \tREADCHAR\n");
+            break;
+    }
+}
+void assemble_read_line() {
+    fprintf(out_fp, "\tCALL \tREADLINE\n");
+}
+
 /*!
  * @brief Generating library
  */
