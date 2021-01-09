@@ -124,6 +124,10 @@ void assemble_else(char *if_end_label, char *else_label) {
     fprintf(out_fp, "%s\n", else_label);
 }
 
+void assemble_call(struct ID *id_procedure) {
+    fprintf(out_fp, "CALL $%s\n", id_procedure->name);
+}
+
 /*!
  * @brief Generating assembly code for product operation
  */

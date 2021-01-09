@@ -839,6 +839,8 @@ static int parse_call_statement(void) {
     }
     in_call_statement = false;
 
+    assemble_call(id_procedure);
+
     return NORMAL;
 }
 
