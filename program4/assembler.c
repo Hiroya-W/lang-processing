@@ -85,6 +85,26 @@ void assemble_procedure_definition() {
     fprintf(out_fp, "$%s\n", current_procedure_name);
 }
 
+void assemble_procedure_begin() {
+    struct ID *p_id;
+    fprintf(out_fp, "\tPOP\t gr2\n"); /* gr2: return pointer */
+
+    p_id = localidroot;
+    if (p_id != NULL) {
+        /* Move to the beginning of the parameter */
+        while (p_id != NULL && p_id->ispara == 0) {
+            p_id = p_id->nextp;
+        }
+
+        while (p_id != NULL) {
+            fprintf(out_fp, "\tPOP gr1\n");
+            fprintf(out_fp, "\tST \tgr1, \t$%s%c%s\n", p_id->name, '%', current_procedure_name);
+            p_id = p_id->nextp;
+        }
+    }
+    fprintf(out_fp, "\tPUSH \t0, \tgr2\n");
+}
+
 /*!
  * @brief Generating assembly code for variable declaration
  * @param[in] else_label Label to jump to else

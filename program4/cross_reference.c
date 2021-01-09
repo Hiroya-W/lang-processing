@@ -552,6 +552,10 @@ static int parse_compound_statement(void) {
     indent_level++;
     insert_indent();
 
+    if (in_subprogram_declaration) {
+        assemble_procedure_begin();
+    }
+
     if (parse_statement() == ERROR) {
         return ERROR;
     }
