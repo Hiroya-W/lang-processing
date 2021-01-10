@@ -191,6 +191,8 @@ void assemble_MULA() {
     /* fprintf(out_fp, ";MULA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
+    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tMULA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
@@ -202,6 +204,8 @@ void assemble_DIVA() {
     /* fprintf(out_fp, ";DIVA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
+    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tDIVA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
@@ -213,6 +217,8 @@ void assemble_AND() {
     /* fprintf(out_fp, ";DIVA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
+    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tAND \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
@@ -248,6 +254,7 @@ void assemble_output_line() {
 
 void assemble_read(int type) {
     fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     switch (type) {
         case TPINT:
             fprintf(out_fp, "\tCALL \tREADINT\n");
