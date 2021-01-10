@@ -165,7 +165,7 @@ int assemble_constant(int type, int value) {
     char *label;
     char *strings;
 
-    if ((strings = (char *)malloc(sizeof(char) * 12)) == NULL) {
+    if ((strings = (char *)malloc(sizeof(char) * 12)) == NULL) { /* enough size */
         return error("Can not malloc for char in assemble_constant.\n");
     }
     create_newlabel(&label);
