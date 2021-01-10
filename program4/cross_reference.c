@@ -1375,17 +1375,20 @@ static int parse_factor(void) {
  */
 static int parse_constant(void) {
     int constant_type = NORMAL;
+    int constant_value;
 
     switch (token) {
         case TNUMBER:
             fprintf(stdout, "%s", string_attr);
             constant_type = TPINT;
+            constant_value = num_attr;
             break;
         case TFALSE:
             /* FALLTHROUGH */
         case TTRUE:
             fprintf(stdout, "%s", tokenstr[token]);
             constant_type = TPBOOL;
+            constant_value = (token == TTRUE) ? 1 : 0;
             break;
         case TSTRING:
             if (strlen(string_attr) != 1) {
@@ -1393,10 +1396,14 @@ static int parse_constant(void) {
             }
             fprintf(stdout, "'%s'", string_attr);
             constant_type = TPCHAR;
+            constant_value = (int)string_attr[0];
             break;
         default:
             return error("Constant is not found.");
     }
+
+    assemble_constant(constant_type, constant_value);
+
     token = scan();
     return constant_type;
 }

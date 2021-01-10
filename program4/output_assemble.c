@@ -161,6 +161,29 @@ void assemble_call(struct ID *id_procedure) {
     fprintf(out_fp, "\tCALL $%s\n", id_procedure->name);
 }
 
+int assemble_constant(int type, int value) {
+    char *label;
+    char *strings;
+
+    if ((strings = (char *)malloc(sizeof(char) * 12)) == NULL) {
+        return error("Can not malloc for char in assemble_constant.\n");
+    }
+    create_newlabel(&label);
+
+    switch (type) {
+        case TPCHAR:
+            sprintf(strings, "'%c'", value);
+            break;
+        default:
+            sprintf(strings, "%d", value);
+    }
+    fprintf(out_fp, "\tLAD \tgr1, \t%s\n", label);
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+
+    add_literal(label, strings);
+    return 0;
+}
+
 /*!
  * @brief Generating assembly code for product operation
  */
