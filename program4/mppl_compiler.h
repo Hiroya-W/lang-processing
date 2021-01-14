@@ -255,7 +255,7 @@ extern void assemble_expression();
 extern void assemble_ADDA();
 extern void assemble_SUBA();
 extern void assemble_OR();
-extern int assemble_constant(int constant_type, int constant_value);
+extern int assemble_constant(int constant_value);
 extern void assemble_MULA();
 extern void assemble_DIVA();
 extern void assemble_AND();

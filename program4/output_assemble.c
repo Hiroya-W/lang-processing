@@ -242,26 +242,9 @@ void assemble_OR() {
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
-int assemble_constant(int type, int value) {
-    char *label;
-    char *strings;
-
-    if ((strings = (char *)malloc(sizeof(char) * 12)) == NULL) { /* enough size */
-        return error("Can not malloc for char in assemble_constant.\n");
-    }
-    create_newlabel(&label);
-
-    switch (type) {
-        case TPCHAR:
-            sprintf(strings, "'%c'", value);
-            break;
-        default:
-            sprintf(strings, "%d", value);
-    }
-    fprintf(out_fp, "\tLAD \tgr1, \t%s\n", label);
+int assemble_constant(int value) {
+    fprintf(out_fp, "\tLAD \tgr1, \t%d\n", value);
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
-
-    add_literal(label, strings);
     return 0;
 }
 

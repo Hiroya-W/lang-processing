@@ -1431,7 +1431,7 @@ static int parse_constant(void) {
             return error("Constant is not found.");
     }
 
-    assemble_constant(constant_type, constant_value);
+    assemble_constant(constant_value);
 
     token = scan();
     return constant_type;
