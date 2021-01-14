@@ -689,6 +689,8 @@ static int parse_assignment_statement(void) {
         return error("The types of the operand1 and operand2 do not match");
     }
 
+    assemble_assign();
+
     return NORMAL;
 }
 
