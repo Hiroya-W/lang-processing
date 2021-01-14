@@ -468,6 +468,7 @@ static int add_type_to_parameter_list(struct ID **root, char *procname, struct T
  */
 static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type, int ispara, int deflinenum) {
     struct ID *p_id;
+    struct ID *p_id_tail;
     struct TYPE *p_type;
     char *p_name;
     char *p_procname;
@@ -536,9 +537,22 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
     p_id->ispara = ispara;
     p_id->deflinenum = deflinenum;
     p_id->irefp = NULL;
+    p_id->nextp = NULL;
 
-    p_id->nextp = *root;
-    *root = p_id;
+    /* Move to the end of the list */
+    /* and register a variable */
+    p_id_tail = *root;
+    if (p_id_tail == NULL) {
+        *root = p_id;
+    } else {
+        while (p_id_tail->nextp != NULL) {
+            p_id_tail = p_id_tail->nextp;
+        }
+        p_id_tail->nextp = p_id;
+    }
+
+    /* p_id->nextp = *root; */
+    /* *root = p_id; */
     return 0;
 }
 
