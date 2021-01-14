@@ -157,6 +157,7 @@ void assemble_variable_reference(struct ID *referenced_variable) {
 void assemble_assign(void) {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
     fprintf(out_fp, "\tST \tgr2, \t0, \tgr1\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
