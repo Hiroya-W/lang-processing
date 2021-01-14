@@ -1165,6 +1165,8 @@ static int parse_expression(void) {
 
         /* The type of the result of a relational operator is a boolean. */
         exp_type1 = TPBOOL;
+
+        assemble_expression();
     }
 
     return exp_type1;

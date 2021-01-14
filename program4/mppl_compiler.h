@@ -250,6 +250,7 @@ extern void assemble_else(char *if_end_label, char *else_label);
 extern void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type);
 extern void assemble_variable_reference(struct ID *referenced_variable);
 extern void assemble_call(struct ID *id_procedure);
+extern void assemble_expression();
 extern int assemble_constant(int constant_type, int constant_value);
 extern void assemble_MULA();
 extern void assemble_DIVA();
