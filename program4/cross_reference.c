@@ -783,6 +783,14 @@ static int parse_condition_statement(void) {
  */
 static int parse_iteration_statement(void) {
     int exp_type = TPNONE;
+    char *iteration_top_label = NULL;
+    char *iteration_bottom_label = NULL;
+
+    create_newlabel(&iteration_top_label);
+    create_newlabel(&iteration_bottom_label);
+
+    fprintf(out_fp, "%s\n", iteration_top_label);
+
     if (token != TWHILE) {
         return error("Keyword 'while' is not found.");
     }
@@ -798,6 +806,8 @@ static int parse_iteration_statement(void) {
         return error("The type of the condition must be boolean.");
     }
 
+    assemble_iteration_condition(iteration_bottom_label);
+
     if (token != TDO) {
         return error("Keyword 'do' is not found.");
     }
@@ -809,6 +819,10 @@ static int parse_iteration_statement(void) {
         return ERROR;
     }
     while_statement_level--;
+
+    fprintf(out_fp, "\tJUMP \t%s\n", iteration_top_label);
+    fprintf(out_fp, "%s\n", iteration_bottom_label);
+
     return NORMAL;
 }
 

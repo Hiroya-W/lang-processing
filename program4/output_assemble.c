@@ -183,6 +183,12 @@ void assemble_else(char *if_end_label, char *else_label) {
     fprintf(out_fp, "%s\n", else_label);
 }
 
+void assemble_iteration_condition(char *bottom_label) {
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tCPA \tgr1, \tgr0\n");
+    fprintf(out_fp, "\tJZE \t%s\n", bottom_label);
+}
+
 void assemble_call(struct ID *id_procedure) {
     fprintf(out_fp, "\tCALL $%s\n", id_procedure->name);
 }

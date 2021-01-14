@@ -247,6 +247,7 @@ extern void assemble_procedure_end();
 extern void assemble_assign(void);
 extern void assemble_if_condition(char *else_label);
 extern void assemble_else(char *if_end_label, char *else_label);
+extern void assemble_iteration_condition(char *bottom_label);
 extern void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type);
 extern void assemble_variable_reference(struct ID *referenced_variable);
 extern void assemble_call(struct ID *id_procedure);
