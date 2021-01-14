@@ -215,6 +215,33 @@ void assemble_expression() {
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
+void assemble_ADDA() {
+    fprintf(out_fp, "\tPOP \tgr2\n");
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
+    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
+    fprintf(out_fp, "\tADDA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+}
+
+void assemble_SUBA() {
+    fprintf(out_fp, "\tPOP \tgr2\n");
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
+    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
+    fprintf(out_fp, "\tSUBA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+}
+
+void assemble_OR() {
+    fprintf(out_fp, "\tPOP \tgr2\n");
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
+    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
+    fprintf(out_fp, "\tOR \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+}
+
 int assemble_constant(int type, int value) {
     char *label;
     char *strings;

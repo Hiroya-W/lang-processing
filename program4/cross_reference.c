@@ -1217,6 +1217,8 @@ static int is_relational_operator(int _token) {
 static int parse_simple_expression(void) {
     int term_type1 = TPNONE;
     int term_type2 = TPNONE;
+    int opr;
+
     if (token == TPLUS || token == TMINUS) {
         term_type1 = TPINT;
 
@@ -1242,6 +1244,7 @@ static int parse_simple_expression(void) {
         } else if (token == TOR && term_type1 != TPBOOL) {
             return error("The type of the operand must be boolean.");
         }
+        opr = token;
 
         token = scan();
 
@@ -1253,6 +1256,14 @@ static int parse_simple_expression(void) {
             return error("The type of the operand must be integer.");
         } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
             return error("The type of the operand must be boolean.");
+        }
+
+        if (opr == TPLUS) {
+            assemble_ADDA();
+        } else if (opr == TMINUS) {
+            assemble_SUBA();
+        } else if (opr == TOR) {
+            assemble_OR();
         }
     }
     return term_type1;
