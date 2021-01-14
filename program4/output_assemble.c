@@ -195,11 +195,23 @@ void assemble_call(struct ID *id_procedure) {
 }
 
 void assemble_expression() {
+    char *jmp_true_label = NULL;
+    char *jmp_false_label = NULL;
+    create_newlabel(&jmp_true_label);
+    create_newlabel(&jmp_false_label);
+
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
     fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tCPA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tJPL \t%s\n", jmp_true_label);
+    fprintf(out_fp, "\tLD \tgr1, \tgr0\n"); /* if false, return 0 */
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+    fprintf(out_fp, "\tJUMP \t%s\n", jmp_false_label);
+
+    fprintf(out_fp, "%s\n", jmp_true_label);
+    fprintf(out_fp, "\tLDA \tgr1, \t1\n"); /* if true, return 1 */
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
