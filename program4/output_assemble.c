@@ -85,24 +85,40 @@ void assemble_procedure_definition() {
     fprintf(out_fp, "$%s\n", current_procedure_name);
 }
 
-void assemble_procedure_begin() {
+int assemble_procedure_begin() {
     struct ID *p_id;
+    struct ID *p_id_list = NULL;
     fprintf(out_fp, "\tPOP\t gr2\n"); /* gr2: return pointer */
 
+    /* Reverse the order of the parameters. */
     p_id = localidroot;
     if (p_id != NULL) {
-        /* Move to the beginning of the parameter */
-        while (p_id != NULL && p_id->ispara == 0) {
+        while (p_id != NULL && p_id->ispara == 1) {
+            struct ID *p_id_temp = NULL;
+            /* struct ID */
+            if ((p_id_temp = (struct ID *)malloc(sizeof(struct ID))) == NULL) {
+                return error("can not malloc1 for struct ID in id_register_to_tab\n");
+            }
+            p_id_temp->name = p_id->name;
+            p_id_temp->nextp = p_id_list;
+            p_id_list = p_id_temp;
             p_id = p_id->nextp;
         }
-
-        while (p_id != NULL) {
-            fprintf(out_fp, "\tPOP gr1\n");
-            fprintf(out_fp, "\tST \tgr1, \t$%s%c%s\n", p_id->name, '%', current_procedure_name);
-            p_id = p_id->nextp;
-        }
+    } else {
+        p_id_list = NULL;
     }
+
+    /* Set a value to parameters */
+    p_id = p_id_list;
+    while (p_id != NULL) {
+        fprintf(out_fp, "\tPOP gr1\n");
+        fprintf(out_fp, "\tST \tgr1, \t$%s%c%s\n", p_id->name, '%', current_procedure_name);
+        p_id = p_id->nextp;
+    }
+
+    /* push a return pointer */
     fprintf(out_fp, "\tPUSH \t0, \tgr2\n");
+    return 0;
 }
 
 void assemble_procedure_end() {
