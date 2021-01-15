@@ -671,6 +671,8 @@ static int parse_statement(void) {
 static int parse_assignment_statement(void) {
     int var_type = TPNONE;
     int exp_type = TPNONE;
+    int is_expression_variable_only = 0;
+
     if ((var_type = parse_variable()) == ERROR) {
         return ERROR;
     }
@@ -681,8 +683,12 @@ static int parse_assignment_statement(void) {
     fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
-    if ((exp_type = parse_expression()) == ERROR) {
+    if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
         return ERROR;
+    }
+
+    if (is_expression_variable_only) {
+        assemble_variable_reference_rval(id_variable);
     }
 
     if (var_type != exp_type) {
