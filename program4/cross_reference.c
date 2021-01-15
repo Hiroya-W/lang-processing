@@ -700,6 +700,7 @@ static int parse_assignment_statement(void) {
  */
 static int parse_condition_statement(void) {
     int exp_type = TPNONE;
+    int is_expression_variable_only = 0;
     char *else_label = NULL;
     char *if_end_label = NULL;
 
@@ -709,8 +710,13 @@ static int parse_condition_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if ((exp_type = parse_expression()) == ERROR) {
+    if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
         return ERROR;
+    }
+
+    if (is_expression_variable_only) {
+        /* condition needs right value */
+        assemble_variable_reference_rval(id_variable);
     }
 
     if (exp_type != TPBOOL) {
