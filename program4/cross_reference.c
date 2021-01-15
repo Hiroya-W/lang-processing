@@ -1219,13 +1219,13 @@ static int parse_expression(int *is_expression_variable_only) {
     }
 
     if (!is_simple_expression_variable_only) {
-        is_expression_variable_only = false;
+        *is_expression_variable_only = false;
     }
 
     while (is_relational_operator(token)) {
         /* The type of the result of a relational operator is a boolean. */
         int exp_type2 = TPNONE;
-        is_expression_variable_only = false;
+        *is_expression_variable_only = false;
 
         if (is_simple_expression_variable_only) {
             assemble_variable_reference_rval(id_referenced_variable);
@@ -1292,7 +1292,7 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
     *is_simple_expression_variable_only = true;
 
     if (token == TPLUS || token == TMINUS) {
-        is_simple_expression_variable_only = false;
+        *is_simple_expression_variable_only = false;
         term_type1 = TPINT;
 
         fprintf(stdout, "%s", tokenstr[token]);
@@ -1309,7 +1309,7 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
     }
     term_type1 = term_type2;
 
-    if (is_term_variable_only && !is_simple_expression_variable_only) {
+    if (is_term_variable_only && !(*is_simple_expression_variable_only)) {
         /* if TPLUS or TMINUS exists, !is_simple_expression_variable_only is true*/
         /* Then need the right value to calculate */
         assemble_variable_reference_rval(id_referenced_variable);
@@ -1319,11 +1319,11 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
     }
 
     if (!is_term_variable_only) {
-        is_simple_expression_variable_only = false;
+        *is_simple_expression_variable_only = false;
     }
 
     while (token == TPLUS || token == TMINUS || token == TOR) {
-        is_simple_expression_variable_only = false;
+        *is_simple_expression_variable_only = false;
 
         if (is_term_variable_only) {
             /* Load a right value from a variable to calculate */
@@ -1384,11 +1384,11 @@ static int parse_term(int *is_variable_only) {
     }
 
     if (!is_variable) {
-        is_variable_only = false;
+        *is_variable_only = false;
     }
 
     while (token == TSTAR || token == TDIV || token == TAND) {
-        is_variable_only = false;
+        *is_variable_only = false;
         if (is_variable) {
             /* Load a right value from a variable to calculate */
             assemble_variable_reference_rval(id_referenced_variable);
