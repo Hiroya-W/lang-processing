@@ -143,6 +143,21 @@ void assemble_variable_declaration(char *variable_name, char *procname, struct T
 }
 
 /*!
+ * @brief Generating assembly code for left value of variable 
+ * @param[in] referenced_variable referenced variable
+ */
+void assemble_variable_reference_lval(struct ID *referenced_variable) {
+    if (referenced_variable->ispara) {
+        /* if id is parameter, id has procname */
+        fprintf(out_fp, "\tLD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
+    } else {
+        fprintf(out_fp, "\tLAD \tgr1, \t%s\n", referenced_variable->name);
+    }
+
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+}
+
+/*!
  * @brief Generating assembly code for right value of variable 
  * @param[in] referenced_variable referenced variable
  */
