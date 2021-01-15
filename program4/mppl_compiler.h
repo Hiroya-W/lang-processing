@@ -261,6 +261,7 @@ extern void assemble_MULA();
 extern void assemble_DIVA();
 extern void assemble_AND();
 extern int assemble_output_format_string(char *strings);
+extern void assemble_output_format_standard_type(int type, int num);
 extern void assemble_output_line();
 extern void assemble_read(int type);
 extern void assemble_read_line();

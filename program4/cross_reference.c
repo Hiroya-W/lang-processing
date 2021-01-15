@@ -1199,6 +1199,10 @@ static int parse_output_format(void) {
                 }
                 fprintf(stdout, "%s", string_attr);
                 token = scan();
+
+                assemble_output_format_standard_type(exp_type, num_attr);
+            } else {
+                assemble_output_format_standard_type(exp_type, 0);
             }
             break;
         default:

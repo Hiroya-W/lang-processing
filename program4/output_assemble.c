@@ -320,6 +320,28 @@ int assemble_output_format_string(char *strings) {
 }
 
 /*!
+ * @brief Generating assembly code for output standard type
+ * @param [in] type Type of the output content
+ * @param [in] num Number of digits to display the content
+ */
+void assemble_output_format_standard_type(int type, int num) {
+    fprintf(out_fp, "\tPOP \tgr1\n");
+    fprintf(out_fp, "\tLAD \tgr2, \t%d\n", num);
+
+    switch (type) {
+        case TPINT:
+            fprintf(out_fp, "\tCALL \tWRITEINT\n");
+            break;
+        case TPCHAR:
+            fprintf(out_fp, "\tCALL \tWRITECHAR\n");
+            break;
+        case TPBOOL:
+            fprintf(out_fp, "\tCALL \tWRITEBOOL\n");
+            break;
+    }
+}
+
+/*!
  * @brief Generating assembly code for newline
  */
 void assemble_output_line() {
