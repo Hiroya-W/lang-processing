@@ -783,6 +783,7 @@ static int parse_condition_statement(void) {
  */
 static int parse_iteration_statement(void) {
     int exp_type = TPNONE;
+    int is_expression_variable_only = 0;
     char *iteration_top_label = NULL;
     char *iteration_bottom_label = NULL;
 
@@ -798,12 +799,17 @@ static int parse_iteration_statement(void) {
     fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
-    if ((exp_type = parse_expression()) == ERROR) {
+    if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
         return ERROR;
     }
 
     if (exp_type != TPBOOL) {
         return error("The type of the condition must be boolean.");
+    }
+
+    if (is_expression_variable_only) {
+        /* condition needs right value */
+        assemble_variable_reference_rval(id_variable);
     }
 
     assemble_iteration_condition(iteration_bottom_label);
