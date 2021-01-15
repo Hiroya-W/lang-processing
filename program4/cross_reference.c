@@ -36,7 +36,7 @@ static int parse_expression(void);
 static int parse_simple_expression(void);
 static int is_relational_operator(int token);
 static int parse_term(void);
-static int parse_factor(void);
+static int parse_factor(int *is_variable);
 static int parse_constant(void);
 static int parse_expressions(void);
 
@@ -1317,16 +1317,22 @@ static int parse_term(void) {
 
 /*!
  * @brief Parsing a factor
+ * @param [out] is_variable if token is TNAME, return 1.
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_factor(void) {
+static int parse_factor(int *is_variable) {
     int factor_type = TPNONE;
     int exp_type = TPNONE;
+    int factor_is_variable = 0;
+
+    is_variable = false;
+
     switch (token) {
         case TNAME:
             if ((factor_type = parse_variable()) == ERROR) {
                 return ERROR;
             }
+            *is_variable = true;
             break;
         case TNUMBER:
             /* FALLTHROUGH */
@@ -1357,12 +1363,13 @@ static int parse_factor(void) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if ((factor_type = parse_factor()) == ERROR) {
+            if ((factor_type = parse_factor(&factor_is_variable)) == ERROR) {
                 return ERROR;
             }
             if (factor_type != TPBOOL) {
                 return error("The type of the operand must be boolean.");
             }
+            /* TODO: if factor is vaible, variable reference rval */
             break;
         case TINTEGER:
             /* FALLTHROUGH */
@@ -1395,6 +1402,7 @@ static int parse_factor(void) {
         default:
             return error("Factor is not found.");
     }
+
     return factor_type;
 }
 
