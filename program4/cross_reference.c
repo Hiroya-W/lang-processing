@@ -678,6 +678,8 @@ static int parse_assignment_statement(void) {
         return ERROR;
     }
 
+    assemble_variable_reference_lval(id_referenced_variable);
+
     if (token != TASSIGN) {
         return error("Symbol ':=' is not found.");
     }
