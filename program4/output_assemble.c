@@ -247,6 +247,7 @@ void assemble_ADDA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tADDA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tJOV \tEOVF\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
@@ -254,6 +255,7 @@ void assemble_SUBA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tSUBA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tJOV \tEOVF\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
@@ -277,6 +279,7 @@ void assemble_MULA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tMULA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tJOV \tEOVF\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
@@ -287,6 +290,7 @@ void assemble_DIVA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tDIVA \tgr1, \tgr2\n");
+    fprintf(out_fp, "\tJOV \tE0DIV\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
