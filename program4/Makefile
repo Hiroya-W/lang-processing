@@ -7,7 +7,7 @@ TEST_CFLAGS := -fno-common -W -Wall -g -Dmain=_main_disabled -coverage -fprofile
 TEST_LIBDIR := -L/usr/lib 
 TEST_LIB := -lcunit
 
-all: main test
+all: main
 
 main: $(OBJS)
 
