@@ -35,7 +35,7 @@ static int parse_compound_statement(void);
 static int parse_expression(void);
 static int parse_simple_expression(void);
 static int is_relational_operator(int token);
-static int parse_term(void);
+static int parse_term(int *is_variable_only);
 static int parse_factor(int *is_variable);
 static int parse_constant(void);
 static int parse_expressions(void);
@@ -1273,16 +1273,28 @@ static int parse_simple_expression(void) {
  * @brief Parsing a term
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_term(void) {
+static int parse_term(int *is_variable_only) {
     int term_type1 = TPNONE;
     int term_type2 = TPNONE;
     int opr;
+    int is_variable = 0;
+    *is_variable_only = true;
 
-    if ((term_type1 = parse_factor()) == ERROR) {
+    if ((term_type1 = parse_factor(&is_variable)) == ERROR) {
         return ERROR;
     }
 
+    if (!is_variable) {
+        is_variable_only = false;
+    }
+
     while (token == TSTAR || token == TDIV || token == TAND) {
+        if (is_variable) {
+            /* Load a right value from a variable to calculate */
+            is_variable_only = false;
+            assemble_variable_reference_rval(id_variable);
+        }
+
         fprintf(stdout, " %s ", tokenstr[token]);
 
         if ((token == TSTAR || token == TDIV) && term_type1 != TPINT) {
@@ -1294,7 +1306,7 @@ static int parse_term(void) {
 
         token = scan();
 
-        if ((term_type2 = parse_factor()) == ERROR) {
+        if ((term_type2 = parse_factor(&is_variable)) == ERROR) {
             return ERROR;
         }
 
@@ -1302,6 +1314,12 @@ static int parse_term(void) {
             return error("The type of the operand must be integer.");
         } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
             return error("The type of the operand must be boolean.");
+        }
+
+        if (is_variable) {
+            /* Load a right value from a variable to calculate */
+            assemble_variable_reference_rval(id_variable);
+            is_variable = false;
         }
 
         if (opr == TSTAR) {
