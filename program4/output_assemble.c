@@ -324,7 +324,6 @@ void assemble_output_line() {
 
 void assemble_read(int type) {
     fprintf(out_fp, "\tPOP \tgr1\n");
-    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     switch (type) {
         case TPINT:
             fprintf(out_fp, "\tCALL \tREADINT\n");
