@@ -1225,9 +1225,9 @@ static int parse_expression(int *is_expression_variable_only) {
     while (is_relational_operator(token)) {
         /* The type of the result of a relational operator is a boolean. */
         int exp_type2 = TPNONE;
+        is_expression_variable_only = false;
 
         if (is_simple_expression_variable_only) {
-            is_expression_variable_only = false;
             assemble_variable_reference_rval(id_variable);
         }
 
