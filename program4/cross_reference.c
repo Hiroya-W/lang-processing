@@ -64,6 +64,7 @@ int definition_procedure_name = 0;
 struct ID *id_procedure = NULL;
 /*! Pointer to id of referenced variable */
 struct ID *id_variable = NULL;
+struct ID *id_referenced_variable;
 
 /*!
  * @brief Parsing a program
@@ -688,7 +689,7 @@ static int parse_assignment_statement(void) {
     }
 
     if (is_expression_variable_only) {
-        assemble_variable_reference_rval(id_variable);
+        assemble_variable_reference_rval(id_referenced_variable);
     }
 
     if (var_type != exp_type) {
@@ -722,7 +723,7 @@ static int parse_condition_statement(void) {
 
     if (is_expression_variable_only) {
         /* condition needs right value */
-        assemble_variable_reference_rval(id_variable);
+        assemble_variable_reference_rval(id_referenced_variable);
     }
 
     if (exp_type != TPBOOL) {
@@ -821,7 +822,7 @@ static int parse_iteration_statement(void) {
 
     if (is_expression_variable_only) {
         /* condition needs right value */
-        assemble_variable_reference_rval(id_variable);
+        assemble_variable_reference_rval(id_referenced_variable);
     }
 
     assemble_iteration_condition(iteration_bottom_label);
@@ -913,7 +914,7 @@ static int parse_expressions(void) {
 
         if (is_expression_variable_only) {
             /* call by reference */
-            assemble_variable_reference_lval(id_variable); /* address */
+            assemble_variable_reference_lval(id_referenced_variable); /* address */
         } else {
             /* expression doesn't have address */
         }
@@ -939,7 +940,7 @@ static int parse_expressions(void) {
             }
 
             if (is_expression_variable_only) {
-                assemble_variable_reference_lval(id_variable); /* address */
+                assemble_variable_reference_lval(id_referenced_variable); /* address */
             } else {
                 /* expression doesn't have address */
             }
@@ -962,7 +963,6 @@ static int parse_expressions(void) {
 static int parse_variable(void) {
     int id_type = TPNONE;
     int is_expression_variable_only = 0;
-    struct ID *id_referenced_variable;
 
     if (token != TNAME) {
         return error("Name is not found.");
@@ -996,7 +996,7 @@ static int parse_variable(void) {
 
         if (is_expression_variable_only) {
             /* index need right value */
-            assemble_variable_reference_rval(id_variable);
+            assemble_variable_reference_rval(id_referenced_variable);
         }
 
         if (token != TRSQPAREN) {
@@ -1181,7 +1181,7 @@ static int parse_output_format(void) {
             }
 
             if (is_expression_variable_only) {
-                assemble_variable_reference_rval(id_variable);
+                assemble_variable_reference_rval(id_referenced_variable);
             }
 
             if (exp_type & TPARRAY) {
@@ -1228,7 +1228,7 @@ static int parse_expression(int *is_expression_variable_only) {
         is_expression_variable_only = false;
 
         if (is_simple_expression_variable_only) {
-            assemble_variable_reference_rval(id_variable);
+            assemble_variable_reference_rval(id_referenced_variable);
         }
 
         fprintf(stdout, " %s ", tokenstr[token]);
@@ -1246,7 +1246,7 @@ static int parse_expression(int *is_expression_variable_only) {
         exp_type1 = TPBOOL;
 
         if (is_simple_expression_variable_only) {
-            assemble_variable_reference_rval(id_variable);
+            assemble_variable_reference_rval(id_referenced_variable);
             is_simple_expression_variable_only = false;
         }
 
@@ -1312,7 +1312,7 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
     if (is_term_variable_only && !is_simple_expression_variable_only) {
         /* if TPLUS or TMINUS exists, !is_simple_expression_variable_only is true*/
         /* Then need the right value to calculate */
-        assemble_variable_reference_rval(id_variable);
+        assemble_variable_reference_rval(id_referenced_variable);
         /* TODO: calculate puls or minus */
 
         is_term_variable_only = false;
@@ -1327,7 +1327,7 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
 
         if (is_term_variable_only) {
             /* Load a right value from a variable to calculate */
-            assemble_variable_reference_rval(id_variable);
+            assemble_variable_reference_rval(id_referenced_variable);
         }
 
         fprintf(stdout, " %s ", tokenstr[token]);
@@ -1353,7 +1353,7 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
 
         if (is_term_variable_only) {
             /* Load a right value from a variable to calculate */
-            assemble_variable_reference_rval(id_variable);
+            assemble_variable_reference_rval(id_referenced_variable);
             is_term_variable_only = false;
         }
 
@@ -1391,7 +1391,7 @@ static int parse_term(int *is_variable_only) {
         is_variable_only = false;
         if (is_variable) {
             /* Load a right value from a variable to calculate */
-            assemble_variable_reference_rval(id_variable);
+            assemble_variable_reference_rval(id_referenced_variable);
         }
 
         fprintf(stdout, " %s ", tokenstr[token]);
@@ -1417,7 +1417,7 @@ static int parse_term(int *is_variable_only) {
 
         if (is_variable) {
             /* Load a right value from a variable to calculate */
-            assemble_variable_reference_rval(id_variable);
+            assemble_variable_reference_rval(id_referenced_variable);
             is_variable = false;
         }
 
@@ -1472,7 +1472,7 @@ static int parse_factor(int *is_variable) {
             }
             /* (expression) is right value */
             if (is_expression_variable_only) {
-                assemble_variable_reference_rval(id_variable);
+                assemble_variable_reference_rval(id_referenced_variable);
             }
 
             if (token != TRPAREN) {
@@ -1513,7 +1513,7 @@ static int parse_factor(int *is_variable) {
             }
 
             if (is_expression_variable_only) {
-                assemble_variable_reference_rval(id_variable);
+                assemble_variable_reference_rval(id_referenced_variable);
             }
 
             if (exp_type & TPARRAY) {
