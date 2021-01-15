@@ -1289,9 +1289,9 @@ static int parse_term(int *is_variable_only) {
     }
 
     while (token == TSTAR || token == TDIV || token == TAND) {
+        is_variable_only = false;
         if (is_variable) {
             /* Load a right value from a variable to calculate */
-            is_variable_only = false;
             assemble_variable_reference_rval(id_variable);
         }
 
