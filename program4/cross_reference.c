@@ -32,7 +32,7 @@ static int parse_output_statement(void);
 static int parse_output_format(void);
 static int parse_compound_statement(void);
 
-static int parse_expression(void);
+static int parse_expression(int *is_expression_variable_only);
 static int parse_simple_expression(int *is_simple_expression_variable_only);
 static int is_relational_operator(int token);
 static int parse_term(int *is_variable_only);
@@ -1155,21 +1155,28 @@ static int parse_output_format(void) {
  * @brief Parsing a expression
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_expression(void) {
+static int parse_expression(int *is_expression_variable_only) {
     int exp_type1 = TPNONE;
+    int is_simple_expression_variable_only = 0;
+    *is_expression_variable_only = true;
 
-    if ((exp_type1 = parse_simple_expression()) == ERROR) {
+    if ((exp_type1 = parse_simple_expression(&is_simple_expression_variable_only)) == ERROR) {
         return ERROR;
     }
 
     while (is_relational_operator(token)) {
-        int exp_type2 = TPNONE;
         /* The type of the result of a relational operator is a boolean. */
+        int exp_type2 = TPNONE;
+
+        if (is_simple_expression_variable_only) {
+            is_expression_variable_only = false;
+            assemble_variable_reference_rval(id_variable);
+        }
 
         fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
-        if ((exp_type2 = parse_simple_expression()) == ERROR) {
+        if ((exp_type2 = parse_simple_expression(&is_simple_expression_variable_only)) == ERROR) {
             return ERROR;
         }
 
@@ -1179,6 +1186,11 @@ static int parse_expression(void) {
 
         /* The type of the result of a relational operator is a boolean. */
         exp_type1 = TPBOOL;
+
+        if (is_simple_expression_variable_only) {
+            assemble_variable_reference_rval(id_variable);
+            is_simple_expression_variable_only = false;
+        }
 
         assemble_expression();
     }
