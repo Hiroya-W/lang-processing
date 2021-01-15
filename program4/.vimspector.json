@@ -7,7 +7,9 @@
                 "type": "cppdbg",
                 "request": "launch",
                 "program": "${workspaceFolder}/main",
-                "args": [],
+                "args": [
+                    "samples/sample11pp.mpl"
+                ],
                 "stopAtEntry": false,
                 "cwd": "${workspaceFolder}",
                 "environment": [],
