@@ -236,6 +236,7 @@ void assemble_expression() {
     fprintf(out_fp, "%s\n", jmp_true_label);
     fprintf(out_fp, "\tLDA \tgr1, \t1\n"); /* if true, return 1 */
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+    fprintf(out_fp, "%s\n", jmp_false_label);
 }
 
 void assemble_ADDA() {
