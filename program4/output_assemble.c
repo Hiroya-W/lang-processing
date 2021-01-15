@@ -88,7 +88,6 @@ void assemble_procedure_definition() {
 int assemble_procedure_begin() {
     struct ID *p_id;
     struct ID *p_id_list = NULL;
-    fprintf(out_fp, "\tPOP\t gr2\n"); /* gr2: return pointer */
 
     /* Reverse the order of the parameters. */
     p_id = localidroot;
@@ -105,9 +104,14 @@ int assemble_procedure_begin() {
             p_id = p_id->nextp;
         }
     } else {
-        p_id_list = NULL;
+        /* If the procedure does not have parameters, it does nothing.*/
+        /* POP gr2
+         * PUSH 0, gr2
+         */
+        return 0;
     }
 
+    fprintf(out_fp, "\tPOP\t gr2\n"); /* gr2: return pointer */
     /* Set a value to parameters */
     p_id = p_id_list;
     while (p_id != NULL) {
