@@ -1341,7 +1341,7 @@ static int parse_term(int *is_variable_only) {
 static int parse_factor(int *is_variable) {
     int factor_type = TPNONE;
     int exp_type = TPNONE;
-    int factor_is_variable = 0;
+    int is_factor_variable = 0;
 
     is_variable = false;
 
@@ -1381,7 +1381,7 @@ static int parse_factor(int *is_variable) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if ((factor_type = parse_factor(&factor_is_variable)) == ERROR) {
+            if ((factor_type = parse_factor(&is_factor_variable)) == ERROR) {
                 return ERROR;
             }
             if (factor_type != TPBOOL) {
