@@ -1383,6 +1383,7 @@ static int parse_factor(int *is_variable) {
     int factor_type = TPNONE;
     int exp_type = TPNONE;
     int is_factor_variable = 0;
+    int is_expression_variable_only = 0;
 
     is_variable = false;
 
@@ -1408,8 +1409,12 @@ static int parse_factor(int *is_variable) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if ((factor_type = parse_expression()) == ERROR) {
+            if ((factor_type = parse_expression(&is_expression_variable_only)) == ERROR) {
                 return ERROR;
+            }
+            /* (expression) is right value */
+            if (is_expression_variable_only) {
+                assemble_variable_reference_rval(id_variable);
             }
 
             if (token != TRPAREN) {
@@ -1445,9 +1450,14 @@ static int parse_factor(int *is_variable) {
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
-            if ((exp_type = parse_expression()) == ERROR) {
+            if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
                 return ERROR;
             }
+
+            if (is_expression_variable_only) {
+                assemble_variable_reference_rval(id_variable);
+            }
+
             if (exp_type & TPARRAY) {
                 return error("The type must be a standard type.");
             }
