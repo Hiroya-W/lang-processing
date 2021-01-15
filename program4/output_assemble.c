@@ -240,8 +240,6 @@ void assemble_expression() {
 void assemble_ADDA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
-    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
-    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tADDA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
@@ -249,8 +247,6 @@ void assemble_ADDA() {
 void assemble_SUBA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
-    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
-    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tSUBA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
@@ -258,8 +254,6 @@ void assemble_SUBA() {
 void assemble_OR() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
-    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
-    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tOR \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
@@ -274,11 +268,8 @@ int assemble_constant(int value) {
  * @brief Generating assembly code for product operation
  */
 void assemble_MULA() {
-    /* fprintf(out_fp, ";MULA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
-    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
-    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tMULA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
@@ -287,11 +278,8 @@ void assemble_MULA() {
  * @brief Generating assembly code for division operation
  */
 void assemble_DIVA() {
-    /* fprintf(out_fp, ";DIVA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
-    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
-    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tDIVA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
@@ -300,11 +288,8 @@ void assemble_DIVA() {
  * @brief Generating assembly code for AND operation
  */
 void assemble_AND() {
-    /* fprintf(out_fp, ";DIVA\n"); */
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
-    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
-    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tAND \tgr1, \tgr2\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
