@@ -1092,6 +1092,8 @@ static int parse_output_statement(void) {
  */
 static int parse_output_format(void) {
     int exp_type = TPNONE;
+    int is_expression_variable_only = 0;
+
     if (token == TSTRING && strlen(string_attr) > 1) {
         fprintf(stdout, "'%s'", string_attr);
 
@@ -1127,9 +1129,14 @@ static int parse_output_format(void) {
         case TBOOLEAN:
             /* FALLTHROUGH */
         case TCHAR:
-            if ((exp_type = parse_expression()) == ERROR) {
+            if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
                 return ERROR;
             }
+
+            if (is_expression_variable_only) {
+                assemble_variable_reference_rval(id_variable);
+            }
+
             if (exp_type & TPARRAY) {
                 return error("The type must be a standard type.");
             }
