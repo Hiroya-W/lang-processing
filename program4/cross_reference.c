@@ -33,7 +33,7 @@ static int parse_output_format(void);
 static int parse_compound_statement(void);
 
 static int parse_expression(void);
-static int parse_simple_expression(void);
+static int parse_simple_expression(int *is_simple_expression_variable_only);
 static int is_relational_operator(int token);
 static int parse_term(int *is_variable_only);
 static int parse_factor(int *is_variable);
@@ -1214,19 +1214,22 @@ static int is_relational_operator(int _token) {
  * @brief Parsing a simple expression
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_simple_expression(void) {
+static int parse_simple_expression(int *is_simple_expression_variable_only) {
     int term_type1 = TPNONE;
     int term_type2 = TPNONE;
     int opr;
+    int is_term_variable_only = 0;
+    *is_simple_expression_variable_only = true;
 
     if (token == TPLUS || token == TMINUS) {
+        is_simple_expression_variable_only = false;
         term_type1 = TPINT;
 
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
 
-    if ((term_type2 = parse_term()) == ERROR) {
+    if ((term_type2 = parse_term(&is_term_variable_only)) == ERROR) {
         return ERROR;
     }
 
@@ -1236,7 +1239,27 @@ static int parse_simple_expression(void) {
     }
     term_type1 = term_type2;
 
+    if (is_term_variable_only && !is_simple_expression_variable_only) {
+        /* if TPLUS or TMINUS exists, !is_simple_expression_variable_only is true*/
+        /* Then need the right value to calculate */
+        assemble_variable_reference_rval(id_variable);
+        /* TODO: calculate puls or minus */
+
+        is_term_variable_only = false;
+    }
+
+    if (!is_term_variable_only) {
+        is_simple_expression_variable_only = false;
+    }
+
     while (token == TPLUS || token == TMINUS || token == TOR) {
+        is_simple_expression_variable_only = false;
+
+        if (is_term_variable_only) {
+            /* Load a right value from a variable to calculate */
+            assemble_variable_reference_rval(id_variable);
+        }
+
         fprintf(stdout, " %s ", tokenstr[token]);
 
         if ((token == TPLUS || token == TMINUS) && term_type1 != TPINT) {
@@ -1248,7 +1271,7 @@ static int parse_simple_expression(void) {
 
         token = scan();
 
-        if ((term_type2 = parse_term()) == ERROR) {
+        if ((term_type2 = parse_term(&is_term_variable_only)) == ERROR) {
             return ERROR;
         }
 
@@ -1256,6 +1279,12 @@ static int parse_simple_expression(void) {
             return error("The type of the operand must be integer.");
         } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
             return error("The type of the operand must be boolean.");
+        }
+
+        if (is_term_variable_only) {
+            /* Load a right value from a variable to calculate */
+            assemble_variable_reference_rval(id_variable);
+            is_term_variable_only = false;
         }
 
         if (opr == TPLUS) {
