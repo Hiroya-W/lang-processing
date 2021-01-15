@@ -227,8 +227,6 @@ void assemble_expression() {
 
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
-    fprintf(out_fp, "\tLD \tgr2, \t0, \tgr2\n");
-    fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
     fprintf(out_fp, "\tCPA \tgr1, \tgr2\n");
     fprintf(out_fp, "\tJPL \t%s\n", jmp_true_label);
     fprintf(out_fp, "\tLD \tgr1, \tgr0\n"); /* if false, return 0 */
