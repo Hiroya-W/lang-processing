@@ -873,12 +873,16 @@ static int parse_call_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_expressions(void) {
+    /* It is always call statement. */
     int exp_type = TPNONE;
     int num_of_exp = 0;
+    int is_expression_variable_only = 0;
     struct TYPE *para_type = id_procedure->itp->paratp;
-    if ((exp_type = parse_expression()) == ERROR) {
+
+    if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
         return ERROR;
     }
+
     num_of_exp++;
 
     if (in_call_statement) {
@@ -888,13 +892,20 @@ static int parse_expressions(void) {
         if (para_type->ttype != exp_type) {
             return error("The type of the argument1 does not match.");
         }
+
+        if (is_expression_variable_only) {
+            /* call by reference */
+            assemble_variable_reference_lval(id_variable); /* address */
+        } else {
+            /* expression doesn't have address */
+        }
     }
 
     while (token == TCOMMA) {
         fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
-        if ((exp_type = parse_expression()) == ERROR) {
+        if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
             return ERROR;
         }
 
@@ -907,6 +918,12 @@ static int parse_expressions(void) {
             if (para_type->ttype != exp_type) {
                 fprintf(stderr, "The type of the argument%d does not match.", num_of_exp);
                 return error("The type of the argument does not match.");
+            }
+
+            if (is_expression_variable_only) {
+                assemble_variable_reference_lval(id_variable); /* address */
+            } else {
+                /* expression doesn't have address */
             }
         }
     }
@@ -1181,6 +1198,10 @@ static int parse_expression(int *is_expression_variable_only) {
 
     if ((exp_type1 = parse_simple_expression(&is_simple_expression_variable_only)) == ERROR) {
         return ERROR;
+    }
+
+    if (!is_simple_expression_variable_only) {
+        is_expression_variable_only = false;
     }
 
     while (is_relational_operator(token)) {
