@@ -1443,7 +1443,7 @@ static int parse_factor(int *is_variable) {
     int is_factor_variable = 0;
     int is_expression_variable_only = 0;
 
-    is_variable = false;
+    *is_variable = false;
 
     switch (token) {
         case TNAME:
