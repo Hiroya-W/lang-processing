@@ -154,6 +154,8 @@ void assemble_variable_reference_lval(struct ID *referenced_variable) {
     if (referenced_variable->ispara) {
         /* if id is parameter, id has procname */
         fprintf(out_fp, "\tLD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
+    } else if (referenced_variable->procname != NULL) {
+        fprintf(out_fp, "\tLAD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
     } else {
         fprintf(out_fp, "\tLAD \tgr1, \t$%s\n", referenced_variable->name);
     }
@@ -170,6 +172,8 @@ void assemble_variable_reference_rval(struct ID *referenced_variable) {
         /* if id is parameter, id has procname */
         fprintf(out_fp, "\tLD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
         fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
+    } else if (referenced_variable->procname != NULL) {
+        fprintf(out_fp, "\tLD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
     } else {
         fprintf(out_fp, "\tLD \tgr1, \t$%s\n", referenced_variable->name);
     }
