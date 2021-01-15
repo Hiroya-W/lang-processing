@@ -1058,6 +1058,7 @@ static int parse_input_statement(void) {
             return error("The type of the variable must be integer or char.");
         }
 
+        assemble_variable_reference_lval(id_referenced_variable);
         assemble_read(var_type);
 
         while (token == TCOMMA) {
@@ -1072,6 +1073,7 @@ static int parse_input_statement(void) {
                 return error("The type of the variable must be integer or char.");
             }
 
+            assemble_variable_reference_lval(id_referenced_variable);
             assemble_read(var_type);
         }
         if (token != TRPAREN) {
