@@ -926,6 +926,7 @@ static int parse_expressions(void) {
  */
 static int parse_variable(void) {
     int id_type = TPNONE;
+    int is_expression_variable_only = 0;
     struct ID *id_referenced_variable;
 
     if (token != TNAME) {
@@ -952,10 +953,15 @@ static int parse_variable(void) {
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
-        if ((exp_type = parse_expression()) == ERROR) {
+        if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
             return ERROR;
         } else if (exp_type != TPINT) {
             return error("The array index type must be an integer.");
+        }
+
+        if (is_expression_variable_only) {
+            /* index need right value */
+            assemble_variable_reference_rval(id_variable);
         }
 
         if (token != TRSQPAREN) {
@@ -976,9 +982,15 @@ static int parse_variable(void) {
                 id_type = TPBOOL;
                 break;
         }
-    } else {
-        assemble_variable_reference(id_referenced_variable);
     }
+    /*
+    else {
+        assemble_variable_reference_lval(id_referenced_variable);
+    }
+    */
+
+    /* TODO: Is variable array type? */
+    /* Is the address to be returned an array or a variable? */
 
     return id_type;
 }
