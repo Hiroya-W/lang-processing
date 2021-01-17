@@ -241,6 +241,7 @@ extern int init_assemble(char *filename_mppl);
 extern int end_assemble(void);
 extern int assemble_start(char *program_name);
 extern int create_newlabel(char **out);
+extern void assemble_block_end(void);
 extern void assemble_procedure_definition();
 extern int assemble_procedure_begin();
 extern void assemble_procedure_end();

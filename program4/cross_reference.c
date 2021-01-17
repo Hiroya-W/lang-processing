@@ -139,6 +139,9 @@ static int parse_block(void) {
     if (parse_compound_statement() == ERROR) {
         return ERROR;
     }
+
+    assemble_block_end();
+
     return NORMAL;
 }
 

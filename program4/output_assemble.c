@@ -77,6 +77,10 @@ int create_newlabel(char **out) {
     return 0;
 }
 
+void assemble_block_end(void) {
+    fprintf(out_fp, "\tRET\n");
+}
+
 /*!
  * @brief Generating assembly code for procedure definition
  */
