@@ -1454,6 +1454,7 @@ static int parse_factor(int *is_variable) {
     int exp_type = TPNONE;
     int is_factor_variable = 0;
     int is_expression_variable_only = 0;
+    int cast_type = 0;
 
     *is_variable = false;
 
@@ -1510,6 +1511,7 @@ static int parse_factor(int *is_variable) {
         case TBOOLEAN:
             /* FALLTHROUGH */
         case TCHAR:
+            cast_type = token;
             if ((factor_type = parse_standard_type()) == ERROR) {
                 return ERROR;
             }
@@ -1535,6 +1537,9 @@ static int parse_factor(int *is_variable) {
             if (token != TRPAREN) {
                 return error("Symbol ')' is not found.");
             }
+
+            assemble_cast(cast_type, exp_type);
+
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
             break;
