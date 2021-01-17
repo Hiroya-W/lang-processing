@@ -251,6 +251,7 @@ extern void assemble_iteration_condition(char *bottom_label);
 extern void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type);
 extern void assemble_variable_reference_rval(struct ID *referenced_variable);
 extern void assemble_variable_reference_lval(struct ID *referenced_variable);
+extern void assemble_assign_real_param_to_address(void);
 extern void assemble_call(struct ID *id_procedure);
 extern void assemble_expression();
 extern void assemble_ADDA();
