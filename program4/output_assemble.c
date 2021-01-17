@@ -164,6 +164,14 @@ void assemble_variable_reference_lval(struct ID *referenced_variable) {
         fprintf(out_fp, "\tLAD \tgr1, \t$%s\n", referenced_variable->name);
     }
 
+    if (referenced_variable->itp->ttype & TPARRAY) {
+        fprintf(out_fp, "\tPOP \tgr2\n"); /* gr2 is index */ /* Check for out-of-array references */
+        fprintf(out_fp, "\tLAD \tgr3, \t%d\n", referenced_variable->itp->arraysize - 1);
+        fprintf(out_fp, "\tCPA \tgr2, \tgr3\n");        /* gr2 - gr3 */
+        fprintf(out_fp, "\tJMI \tEROV\n");              /* if gr2 - gr3 is negative, it is an out-of-array reference */
+        fprintf(out_fp, "\tLAD \tgr1, \tgr2, \tgr1\n"); /* gr1 <- address(gr1 + gr2) */
+    }
+
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
@@ -172,14 +180,20 @@ void assemble_variable_reference_lval(struct ID *referenced_variable) {
  * @param[in] referenced_variable referenced variable
  */
 void assemble_variable_reference_rval(struct ID *referenced_variable) {
-    if (referenced_variable->ispara) {
-        /* if id is parameter, id has procname */
-        fprintf(out_fp, "\tLD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
-        fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
-    } else if (referenced_variable->procname != NULL) {
-        fprintf(out_fp, "\tLD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
+    if (referenced_variable->itp->ttype & TPARRAY) {
+        assemble_variable_reference_lval(referenced_variable); /* get address */
+        fprintf(out_fp, "\tPOP \tgr1\n");
+        fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n"); /* get rval from address */
     } else {
-        fprintf(out_fp, "\tLD \tgr1, \t$%s\n", referenced_variable->name);
+        if (referenced_variable->ispara) {
+            /* if id is parameter, id has procname */
+            fprintf(out_fp, "\tLD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
+            fprintf(out_fp, "\tLD \tgr1, \t0, \tgr1\n");
+        } else if (referenced_variable->procname != NULL) {
+            fprintf(out_fp, "\tLD \tgr1, \t$%s%%%s\n", referenced_variable->name, referenced_variable->procname);
+        } else {
+            fprintf(out_fp, "\tLD \tgr1, \t$%s\n", referenced_variable->name);
+        }
     }
 
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
@@ -593,12 +607,6 @@ void assemble_library() {
     fprintf(out_fp, "  ST  gr5, 0,gr1\n");
     fprintf(out_fp, "  ST  gr7, INP  ;  INP = inp;\n");
     fprintf(out_fp, "RC3      ; }\n");
-    fprintf(out_fp, "  RPOP\n");
-    fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, "READINT\n");
-    fprintf(out_fp, "; gr1が指す番地に整数値一つを読み込む\n");
-    fprintf(out_fp, "  RPUSH\n");
-    fprintf(out_fp, "RI1      ; do {\n");
     fprintf(out_fp, "  CALL  READCHAR  ;  ch = READCHAR();\n");
     fprintf(out_fp, "  LD  gr7, 0,gr1\n");
     fprintf(out_fp, "  CPA  gr7, SPACE  ; } while(ch == ' ' || ch == '\\t' || ch == '\\n');\n");
