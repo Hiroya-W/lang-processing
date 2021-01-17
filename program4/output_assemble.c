@@ -293,6 +293,12 @@ void assemble_expression(int relational_operator_token) {
     fprintf(out_fp, "%s\n", jmp_false_label);
 }
 
+void assemble_minus_sign() {
+    fprintf(out_fp, "\tLAD \tgr1, \t-1");
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+    assemble_MULA();
+}
+
 void assemble_ADDA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");

@@ -255,6 +255,7 @@ extern void assemble_variable_reference_lval(struct ID *referenced_variable);
 extern void assemble_assign_real_param_to_address(void);
 extern void assemble_call(struct ID *id_procedure);
 extern void assemble_expression(int relational_operator_token);
+extern void assemble_minus_sign();
 extern void assemble_ADDA();
 extern void assemble_SUBA();
 extern void assemble_OR();

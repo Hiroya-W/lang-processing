@@ -1302,11 +1302,13 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
     int term_type2 = TPNONE;
     int opr;
     int is_term_variable_only = 0;
+    int sign_token = -1;
     *is_simple_expression_variable_only = true;
 
     if (token == TPLUS || token == TMINUS) {
         *is_simple_expression_variable_only = false;
         term_type1 = TPINT;
+        sign_token = token;
 
         fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
@@ -1329,6 +1331,10 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
         /* TODO: calculate puls or minus */
 
         is_term_variable_only = false;
+    }
+
+    if (sign_token == TMINUS) {
+        assemble_minus_sign();
     }
 
     if (!is_term_variable_only) {
