@@ -1235,6 +1235,7 @@ static int parse_expression(int *is_expression_variable_only) {
     }
 
     while (is_relational_operator(token)) {
+        int relational_operator_token = token;
         /* The type of the result of a relational operator is a boolean. */
         int exp_type2 = TPNONE;
         *is_expression_variable_only = false;
@@ -1262,7 +1263,7 @@ static int parse_expression(int *is_expression_variable_only) {
             is_simple_expression_variable_only = false;
         }
 
-        assemble_expression();
+        assemble_expression(relational_operator_token);
     }
 
     return exp_type1;

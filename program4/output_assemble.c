@@ -250,7 +250,7 @@ void assemble_call(struct ID *id_procedure) {
     fprintf(out_fp, "\tCALL $%s\n", id_procedure->name);
 }
 
-void assemble_expression() {
+void assemble_expression(int relational_operator_token) {
     char *jmp_true_label = NULL;
     char *jmp_false_label = NULL;
     create_newlabel(&jmp_true_label);
@@ -259,13 +259,36 @@ void assemble_expression() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tCPA \tgr1, \tgr2\n");
-    fprintf(out_fp, "\tJPL \t%s\n", jmp_true_label);
-    fprintf(out_fp, "\tLD \tgr1, \tgr0\n"); /* if false, return 0 */
+
+    switch (relational_operator_token) {
+        case TEQUAL:
+            fprintf(out_fp, "\tJZE \t%s\n", jmp_true_label);
+            break;
+        case TNOTEQ:
+            fprintf(out_fp, "\tJNZ \t%s\n", jmp_true_label);
+            break;
+        case TLE:
+            fprintf(out_fp, "\tJMI \t%s\n", jmp_true_label);
+            break;
+        case TLEEQ:
+            fprintf(out_fp, "\tJMI \t%s\n", jmp_true_label);
+            fprintf(out_fp, "\tJZE \t%s\n", jmp_true_label);
+            break;
+        case TGR:
+            fprintf(out_fp, "\tJPL \t%s\n", jmp_true_label);
+            break;
+        case TGREQ:
+            fprintf(out_fp, "\tJPL \t%s\n", jmp_true_label);
+            fprintf(out_fp, "\tJZE \t%s\n", jmp_true_label);
+            break;
+    }
+
+    fprintf(out_fp, "\tLD \tgr1, \tgr0\n"); /* return 0 */
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
     fprintf(out_fp, "\tJUMP \t%s\n", jmp_false_label);
 
     fprintf(out_fp, "%s\n", jmp_true_label);
-    fprintf(out_fp, "\tLAD \tgr1, \t1\n"); /* if true, return 1 */
+    fprintf(out_fp, "\tLAD \tgr1, \t1\n"); /* return 1 */
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
     fprintf(out_fp, "%s\n", jmp_false_label);
 }
