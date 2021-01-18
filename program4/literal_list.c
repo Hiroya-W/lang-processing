@@ -2,12 +2,14 @@
 
 /*! Pointers to root */
 struct LITERAL *literal_root;
+struct LITERAL *while_end_literal_root;
 
 /*!
  * @brief Initialise the list
  */
 void init_literal_list() {
     literal_root = NULL;
+    while_end_literal_root = NULL;
 }
 
 /*!
@@ -16,7 +18,7 @@ void init_literal_list() {
  * @param[in] value Value of literal
  * @return int Return 0 on success and -1 on failure.
  */
-int add_literal(char *label, char *value) {
+int add_literal(struct LITERAL **root, char *label, char *value) {
     struct LITERAL *new_literal;
 
     /* struct LITERAL */
@@ -25,24 +27,29 @@ int add_literal(char *label, char *value) {
     }
     new_literal->label = label;
     new_literal->value = value;
-    new_literal->nextp = literal_root;
-    literal_root = new_literal;
+    new_literal->nextp = *root;
+    *root = new_literal;
 
     return 0;
+}
+
+void release_literal_lists(void) {
+    release_literal(&literal_root);
+    release_literal(&while_end_literal_root);
 }
 
 /*!
  * @brief Release the literal list
  * @param[in] root The root of the list 
  */
-void release_literal(void) {
-    struct LITERAL *p_literal = literal_root;
+void release_literal(struct LITERAL **root) {
+    struct LITERAL *p_literal = *root;
     while (p_literal != NULL) {
         struct LITERAL *next_p = p_literal->nextp;
         free(p_literal);
         p_literal = next_p;
     }
-    literal_root = NULL;
+    *root = NULL;
 }
 
 /*!

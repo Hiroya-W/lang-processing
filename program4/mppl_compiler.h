@@ -274,9 +274,12 @@ extern void assemble_library();
 
 /*! @name literal_list.c */
 /* @{ */
+extern struct LITERAL *literal_root;
+extern struct LITERAL *while_end_literal_root;
 extern void init_literal_list();
-extern int add_literal(char *label, char *value);
-extern void release_literal(void);
+extern int add_literal(struct LITERAL **root, char *label, char *value);
+extern void release_literal_lists(void);
+extern void release_literal(struct LITERAL **root);
 extern void assemble_literals(void);
 /* @} */
 
