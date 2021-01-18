@@ -273,23 +273,23 @@ void assemble_expression(int relational_operator_token) {
     fprintf(out_fp, "\tCPA \tgr1, \tgr2\n");
 
     switch (relational_operator_token) {
-        case TEQUAL:
+        case TEQUAL: /* = */
             fprintf(out_fp, "\tJZE \t%s\n", jmp_true_label);
             break;
-        case TNOTEQ:
+        case TNOTEQ: /* <> */
             fprintf(out_fp, "\tJNZ \t%s\n", jmp_true_label);
             break;
-        case TLE:
+        case TLE: /* < */
             fprintf(out_fp, "\tJMI \t%s\n", jmp_true_label);
             break;
-        case TLEEQ:
+        case TLEEQ: /* <= */
             fprintf(out_fp, "\tJMI \t%s\n", jmp_true_label);
             fprintf(out_fp, "\tJZE \t%s\n", jmp_true_label);
             break;
-        case TGR:
+        case TGR: /* > */
             fprintf(out_fp, "\tJPL \t%s\n", jmp_true_label);
             break;
-        case TGREQ:
+        case TGREQ: /* >= */
             fprintf(out_fp, "\tJPL \t%s\n", jmp_true_label);
             fprintf(out_fp, "\tJZE \t%s\n", jmp_true_label);
             break;
