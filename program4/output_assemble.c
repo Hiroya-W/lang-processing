@@ -250,6 +250,14 @@ void assemble_break(void) {
     fprintf(out_fp, "\tJUMP \t%s\n", while_end_literal_root->label);
 }
 
+void assemble_return(void) {
+    if (in_subprogram_declaration) {
+        fprintf(out_fp, "\tRET\n");
+    } else {
+        fprintf(out_fp, "\tSVC \t0\n");
+    }
+}
+
 void assemble_call(struct ID *id_procedure) {
     fprintf(out_fp, "\tCALL $%s\n", id_procedure->name);
 }

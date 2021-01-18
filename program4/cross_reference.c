@@ -637,6 +637,7 @@ static int parse_statement(void) {
             }
             break;
         case TRETURN:
+            assemble_return();
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
             break;
