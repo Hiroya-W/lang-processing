@@ -262,6 +262,7 @@ extern void assemble_ADDA();
 extern void assemble_SUBA();
 extern void assemble_OR();
 extern int assemble_constant(int constant_value);
+extern void assemble_not_factor(void);
 extern void assemble_cast(int to_type, int from_type);
 extern void assemble_MULA();
 extern void assemble_DIVA();

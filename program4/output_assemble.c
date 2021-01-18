@@ -340,6 +340,25 @@ int assemble_constant(int value) {
     return 0;
 }
 
+void assemble_not_factor(void) {
+    char *jmp_zero_label = NULL;
+    char *jmp_not_end_label = NULL;
+    create_newlabel(&jmp_zero_label);
+    create_newlabel(&jmp_not_end_label);
+
+    fprintf(out_fp, "\tPOP \tgr1\n"); /* factor value */
+    fprintf(out_fp, "\tCPA \tgr1, \tgr0\n");
+    fprintf(out_fp, "\tJNZ \t%s\n", jmp_zero_label); /* expression value != 0 ? 0(false) : 1(true) */
+    fprintf(out_fp, "\tLAD \tgr1, 1\n");             /* return 1 */
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+    fprintf(out_fp, "\tJUMP \t%s\n", jmp_not_end_label);
+
+    fprintf(out_fp, "%s\n", jmp_zero_label);
+    fprintf(out_fp, "\tLD \tgr1, \tgr0\n"); /* return 0 */
+    fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
+    fprintf(out_fp, "%s\n", jmp_not_end_label);
+}
+
 void assemble_cast(int to_type, int from_type) {
     if (from_type == TPINT) {
         if (to_type == TPINT) {
