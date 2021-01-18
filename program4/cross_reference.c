@@ -627,6 +627,7 @@ static int parse_statement(void) {
                 error("Keyword 'break' is written outside of a while statement.");
                 return ERROR;
             }
+            assemble_break();
             fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
             break;
@@ -807,6 +808,7 @@ static int parse_iteration_statement(void) {
 
     create_newlabel(&iteration_top_label);
     create_newlabel(&iteration_bottom_label);
+    add_literal(&while_end_literal_root, iteration_bottom_label, "0"); /* No value is required. */
 
     fprintf(out_fp, "%s\n", iteration_top_label);
 
@@ -846,6 +848,7 @@ static int parse_iteration_statement(void) {
 
     fprintf(out_fp, "\tJUMP \t%s\n", iteration_top_label);
     fprintf(out_fp, "%s\n", iteration_bottom_label);
+    pop_while_literal_list();
 
     return NORMAL;
 }

@@ -246,6 +246,10 @@ void assemble_iteration_condition(char *bottom_label) {
     fprintf(out_fp, "\tJZE \t%s\n", bottom_label);
 }
 
+void assemble_break(void) {
+    fprintf(out_fp, "\tJUMP \t%s", while_end_literal_root->label);
+}
+
 void assemble_call(struct ID *id_procedure) {
     fprintf(out_fp, "\tCALL $%s\n", id_procedure->name);
 }
