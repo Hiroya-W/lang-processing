@@ -973,6 +973,7 @@ static int parse_expressions(void) {
 static int parse_variable(void) {
     int id_type = TPNONE;
     int is_expression_variable_only = 0;
+    struct ID *id_array_variable = NULL;
 
     if (token != TNAME) {
         return error("Name is not found.");
@@ -989,6 +990,9 @@ static int parse_variable(void) {
 
     if (token == TLSQPAREN) {
         int exp_type = TPNONE;
+
+        id_array_variable = id_variable;
+
         if (!(id_type & TPARRAY)) {
             fprintf(stderr, "%s is not Array type.", string_attr);
             return error("id is not Array type.");
@@ -1027,6 +1031,8 @@ static int parse_variable(void) {
                 id_type = TPBOOL;
                 break;
         }
+
+        id_referenced_variable = id_array_variable;
     }
     /*
     else {
