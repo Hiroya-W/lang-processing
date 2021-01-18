@@ -725,7 +725,7 @@ void assemble_library() {
     fprintf(out_fp, "READINT\n");
     fprintf(out_fp, ";gr1が指す番地に整数値一つを読み込む\n");
     fprintf(out_fp, "  RPUSH\n");
-    fprintf(out_fp, "RI1      ; do {");
+    fprintf(out_fp, "RI1      ; do {\n");
     fprintf(out_fp, "  CALL  READCHAR  ;  ch = READCHAR();\n");
     fprintf(out_fp, "  LD  gr7, 0,gr1\n");
     fprintf(out_fp, "  CPA  gr7, SPACE  ; } while(ch == ' ' || ch == '\\t' || ch == '\\n');\n");
