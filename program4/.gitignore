@@ -12,6 +12,9 @@ test
 output.txt
 outputs/
 
+# samples
+samples
+
 # documents
 docs/
 Doxyfile.bak
