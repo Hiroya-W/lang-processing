@@ -1516,6 +1516,9 @@ static int parse_factor(int *is_variable) {
                 return error("The type of the operand must be boolean.");
             }
             /* TODO: if factor is vaible, variable reference rval */
+            if (is_factor_variable) {
+                assemble_variable_reference_rval(id_referenced_variable);
+            }
             assemble_not_factor();
             break;
         case TINTEGER:
