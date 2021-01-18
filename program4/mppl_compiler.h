@@ -278,6 +278,7 @@ extern struct LITERAL *literal_root;
 extern struct LITERAL *while_end_literal_root;
 extern void init_literal_list();
 extern int add_literal(struct LITERAL **root, char *label, char *value);
+extern void pop_while_literal_list(void);
 extern void release_literal_lists(void);
 extern void release_literal(struct LITERAL **root);
 extern void assemble_literals(void);

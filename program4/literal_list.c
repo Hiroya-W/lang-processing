@@ -33,6 +33,16 @@ int add_literal(struct LITERAL **root, char *label, char *value) {
     return 0;
 }
 
+void pop_while_literal_list(void) {
+    struct LITERAL *p_literal;
+    if (while_end_literal_root == NULL) {
+        return;
+    }
+    p_literal = while_end_literal_root->nextp;
+    free(while_end_literal_root);
+    while_end_literal_root = p_literal;
+}
+
 void release_literal_lists(void) {
     release_literal(&literal_root);
     release_literal(&while_end_literal_root);
