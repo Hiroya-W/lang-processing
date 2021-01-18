@@ -247,7 +247,7 @@ void assemble_iteration_condition(char *bottom_label) {
 }
 
 void assemble_break(void) {
-    fprintf(out_fp, "\tJUMP \t%s", while_end_literal_root->label);
+    fprintf(out_fp, "\tJUMP \t%s\n", while_end_literal_root->label);
 }
 
 void assemble_call(struct ID *id_procedure) {
@@ -298,7 +298,7 @@ void assemble_expression(int relational_operator_token) {
 }
 
 void assemble_minus_sign() {
-    fprintf(out_fp, "\tLAD \tgr1, \t-1");
+    fprintf(out_fp, "\tLAD \tgr1, \t-1\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
     assemble_MULA();
 }
