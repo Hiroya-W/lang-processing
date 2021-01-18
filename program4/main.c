@@ -99,7 +99,7 @@ int main(int nc, char *np[]) {
     fflush(stdout);
 
     release_crtab();
-    release_literal();
+    release_literal_lists();
     return ret;
 }
 

@@ -202,7 +202,7 @@ void assemble_variable_reference_rval(struct ID *referenced_variable) {
 void assemble_assign_real_param_to_address(void) {
     char *label = NULL;
     create_newlabel(&label);
-    add_literal(label, "0");
+    add_literal(&literal_root, label, "0");
     fprintf(out_fp, "\tLAD \tgr2, \t%s\n", label);
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tST \tgr1, \t0, \tgr2\n");
@@ -427,7 +427,7 @@ int assemble_output_format_string(char *strings) {
     }
     create_newlabel(&label);
     sprintf(surrounded_strings, "'%s'", strings);
-    add_literal(label, surrounded_strings);
+    add_literal(&literal_root, label, surrounded_strings);
 
     fprintf(out_fp, "\tLAD \tgr1, %s\n", label);
     fprintf(out_fp, "\tLD \tgr2, \tgr0\n");
