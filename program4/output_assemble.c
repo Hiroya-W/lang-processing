@@ -165,11 +165,13 @@ void assemble_variable_reference_lval(struct ID *referenced_variable) {
     }
 
     if (referenced_variable->itp->ttype & TPARRAY) {
+        /* gr1 is head */
         fprintf(out_fp, "\tPOP \tgr2\n"); /* gr2 is index */ /* Check for out-of-array references */
         fprintf(out_fp, "\tLAD \tgr3, \t%d\n", referenced_variable->itp->arraysize - 1);
-        fprintf(out_fp, "\tCPA \tgr2, \tgr3\n");        /* gr2 - gr3 */
-        fprintf(out_fp, "\tJMI \tEROV\n");              /* if gr2 - gr3 is negative, it is an out-of-array reference */
-        fprintf(out_fp, "\tLAD \tgr1, \tgr2, \tgr1\n"); /* gr1 <- address(gr1 + gr2) */
+        fprintf(out_fp, "\tCPA \tgr2, \tgr3\n");  /* gr2 - gr3 */
+        fprintf(out_fp, "\tJMI \tEROV\n");        /* if gr2 - gr3 is negative, it is an out-of-array reference */
+        fprintf(out_fp, "\tADDA \tgr1, \tgr2\n"); /* gr1 <- address(gr1(head) + gr2(index)) */
+        fprintf(out_fp, "\tJOV \tEOVF\n");
     }
 
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
