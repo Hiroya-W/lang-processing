@@ -90,12 +90,12 @@ void id_register_without_type_test(void) {
     CU_ASSERT_PTR_NOT_NULL(search_tab(&id_without_type_root, "GLOBAL NAME2", NULL));
 
     root = id_without_type_root;
-    CU_ASSERT_STRING_EQUAL(root->name, "GLOBAL NAME2");
+    CU_ASSERT_STRING_EQUAL(root->name, "GLOBAL NAME1");
     CU_ASSERT_PTR_NULL(root->procname);
     CU_ASSERT_PTR_NOT_NULL(root->nextp);
 
     root = root->nextp;
-    CU_ASSERT_STRING_EQUAL(root->name, "GLOBAL NAME1");
+    CU_ASSERT_STRING_EQUAL(root->name, "GLOBAL NAME2");
     CU_ASSERT_PTR_NULL(root->procname);
     CU_ASSERT_PTR_NULL(root->nextp);
 
@@ -110,12 +110,12 @@ void id_register_without_type_test(void) {
     CU_ASSERT_PTR_NOT_NULL(search_tab(&id_without_type_root, "LOCAL NAME2", "procedure_name"));
 
     root = id_without_type_root;
-    CU_ASSERT_STRING_EQUAL(root->name, "LOCAL NAME2");
+    CU_ASSERT_STRING_EQUAL(root->name, "LOCAL NAME1");
     CU_ASSERT_STRING_EQUAL(root->procname, "procedure_name");
     CU_ASSERT_PTR_NOT_NULL(root->nextp);
 
     root = root->nextp;
-    CU_ASSERT_STRING_EQUAL(root->name, "LOCAL NAME1");
+    CU_ASSERT_STRING_EQUAL(root->name, "LOCAL NAME2");
     CU_ASSERT_STRING_EQUAL(root->procname, "procedure_name");
     CU_ASSERT_PTR_NULL(root->nextp);
 
@@ -210,6 +210,7 @@ void id_register_as_type_std_test(void) {
     type = std_type(TPCHAR);
     id_register_as_type(&type);
     root = globalidroot;
+    root = root->nextp;
 
     CU_ASSERT_PTR_NOT_NULL(search_tab(&globalidroot, "CHAR NAME2", NULL));
     CU_ASSERT_STRING_EQUAL(root->name, "CHAR NAME2");
@@ -253,6 +254,7 @@ void id_register_as_type_array_test1(void) {
     type = array_type(TPARRAYCHAR);
     id_register_as_type(&type);
     root = globalidroot;
+    root = root->nextp;
 
     CU_ASSERT_PTR_NOT_NULL(search_tab(&globalidroot, "CHAR NAME2", NULL));
     CU_ASSERT_STRING_EQUAL(root->name, "CHAR NAME2");
