@@ -276,7 +276,6 @@ void id_register_as_type_array_test2(void) {
     file_name = "./samples/id_register_as_type_array_test2.mpl";
 
     init_scan(file_name);
-    indent_level = 0;
     linenum = 1;
     token_linenum = 0;
 
@@ -535,7 +534,6 @@ void test_end(void) {
 
 void parse(void) {
     init_scan(file_name);
-    indent_level = 0;
     linenum = 1;
     token_linenum = 0;
 
