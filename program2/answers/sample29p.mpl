@@ -1,8 +1,8 @@
 program sample29;
 var unused1 : integer;
     UnusedArrayForTest : array[200] of char;
-    procedure gcmlcm(m, n, gc, lc : integer);
-    var a, b, r : integer;
+procedure gcmlcm(m, n, gc, lc : integer);
+var a, b, r : integer;
     begin
         a := m;
         b := n;
@@ -14,14 +14,16 @@ var unused1 : integer;
         gc := a;
         lc := (m div gc) * n
     end;
-    procedure abs(a, b : integer);
+procedure abs(a, b : integer);
+    begin
         if a < 0 then
             b := -a
         else
             b := a
     end;
-    procedure gcm(a, b, gc : integer);
-    var lc, aa, bb : integer;
+procedure gcm(a, b, gc : integer);
+var lc, aa, bb : integer;
+    begin
         if (a = 0) or (b = 0) then
             gc := 1
         else
@@ -30,8 +32,9 @@ var unused1 : integer;
                 call gcmlcm(aa, bb, gc, lc)
             end
     end;
-    procedure lcm(a, b, lc : integer);
-    var gc, aa, bb : integer;
+procedure lcm(a, b, lc : integer);
+var gc, aa, bb : integer;
+    begin
         if (a = 0) or (b = 0) then
             lc := 1
         else
@@ -41,8 +44,9 @@ var unused1 : integer;
             end
     end;
 var unusedchar : char;
-    procedure reduce(a1, a2 : integer);
-    var gc : integer;
+procedure reduce(a1, a2 : integer);
+var gc : integer;
+    begin
         if a1 = 0 then
                 a2 := 1;
                 return
@@ -59,8 +63,9 @@ var unusedchar : char;
         a1 := a1 div gc;
         a2 := a2 div gc
     end;
-    procedure sum(x1, x2, y1, y2 : integer);
-    var lc, y11 : integer;
+procedure sum(x1, x2, y1, y2 : integer);
+var lc, y11 : integer;
+    begin
         call lcm(x2, y2, lc);
         x1 := x1 * (lc div x2);
         y11 := y1 * (lc div y2);
@@ -68,12 +73,14 @@ var unusedchar : char;
         x2 := lc;
         call reduce(x1, x2)
     end;
-    procedure sub(x1, x2, y1, y2 : integer);
-    var lc, y11 : integer;
+procedure sub(x1, x2, y1, y2 : integer);
+var lc, y11 : integer;
+    begin
         call sum(x1, x2, -y1, y2)
     end;
-    procedure mult(x1, x2, y1, y2 : integer);
-    var gc, y22, y11 : integer;
+procedure mult(x1, x2, y1, y2 : integer);
+var gc, y22, y11 : integer;
+    begin
         call gcm(x1, y2, gc);
         x1 := x1 div gc;
         y22 := y2 div gc;
@@ -84,11 +91,13 @@ var unusedchar : char;
         x2 := x2 * y22;
         call reduce(x1, x2)
     end;
-    procedure divide(x1, x2, y1, y2 : integer);
+procedure divide(x1, x2, y1, y2 : integer);
+    begin
         call mult(x1, x2, y2, y1)
     end;
 var unusedarray : array[100] of char;
-    procedure printfinal(a, b : integer);
+procedure printfinal(a, b : integer);
+    begin
         if a = 0 then
             writeln('Final Result =', a)
         else if b = 1 then
@@ -96,7 +105,8 @@ var unusedarray : array[100] of char;
         else
             writeln('Final Result =', a, '/', b)
     end;
-    procedure printtemp(a, b : integer);
+procedure printtemp(a, b : integer);
+    begin
         if a = 0 then
             writeln('Temporary Result =', a)
         else if b = 1 then

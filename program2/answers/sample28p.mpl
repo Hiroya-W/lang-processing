@@ -1,9 +1,9 @@
 program sample28p;
-    procedure p;
+procedure p;
     begin
         writeln('Hello!')
     end;
-    procedure q;
+procedure q;
     begin
         writeln('Everyone!')
     end;
