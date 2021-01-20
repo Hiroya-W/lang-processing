@@ -40,12 +40,8 @@ static int parse_factor(int *is_variable);
 static int parse_constant(void);
 static int parse_expressions(void);
 
-static void insert_indent(void);
-
 /*! When a blank line exists, it becomes 1. */
 static int exists_empty_statement = 0;
-/*! Indicates the current indent level. */
-static int indent_level = 0;
 /*! Indicates a nesting level of while statement */
 static int while_statement_level = 0;
 /*! When in subprogram declaration, it becomes 1 */
@@ -74,13 +70,11 @@ int parse_program(void) {
     if (token != TPROGRAM) {
         return error("Keyword 'program' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if (token != TNAME) {
         return error("Program name is not found.");
     }
-    fprintf(stdout, "%s", string_attr);
 
     if (assemble_start(string_attr) == ERROR) {
         return ERROR;
@@ -91,8 +85,6 @@ int parse_program(void) {
     if (token != TSEMI) {
         return error("Semicolon is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
-    fprintf(stdout, "\n");
     token = scan();
 
     if (parse_block() == ERROR) {
@@ -102,7 +94,6 @@ int parse_program(void) {
     if (token != TDOT) {
         return error("Period is not found at the end of program.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     assemble_literals();
@@ -155,20 +146,11 @@ static int parse_variable_declaration(void) {
         return error("Keyword 'var' is not found.");
     }
 
-    insert_indent();
-    fprintf(stdout, "%s ", tokenstr[token]);
-
     token = scan();
 
     in_variable_declaration = true;
 
     while (token == TNAME) {
-        if (is_the_first_line == 0) {
-            /* insert tab */
-            indent_level++;
-            insert_indent();
-        }
-
         if (parse_variable_names() == ERROR) {
             return ERROR;
         }
@@ -176,7 +158,6 @@ static int parse_variable_declaration(void) {
         if (token != TCOLON) {
             return error("Colon is not found.");
         }
-        fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
         if (parse_type() == ERROR) {
@@ -186,14 +167,10 @@ static int parse_variable_declaration(void) {
         if (token != TSEMI) {
             return error("Symbol ';' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
-        fprintf(stdout, "\n");
         token = scan();
 
         if (is_the_first_line == 1) {
             is_the_first_line = 0;
-        } else {
-            indent_level--;
         }
     }
 
@@ -210,7 +187,6 @@ static int parse_variable_names(void) {
     if (token != TNAME) {
         return error("Name is not found.");
     }
-    fprintf(stdout, "%s", string_attr);
 
     /* declaration */
     if (in_variable_declaration || is_formal_parameter) {
@@ -226,14 +202,11 @@ static int parse_variable_names(void) {
     token = scan();
 
     while (token == TCOMMA) {
-        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
         if (token != TNAME) {
             return error("Name is not found.");
         }
-        fprintf(stdout, "%s", string_attr);
-
         /* definition */
         if (in_variable_declaration || is_formal_parameter) {
             if (id_register_without_type(string_attr) == ERROR) {
@@ -284,7 +257,6 @@ static int parse_standard_type(void) {
     if (token != TINTEGER && token != TBOOLEAN && token != TCHAR) {
         return error("Standard type is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
 
     /* regist id */
     if (in_variable_declaration || is_formal_parameter) {
@@ -343,19 +315,16 @@ static int parse_array_type(void) {
     if (token != TARRAY) {
         return error("Keyword 'array' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     if (token != TLSQPAREN) {
         return error("Symbol '[' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     if (token != TNUMBER) {
         return error("Number is not found.");
     }
-    fprintf(stdout, "%s", string_attr);
 
     /* array size */
     if (in_variable_declaration) {
@@ -370,13 +339,11 @@ static int parse_array_type(void) {
     if (token != TRSQPAREN) {
         return error("Symbol ']' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     if (token != TOF) {
         return error("Keyword 'of' is not found.");
     }
-    fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
     if (parse_standard_type() == ERROR) {
@@ -393,8 +360,6 @@ static int parse_subprogram_declaration(void) {
     if (token != TPROCEDURE) {
         return error("Keyword 'procedure' is not found.");
     }
-
-    fprintf(stdout, "%s ", tokenstr[token]);
 
     token = scan();
 
@@ -414,8 +379,6 @@ static int parse_subprogram_declaration(void) {
     if (token != TSEMI) {
         return error("Symbol ';' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
-    fprintf(stdout, "\n");
     token = scan();
 
     if (token == TVAR) {
@@ -424,7 +387,6 @@ static int parse_subprogram_declaration(void) {
         }
     }
 
-    indent_level++;
     assemble_procedure_definition();
     assemble_procedure_begin();
 
@@ -435,10 +397,7 @@ static int parse_subprogram_declaration(void) {
     if (token != TSEMI) {
         return error("Symbol ';' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
-    fprintf(stdout, "\n");
     token = scan();
-    indent_level--;
 
     in_subprogram_declaration = false;
     release_localidroot();
@@ -457,7 +416,6 @@ static int parse_procedure_name(void) {
     if (token != TNAME) {
         return error("Procedure name is not found.");
     }
-    fprintf(stdout, "%s", string_attr);
 
     /* definition */
     if (definition_procedure_name) {
@@ -493,7 +451,6 @@ static int parse_formal_parameters(void) {
     if (token != TLPAREN) {
         return error("Symbol '(' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     is_formal_parameter = true;
@@ -505,7 +462,6 @@ static int parse_formal_parameters(void) {
     if (token != TCOLON) {
         return error("Symbol ':' is not found.");
     }
-    fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
     if (parse_type() == ERROR) {
@@ -513,11 +469,6 @@ static int parse_formal_parameters(void) {
     }
 
     while (token == TSEMI) {
-        fprintf(stdout, "%s", tokenstr[token]);
-        fprintf(stdout, "\n");
-        indent_level++;
-        insert_indent();
-
         token = scan();
 
         if (parse_variable_names() == ERROR) {
@@ -527,19 +478,16 @@ static int parse_formal_parameters(void) {
         if (token != TCOLON) {
             return error("Symbol ':' is not found.");
         }
-        fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
         if (parse_type() == ERROR) {
             return ERROR;
         }
-        indent_level--;
     }
 
     if (token != TRPAREN) {
         return error("Sybmol ')' is not found.");
     }
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     is_formal_parameter = false;
@@ -555,27 +503,14 @@ static int parse_compound_statement(void) {
     if (token != TBEGIN) {
         return error("Keyword 'begin' is not found.");
     }
-    /*fprintf(stdout, "\r"); */
-    insert_indent();
-    fprintf(stdout, "%s", tokenstr[token]);
-    fprintf(stdout, "\n");
     token = scan();
-
-    indent_level++;
-    insert_indent();
 
     if (parse_statement() == ERROR) {
         return ERROR;
     }
 
     while (token == TSEMI) {
-        fprintf(stdout, "%s", tokenstr[token]);
-        fprintf(stdout, "\n");
         token = scan();
-
-        if (token != TEND) {
-            insert_indent();
-        }
 
         if (parse_statement() == ERROR) {
             return ERROR;
@@ -587,15 +522,8 @@ static int parse_compound_statement(void) {
     }
 
     if (exists_empty_statement) {
-        /* fprintf(stdout, "\r");  "\r": Return to the top of the line */
         exists_empty_statement = 0;
-    } else {
-        fprintf(stdout, "\n");
     }
-    indent_level--;
-
-    insert_indent();
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     return NORMAL;
@@ -628,7 +556,6 @@ static int parse_statement(void) {
                 return ERROR;
             }
             assemble_break();
-            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
             break;
         case TCALL:
@@ -638,7 +565,6 @@ static int parse_statement(void) {
             break;
         case TRETURN:
             assemble_return();
-            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
             break;
         case TREAD:
@@ -688,7 +614,6 @@ static int parse_assignment_statement(void) {
     if (token != TASSIGN) {
         return error("Symbol ':=' is not found.");
     }
-    fprintf(stdout, " %s ", tokenstr[token]);
     token = scan();
 
     if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
@@ -721,7 +646,6 @@ static int parse_condition_statement(void) {
     if (token != TIF) {
         return error("Keyword 'if' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
@@ -745,21 +669,11 @@ static int parse_condition_statement(void) {
     if (token != TTHEN) {
         return error("Keyword 'then' is not found.");
     }
-    fprintf(stdout, " %s", tokenstr[token]);
-    fprintf(stdout, "\n");
     token = scan();
-
-    indent_level++;
-
-    if (token != TBEGIN) {
-        insert_indent();
-    }
 
     if (parse_statement() == ERROR) {
         return ERROR;
     }
-
-    indent_level--;
 
     if (create_newlabel(&if_end_label) == ERROR) {
         return ERROR;
@@ -767,33 +681,18 @@ static int parse_condition_statement(void) {
 
     if (token == TELSE) {
         assemble_else(if_end_label, else_label);
-        fprintf(stdout, "\n");
-        insert_indent();
-
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
         if (token != TIF) {
-            fprintf(stdout, "\n");
-            indent_level++;
-            if (token != TBEGIN) {
-                insert_indent();
-            }
             if (parse_statement() == ERROR) {
                 return ERROR;
             }
-            indent_level--;
         } else {
-            fprintf(stdout, " ");
             if (parse_statement() == ERROR) {
                 return ERROR;
             }
         }
-        fprintf(out_fp, "%s\n", if_end_label);
-    } else {
-        fprintf(out_fp, "%s\n", else_label);
     }
-
     return NORMAL;
 }
 
@@ -811,13 +710,10 @@ static int parse_iteration_statement(void) {
     create_newlabel(&iteration_bottom_label);
     add_literal(&while_end_literal_root, iteration_bottom_label, "0"); /* No value is required. */
 
-    fprintf(out_fp, "%s\n", iteration_top_label);
-
     if (token != TWHILE) {
         return error("Keyword 'while' is not found.");
     }
     while_statement_level++;
-    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
@@ -838,8 +734,6 @@ static int parse_iteration_statement(void) {
     if (token != TDO) {
         return error("Keyword 'do' is not found.");
     }
-    fprintf(stdout, " %s", tokenstr[token]);
-    fprintf(stdout, "\n");
     token = scan();
 
     if (parse_statement() == ERROR) {
@@ -862,7 +756,6 @@ static int parse_call_statement(void) {
     if (token != TCALL) {
         return error("Keyword 'call' is not found.");
     }
-    fprintf(stdout, "%s ", tokenstr[token]);
     token = scan();
 
     in_call_statement = true;
@@ -871,7 +764,6 @@ static int parse_call_statement(void) {
     }
 
     if (token == TLPAREN) {
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
         if (parse_expressions() == ERROR) {
@@ -881,7 +773,6 @@ static int parse_call_statement(void) {
         if (token != TRPAREN) {
             return error("Symbol ')' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     } else {
         struct TYPE *para_type = id_procedure->itp->paratp;
@@ -931,7 +822,6 @@ static int parse_expressions(void) {
     }
 
     while (token == TCOMMA) {
-        fprintf(stdout, "%s ", tokenstr[token]);
         token = scan();
 
         if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
@@ -979,7 +869,6 @@ static int parse_variable(void) {
     if (token != TNAME) {
         return error("Name is not found.");
     }
-    fprintf(stdout, "%s", string_attr);
 
     if ((id_type = register_linenum(string_attr)) == ERROR) {
         return ERROR;
@@ -1000,7 +889,6 @@ static int parse_variable(void) {
         }
 
         /* name is array type */
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
         if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
@@ -1017,7 +905,6 @@ static int parse_variable(void) {
         if (token != TRSQPAREN) {
             return error("Sybmol ']' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
         /* the type of the array elements */
@@ -1035,14 +922,6 @@ static int parse_variable(void) {
 
         id_referenced_variable = id_array_variable;
     }
-    /*
-    else {
-        assemble_variable_reference_lval(id_referenced_variable);
-    }
-    */
-
-    /* TODO: Is variable array type? */
-    /* Is the address to be returned an array or a variable? */
 
     return id_type;
 }
@@ -1059,12 +938,10 @@ static int parse_input_statement(void) {
     }
     read_token = token;
 
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     if (token == TLPAREN) {
         int var_type = TPNONE;
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
         if ((var_type = parse_variable()) == ERROR) {
@@ -1079,7 +956,6 @@ static int parse_input_statement(void) {
         assemble_read(var_type);
 
         while (token == TCOMMA) {
-            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
             if ((var_type = parse_variable()) == ERROR) {
@@ -1096,7 +972,6 @@ static int parse_input_statement(void) {
         if (token != TRPAREN) {
             return error("Sybmol ')' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
 
@@ -1118,11 +993,9 @@ static int parse_output_statement(void) {
     }
     write_token = token;
 
-    fprintf(stdout, "%s", tokenstr[token]);
     token = scan();
 
     if (token == TLPAREN) {
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
 
         if (parse_output_format() == ERROR) {
@@ -1130,7 +1003,6 @@ static int parse_output_statement(void) {
         }
 
         while (token == TCOMMA) {
-            fprintf(stdout, "%s ", tokenstr[token]);
             token = scan();
 
             if (parse_output_format() == ERROR) {
@@ -1141,7 +1013,6 @@ static int parse_output_statement(void) {
         if (token != TRPAREN) {
             return error("Symbol ')' is not found.");
         }
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
 
@@ -1161,8 +1032,6 @@ static int parse_output_format(void) {
     int is_expression_variable_only = 0;
 
     if (token == TSTRING && strlen(string_attr) > 1) {
-        fprintf(stdout, "'%s'", string_attr);
-
         if (assemble_output_format_string(string_attr) == ERROR) {
             return ERROR;
         }
@@ -1208,13 +1077,11 @@ static int parse_output_format(void) {
             }
 
             if (token == TCOLON) {
-                fprintf(stdout, " %s ", tokenstr[token]);
                 token = scan();
 
                 if (token != TNUMBER) {
                     return error("Number is not found.");
                 }
-                fprintf(stdout, "%s", string_attr);
                 token = scan();
 
                 assemble_output_format_standard_type(exp_type, num_attr);
@@ -1255,7 +1122,6 @@ static int parse_expression(int *is_expression_variable_only) {
             assemble_variable_reference_rval(id_referenced_variable);
         }
 
-        fprintf(stdout, " %s ", tokenstr[token]);
         token = scan();
 
         if ((exp_type2 = parse_simple_expression(&is_simple_expression_variable_only)) == ERROR) {
@@ -1321,7 +1187,6 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
         term_type1 = TPINT;
         sign_token = token;
 
-        fprintf(stdout, "%s", tokenstr[token]);
         token = scan();
     }
 
@@ -1359,8 +1224,6 @@ static int parse_simple_expression(int *is_simple_expression_variable_only) {
             /* Load a right value from a variable to calculate */
             assemble_variable_reference_rval(id_referenced_variable);
         }
-
-        fprintf(stdout, " %s ", tokenstr[token]);
 
         if ((token == TPLUS || token == TMINUS) && term_type1 != TPINT) {
             return error("The type of the operand must be integer.");
@@ -1423,8 +1286,6 @@ static int parse_term(int *is_variable_only) {
             /* Load a right value from a variable to calculate */
             assemble_variable_reference_rval(id_referenced_variable);
         }
-
-        fprintf(stdout, " %s ", tokenstr[token]);
 
         if ((token == TSTAR || token == TDIV) && term_type1 != TPINT) {
             return error("The type of the operand must be integer.");
@@ -1495,7 +1356,6 @@ static int parse_factor(int *is_variable) {
             }
             break;
         case TLPAREN:
-            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
             if ((factor_type = parse_expression(&is_expression_variable_only)) == ERROR) {
@@ -1509,11 +1369,9 @@ static int parse_factor(int *is_variable) {
             if (token != TRPAREN) {
                 return error("Symbol ')' is not found.");
             }
-            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
             break;
         case TNOT:
-            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
             if ((factor_type = parse_factor(&is_factor_variable)) == ERROR) {
@@ -1541,7 +1399,6 @@ static int parse_factor(int *is_variable) {
             if (token != TLPAREN) {
                 return error("Symbol '(' is not found");
             }
-            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
 
             if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
@@ -1562,7 +1419,6 @@ static int parse_factor(int *is_variable) {
 
             assemble_cast(cast_type, exp_type);
 
-            fprintf(stdout, "%s", tokenstr[token]);
             token = scan();
             break;
         default:
@@ -1582,14 +1438,12 @@ static int parse_constant(void) {
 
     switch (token) {
         case TNUMBER:
-            fprintf(stdout, "%s", string_attr);
             constant_type = TPINT;
             constant_value = num_attr;
             break;
         case TFALSE:
             /* FALLTHROUGH */
         case TTRUE:
-            fprintf(stdout, "%s", tokenstr[token]);
             constant_type = TPBOOL;
             constant_value = (token == TTRUE) ? 1 : 0;
             break;
@@ -1597,7 +1451,6 @@ static int parse_constant(void) {
             if (strlen(string_attr) != 1) {
                 return error("Constant string length != 1");
             }
-            fprintf(stdout, "'%s'", string_attr);
             constant_type = TPCHAR;
             constant_value = (int)string_attr[0];
             break;
@@ -1609,15 +1462,4 @@ static int parse_constant(void) {
 
     token = scan();
     return constant_type;
-}
-
-/*!
- * @brief Insert an indent
- */
-static void insert_indent(void) {
-    int i;
-    for (i = 0; i < indent_level; i++) {
-        fprintf(stdout, "    ");
-    }
-    return;
 }
