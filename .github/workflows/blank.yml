@@ -37,6 +37,11 @@ jobs:
             cd $GITHUB_WORKSPACE
             cd program3
             make main
+      - name: Compile Check - Program4
+        run: |
+            cd $GITHUB_WORKSPACE
+            cd program4
+            make main
 
       - name: Install CUnit
         run: |
@@ -60,3 +65,8 @@ jobs:
             cd program3
             make 
             make check
+      - name: CUnit Test - Program4
+        run: |
+            cd $GITHUB_WORKSPACE
+            cd program4
+            make 
