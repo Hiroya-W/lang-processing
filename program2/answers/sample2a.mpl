@@ -4,16 +4,11 @@ begin
     writeln('please input change');
     readln(n);
     count := 0;
-    while n > 0 do
-    begin
-        while n >= 10 do
-        begin
-            while n >= 100 do
-            begin
-                while n >= 1000 do
-                begin
-                    while n >= 10000 do
-                    begin
+    while n > 0 do begin
+        while n >= 10 do begin
+            while n >= 100 do begin
+                while n >= 1000 do begin
+                    while n >= 10000 do begin
                         count := count + 1;
                         n := n - 10000;
                     end;

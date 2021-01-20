@@ -4,8 +4,7 @@ begin
     readln(n);
     i := n;
     sum := 0;
-    while i > 0 do
-    begin
+    while i > 0 do begin
         sum := sum + i;
         i := i - 1
     end;
