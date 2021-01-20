@@ -95,7 +95,6 @@ int main(int nc, char *np[]) {
         return EXIT_FAILURE;
     }
 
-    print_tab(crtabroot);
     fflush(stdout);
 
     release_crtab();
