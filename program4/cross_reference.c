@@ -32,11 +32,11 @@ static int parse_output_statement(void);
 static int parse_output_format(void);
 static int parse_compound_statement(void);
 
-static int parse_expression(void);
-static int parse_simple_expression(void);
+static int parse_expression(int *is_expression_variable_only);
+static int parse_simple_expression(int *is_simple_expression_variable_only);
 static int is_relational_operator(int token);
-static int parse_term(void);
-static int parse_factor(void);
+static int parse_term(int *is_variable_only);
+static int parse_factor(int *is_variable);
 static int parse_constant(void);
 static int parse_expressions(void);
 
@@ -58,6 +58,9 @@ int is_formal_parameter = 0;
 int definition_procedure_name = 0;
 /*! Pointer to id of procedure name*/
 struct ID *id_procedure = NULL;
+/*! Pointer to id of referenced variable */
+struct ID *id_variable = NULL;
+struct ID *id_referenced_variable;
 
 /*!
  * @brief Parsing a program
@@ -72,6 +75,11 @@ int parse_program(void) {
     if (token != TNAME) {
         return error("Program name is not found.");
     }
+
+    if (assemble_start(string_attr) == ERROR) {
+        return ERROR;
+    }
+
     token = scan();
 
     if (token != TSEMI) {
@@ -88,6 +96,9 @@ int parse_program(void) {
     }
     token = scan();
 
+    assemble_literals();
+    assemble_library();
+
     return NORMAL;
 }
 
@@ -96,6 +107,11 @@ int parse_program(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_block(void) {
+    char *L0001 = NULL;
+    if (create_newlabel(&L0001) == ERROR) {
+        return ERROR;
+    }
+
     while (token == TVAR || token == TPROCEDURE) {
         if (token == TVAR) {
             /* paragraph */
@@ -109,9 +125,14 @@ static int parse_block(void) {
             }
         }
     }
+
+    fprintf(out_fp, "%s\n", L0001);
     if (parse_compound_statement() == ERROR) {
         return ERROR;
     }
+
+    assemble_block_end();
+
     return NORMAL;
 }
 
@@ -186,7 +207,6 @@ static int parse_variable_names(void) {
         if (token != TNAME) {
             return error("Name is not found.");
         }
-
         /* definition */
         if (in_variable_declaration || is_formal_parameter) {
             if (id_register_without_type(string_attr) == ERROR) {
@@ -367,6 +387,9 @@ static int parse_subprogram_declaration(void) {
         }
     }
 
+    assemble_procedure_definition();
+    assemble_procedure_begin();
+
     if (parse_compound_statement() == ERROR) {
         return ERROR;
     }
@@ -378,6 +401,8 @@ static int parse_subprogram_declaration(void) {
 
     in_subprogram_declaration = false;
     release_localidroot();
+
+    assemble_procedure_end();
 
     return NORMAL;
 }
@@ -530,6 +555,7 @@ static int parse_statement(void) {
                 error("Keyword 'break' is written outside of a while statement.");
                 return ERROR;
             }
+            assemble_break();
             token = scan();
             break;
         case TCALL:
@@ -538,6 +564,7 @@ static int parse_statement(void) {
             }
             break;
         case TRETURN:
+            assemble_return();
             token = scan();
             break;
         case TREAD:
@@ -576,22 +603,32 @@ static int parse_statement(void) {
 static int parse_assignment_statement(void) {
     int var_type = TPNONE;
     int exp_type = TPNONE;
+    int is_expression_variable_only = 0;
+
     if ((var_type = parse_variable()) == ERROR) {
         return ERROR;
     }
+
+    assemble_variable_reference_lval(id_referenced_variable);
 
     if (token != TASSIGN) {
         return error("Symbol ':=' is not found.");
     }
     token = scan();
 
-    if ((exp_type = parse_expression()) == ERROR) {
+    if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
         return ERROR;
+    }
+
+    if (is_expression_variable_only) {
+        assemble_variable_reference_rval(id_referenced_variable);
     }
 
     if (var_type != exp_type) {
         return error("The types of the operand1 and operand2 do not match");
     }
+
+    assemble_assign();
 
     return NORMAL;
 }
@@ -602,18 +639,32 @@ static int parse_assignment_statement(void) {
  */
 static int parse_condition_statement(void) {
     int exp_type = TPNONE;
+    int is_expression_variable_only = 0;
+    char *else_label = NULL;
+    char *if_end_label = NULL;
+
     if (token != TIF) {
         return error("Keyword 'if' is not found.");
     }
     token = scan();
 
-    if ((exp_type = parse_expression()) == ERROR) {
+    if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
         return ERROR;
+    }
+
+    if (is_expression_variable_only) {
+        /* condition needs right value */
+        assemble_variable_reference_rval(id_referenced_variable);
     }
 
     if (exp_type != TPBOOL) {
         return error("The type of the condition must be boolean.");
     }
+
+    if (create_newlabel(&else_label) == ERROR) {
+        return ERROR;
+    }
+    assemble_if_condition(else_label);
 
     if (token != TTHEN) {
         return error("Keyword 'then' is not found.");
@@ -624,7 +675,12 @@ static int parse_condition_statement(void) {
         return ERROR;
     }
 
+    if (create_newlabel(&if_end_label) == ERROR) {
+        return ERROR;
+    }
+
     if (token == TELSE) {
+        assemble_else(if_end_label, else_label);
         token = scan();
 
         if (token != TIF) {
@@ -637,7 +693,6 @@ static int parse_condition_statement(void) {
             }
         }
     }
-
     return NORMAL;
 }
 
@@ -647,19 +702,34 @@ static int parse_condition_statement(void) {
  */
 static int parse_iteration_statement(void) {
     int exp_type = TPNONE;
+    int is_expression_variable_only = 0;
+    char *iteration_top_label = NULL;
+    char *iteration_bottom_label = NULL;
+
+    create_newlabel(&iteration_top_label);
+    create_newlabel(&iteration_bottom_label);
+    add_literal(&while_end_literal_root, iteration_bottom_label, "0"); /* No value is required. */
+
     if (token != TWHILE) {
         return error("Keyword 'while' is not found.");
     }
     while_statement_level++;
     token = scan();
 
-    if ((exp_type = parse_expression()) == ERROR) {
+    if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
         return ERROR;
     }
 
     if (exp_type != TPBOOL) {
         return error("The type of the condition must be boolean.");
     }
+
+    if (is_expression_variable_only) {
+        /* condition needs right value */
+        assemble_variable_reference_rval(id_referenced_variable);
+    }
+
+    assemble_iteration_condition(iteration_bottom_label);
 
     if (token != TDO) {
         return error("Keyword 'do' is not found.");
@@ -670,6 +740,11 @@ static int parse_iteration_statement(void) {
         return ERROR;
     }
     while_statement_level--;
+
+    fprintf(out_fp, "\tJUMP \t%s\n", iteration_top_label);
+    fprintf(out_fp, "%s\n", iteration_bottom_label);
+    pop_while_literal_list();
+
     return NORMAL;
 }
 
@@ -707,6 +782,8 @@ static int parse_call_statement(void) {
     }
     in_call_statement = false;
 
+    assemble_call(id_procedure);
+
     return NORMAL;
 }
 
@@ -715,12 +792,16 @@ static int parse_call_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_expressions(void) {
+    /* It is always call statement. */
     int exp_type = TPNONE;
     int num_of_exp = 0;
+    int is_expression_variable_only = 0;
     struct TYPE *para_type = id_procedure->itp->paratp;
-    if ((exp_type = parse_expression()) == ERROR) {
+
+    if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
         return ERROR;
     }
+
     num_of_exp++;
 
     if (in_call_statement) {
@@ -730,11 +811,20 @@ static int parse_expressions(void) {
         if (para_type->ttype != exp_type) {
             return error("The type of the argument1 does not match.");
         }
+
+        if (is_expression_variable_only) {
+            /* call by reference */
+            assemble_variable_reference_lval(id_referenced_variable); /* address */
+        } else {
+            /* expression doesn't have address */
+            assemble_assign_real_param_to_address();
+        }
     }
+
     while (token == TCOMMA) {
         token = scan();
 
-        if ((exp_type = parse_expression()) == ERROR) {
+        if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
             return ERROR;
         }
 
@@ -745,7 +835,15 @@ static int parse_expressions(void) {
                 return error("There are a lot of arguments.");
             }
             if (para_type->ttype != exp_type) {
+                fprintf(stderr, "The type of the argument%d does not match.", num_of_exp);
                 return error("The type of the argument does not match.");
+            }
+
+            if (is_expression_variable_only) {
+                assemble_variable_reference_lval(id_referenced_variable); /* address */
+            } else {
+                /* expression doesn't have address */
+                assemble_assign_real_param_to_address();
             }
         }
     }
@@ -765,6 +863,9 @@ static int parse_expressions(void) {
  */
 static int parse_variable(void) {
     int id_type = TPNONE;
+    int is_expression_variable_only = 0;
+    struct ID *id_array_variable = NULL;
+
     if (token != TNAME) {
         return error("Name is not found.");
     }
@@ -773,10 +874,15 @@ static int parse_variable(void) {
         return ERROR;
     }
 
+    id_referenced_variable = id_variable;
+
     token = scan();
 
     if (token == TLSQPAREN) {
         int exp_type = TPNONE;
+
+        id_array_variable = id_variable;
+
         if (!(id_type & TPARRAY)) {
             fprintf(stderr, "%s is not Array type.", string_attr);
             return error("id is not Array type.");
@@ -785,10 +891,15 @@ static int parse_variable(void) {
         /* name is array type */
         token = scan();
 
-        if ((exp_type = parse_expression()) == ERROR) {
+        if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
             return ERROR;
         } else if (exp_type != TPINT) {
             return error("The array index type must be an integer.");
+        }
+
+        if (is_expression_variable_only) {
+            /* index need right value */
+            assemble_variable_reference_rval(id_referenced_variable);
         }
 
         if (token != TRSQPAREN) {
@@ -808,6 +919,8 @@ static int parse_variable(void) {
                 id_type = TPBOOL;
                 break;
         }
+
+        id_referenced_variable = id_array_variable;
     }
 
     return id_type;
@@ -818,9 +931,13 @@ static int parse_variable(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_input_statement(void) {
+    int read_token;
+
     if (token != TREAD && token != TREADLN) {
         return error("Keyword 'read' or 'readln' is not found.");
     }
+    read_token = token;
+
     token = scan();
 
     if (token == TLPAREN) {
@@ -835,6 +952,9 @@ static int parse_input_statement(void) {
             return error("The type of the variable must be integer or char.");
         }
 
+        assemble_variable_reference_lval(id_referenced_variable);
+        assemble_read(var_type);
+
         while (token == TCOMMA) {
             token = scan();
 
@@ -845,11 +965,18 @@ static int parse_input_statement(void) {
             if (var_type != TPINT && var_type != TPCHAR) {
                 return error("The type of the variable must be integer or char.");
             }
+
+            assemble_variable_reference_lval(id_referenced_variable);
+            assemble_read(var_type);
         }
         if (token != TRPAREN) {
             return error("Sybmol ')' is not found.");
         }
         token = scan();
+    }
+
+    if (read_token == TREADLN) {
+        assemble_read_line();
     }
 
     return NORMAL;
@@ -860,9 +987,12 @@ static int parse_input_statement(void) {
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_output_statement(void) {
+    int write_token;
     if (token != TWRITE && token != TWRITELN) {
         return error("Keyword 'write' or 'writeln' is not found.");
     }
+    write_token = token;
+
     token = scan();
 
     if (token == TLPAREN) {
@@ -885,6 +1015,11 @@ static int parse_output_statement(void) {
         }
         token = scan();
     }
+
+    if (write_token == TWRITELN) {
+        assemble_output_line();
+    }
+
     return NORMAL;
 }
 
@@ -894,7 +1029,13 @@ static int parse_output_statement(void) {
  */
 static int parse_output_format(void) {
     int exp_type = TPNONE;
+    int is_expression_variable_only = 0;
+
     if (token == TSTRING && strlen(string_attr) > 1) {
+        if (assemble_output_format_string(string_attr) == ERROR) {
+            return ERROR;
+        }
+
         token = scan();
         return NORMAL;
     }
@@ -923,9 +1064,14 @@ static int parse_output_format(void) {
         case TBOOLEAN:
             /* FALLTHROUGH */
         case TCHAR:
-            if ((exp_type = parse_expression()) == ERROR) {
+            if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
                 return ERROR;
             }
+
+            if (is_expression_variable_only) {
+                assemble_variable_reference_rval(id_referenced_variable);
+            }
+
             if (exp_type & TPARRAY) {
                 return error("The type must be a standard type.");
             }
@@ -937,6 +1083,10 @@ static int parse_output_format(void) {
                     return error("Number is not found.");
                 }
                 token = scan();
+
+                assemble_output_format_standard_type(exp_type, num_attr);
+            } else {
+                assemble_output_format_standard_type(exp_type, 0);
             }
             break;
         default:
@@ -949,20 +1099,32 @@ static int parse_output_format(void) {
  * @brief Parsing a expression
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_expression(void) {
+static int parse_expression(int *is_expression_variable_only) {
     int exp_type1 = TPNONE;
+    int is_simple_expression_variable_only = 0;
+    *is_expression_variable_only = true;
 
-    if ((exp_type1 = parse_simple_expression()) == ERROR) {
+    if ((exp_type1 = parse_simple_expression(&is_simple_expression_variable_only)) == ERROR) {
         return ERROR;
     }
 
+    if (!is_simple_expression_variable_only) {
+        *is_expression_variable_only = false;
+    }
+
     while (is_relational_operator(token)) {
-        int exp_type2 = TPNONE;
+        int relational_operator_token = token;
         /* The type of the result of a relational operator is a boolean. */
+        int exp_type2 = TPNONE;
+        *is_expression_variable_only = false;
+
+        if (is_simple_expression_variable_only) {
+            assemble_variable_reference_rval(id_referenced_variable);
+        }
 
         token = scan();
 
-        if ((exp_type2 = parse_simple_expression()) == ERROR) {
+        if ((exp_type2 = parse_simple_expression(&is_simple_expression_variable_only)) == ERROR) {
             return ERROR;
         }
 
@@ -972,6 +1134,13 @@ static int parse_expression(void) {
 
         /* The type of the result of a relational operator is a boolean. */
         exp_type1 = TPBOOL;
+
+        if (is_simple_expression_variable_only) {
+            assemble_variable_reference_rval(id_referenced_variable);
+            is_simple_expression_variable_only = false;
+        }
+
+        assemble_expression(relational_operator_token);
     }
 
     return exp_type1;
@@ -1005,16 +1174,23 @@ static int is_relational_operator(int _token) {
  * @brief Parsing a simple expression
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_simple_expression(void) {
+static int parse_simple_expression(int *is_simple_expression_variable_only) {
     int term_type1 = TPNONE;
     int term_type2 = TPNONE;
+    int opr;
+    int is_term_variable_only = 0;
+    int sign_token = -1;
+    *is_simple_expression_variable_only = true;
+
     if (token == TPLUS || token == TMINUS) {
+        *is_simple_expression_variable_only = false;
         term_type1 = TPINT;
+        sign_token = token;
 
         token = scan();
     }
 
-    if ((term_type2 = parse_term()) == ERROR) {
+    if ((term_type2 = parse_term(&is_term_variable_only)) == ERROR) {
         return ERROR;
     }
 
@@ -1024,16 +1200,41 @@ static int parse_simple_expression(void) {
     }
     term_type1 = term_type2;
 
+    if (is_term_variable_only && !(*is_simple_expression_variable_only)) {
+        /* if TPLUS or TMINUS exists, !is_simple_expression_variable_only is true*/
+        /* Then need the right value to calculate */
+        assemble_variable_reference_rval(id_referenced_variable);
+        /* TODO: calculate puls or minus */
+
+        is_term_variable_only = false;
+    }
+
+    if (sign_token == TMINUS) {
+        assemble_minus_sign();
+    }
+
+    if (!is_term_variable_only) {
+        *is_simple_expression_variable_only = false;
+    }
+
     while (token == TPLUS || token == TMINUS || token == TOR) {
+        *is_simple_expression_variable_only = false;
+
+        if (is_term_variable_only) {
+            /* Load a right value from a variable to calculate */
+            assemble_variable_reference_rval(id_referenced_variable);
+        }
+
         if ((token == TPLUS || token == TMINUS) && term_type1 != TPINT) {
             return error("The type of the operand must be integer.");
         } else if (token == TOR && term_type1 != TPBOOL) {
             return error("The type of the operand must be boolean.");
         }
+        opr = token;
 
         token = scan();
 
-        if ((term_type2 = parse_term()) == ERROR) {
+        if ((term_type2 = parse_term(&is_term_variable_only)) == ERROR) {
             return ERROR;
         }
 
@@ -1041,6 +1242,20 @@ static int parse_simple_expression(void) {
             return error("The type of the operand must be integer.");
         } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
             return error("The type of the operand must be boolean.");
+        }
+
+        if (is_term_variable_only) {
+            /* Load a right value from a variable to calculate */
+            assemble_variable_reference_rval(id_referenced_variable);
+            is_term_variable_only = false;
+        }
+
+        if (opr == TPLUS) {
+            assemble_ADDA();
+        } else if (opr == TMINUS) {
+            assemble_SUBA();
+        } else if (opr == TOR) {
+            assemble_OR();
         }
     }
     return term_type1;
@@ -1050,24 +1265,38 @@ static int parse_simple_expression(void) {
  * @brief Parsing a term
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_term(void) {
+static int parse_term(int *is_variable_only) {
     int term_type1 = TPNONE;
     int term_type2 = TPNONE;
+    int opr;
+    int is_variable = 0;
+    *is_variable_only = true;
 
-    if ((term_type1 = parse_factor()) == ERROR) {
+    if ((term_type1 = parse_factor(&is_variable)) == ERROR) {
         return ERROR;
     }
 
+    if (!is_variable) {
+        *is_variable_only = false;
+    }
+
     while (token == TSTAR || token == TDIV || token == TAND) {
+        *is_variable_only = false;
+        if (is_variable) {
+            /* Load a right value from a variable to calculate */
+            assemble_variable_reference_rval(id_referenced_variable);
+        }
+
         if ((token == TSTAR || token == TDIV) && term_type1 != TPINT) {
             return error("The type of the operand must be integer.");
         } else if (token == TAND && term_type1 != TPBOOL) {
             return error("The type of the operand must be boolean.");
         }
+        opr = token;
 
         token = scan();
 
-        if ((term_type2 = parse_factor()) == ERROR) {
+        if ((term_type2 = parse_factor(&is_variable)) == ERROR) {
             return ERROR;
         }
 
@@ -1076,22 +1305,44 @@ static int parse_term(void) {
         } else if (term_type1 == TPBOOL && term_type2 != TPBOOL) {
             return error("The type of the operand must be boolean.");
         }
+
+        if (is_variable) {
+            /* Load a right value from a variable to calculate */
+            assemble_variable_reference_rval(id_referenced_variable);
+            is_variable = false;
+        }
+
+        if (opr == TSTAR) {
+            assemble_MULA();
+        } else if (opr == TDIV) {
+            assemble_DIVA();
+        } else if (opr == TAND) {
+            assemble_AND();
+        }
     }
     return term_type1;
 }
 
 /*!
  * @brief Parsing a factor
+ * @param [out] is_variable if token is TNAME, return 1.
  * @return int Returns 0 on success and 1 on failure.
  */
-static int parse_factor(void) {
+static int parse_factor(int *is_variable) {
     int factor_type = TPNONE;
     int exp_type = TPNONE;
+    int is_factor_variable = 0;
+    int is_expression_variable_only = 0;
+    int cast_type = 0;
+
+    *is_variable = false;
+
     switch (token) {
         case TNAME:
             if ((factor_type = parse_variable()) == ERROR) {
                 return ERROR;
             }
+            *is_variable = true;
             break;
         case TNUMBER:
             /* FALLTHROUGH */
@@ -1107,8 +1358,12 @@ static int parse_factor(void) {
         case TLPAREN:
             token = scan();
 
-            if ((factor_type = parse_expression()) == ERROR) {
+            if ((factor_type = parse_expression(&is_expression_variable_only)) == ERROR) {
                 return ERROR;
+            }
+            /* (expression) is right value */
+            if (is_expression_variable_only) {
+                assemble_variable_reference_rval(id_referenced_variable);
             }
 
             if (token != TRPAREN) {
@@ -1119,18 +1374,24 @@ static int parse_factor(void) {
         case TNOT:
             token = scan();
 
-            if ((factor_type = parse_factor()) == ERROR) {
+            if ((factor_type = parse_factor(&is_factor_variable)) == ERROR) {
                 return ERROR;
             }
             if (factor_type != TPBOOL) {
                 return error("The type of the operand must be boolean.");
             }
+            /* TODO: if factor is vaible, variable reference rval */
+            if (is_factor_variable) {
+                assemble_variable_reference_rval(id_referenced_variable);
+            }
+            assemble_not_factor();
             break;
         case TINTEGER:
             /* FALLTHROUGH */
         case TBOOLEAN:
             /* FALLTHROUGH */
         case TCHAR:
+            cast_type = token;
             if ((factor_type = parse_standard_type()) == ERROR) {
                 return ERROR;
             }
@@ -1140,9 +1401,14 @@ static int parse_factor(void) {
             }
             token = scan();
 
-            if ((exp_type = parse_expression()) == ERROR) {
+            if ((exp_type = parse_expression(&is_expression_variable_only)) == ERROR) {
                 return ERROR;
             }
+
+            if (is_expression_variable_only) {
+                assemble_variable_reference_rval(id_referenced_variable);
+            }
+
             if (exp_type & TPARRAY) {
                 return error("The type must be a standard type.");
             }
@@ -1150,11 +1416,15 @@ static int parse_factor(void) {
             if (token != TRPAREN) {
                 return error("Symbol ')' is not found.");
             }
+
+            assemble_cast(cast_type, exp_type);
+
             token = scan();
             break;
         default:
             return error("Factor is not found.");
     }
+
     return factor_type;
 }
 
@@ -1164,25 +1434,32 @@ static int parse_factor(void) {
  */
 static int parse_constant(void) {
     int constant_type = NORMAL;
+    int constant_value;
 
     switch (token) {
         case TNUMBER:
             constant_type = TPINT;
+            constant_value = num_attr;
             break;
         case TFALSE:
             /* FALLTHROUGH */
         case TTRUE:
             constant_type = TPBOOL;
+            constant_value = (token == TTRUE) ? 1 : 0;
             break;
         case TSTRING:
             if (strlen(string_attr) != 1) {
                 return error("Constant string length != 1");
             }
             constant_type = TPCHAR;
+            constant_value = (int)string_attr[0];
             break;
         default:
             return error("Constant is not found.");
     }
+
+    assemble_constant(constant_value);
+
     token = scan();
     return constant_type;
 }

@@ -44,7 +44,7 @@ static int string_attr_push_back(const char c);
 int init_scan(char *filename) {
     if ((fp = fopen(filename, "r")) == NULL) {
         error("fopen() returns NULL");
-        error("function scan_alnum()");
+        error("function init_scan()");
         return -1;
     }
 
