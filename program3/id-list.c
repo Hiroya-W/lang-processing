@@ -5,7 +5,7 @@
 /*! Width of the Name column */
 #define INDENT_SIZE_NAME 20
 /*! Width of the Type column */
-#define INDENT_SIZE_TYPE 30
+#define INDENT_SIZE_TYPE 45
 /*! Width of the Def column */
 #define INDENT_SIZE_DEF 4
 /* @} */
@@ -312,7 +312,7 @@ void print_tab(struct ID *root) {
     struct ID *p;
     struct LINE *q;
 
-    fprintf(stdout, "--------------------------------------------------------------------------\n");
+    fprintf(stdout, "-----------------------------------------------------------------------------------------\n");
     fprintf(stdout, "%-*s", INDENT_SIZE_NAME, "Name");
     fprintf(stdout, "%-*s", INDENT_SIZE_TYPE, "Type");
     fprintf(stdout, "Def. | Ref.\n");
@@ -368,7 +368,7 @@ void print_tab(struct ID *root) {
         }
         fprintf(stdout, "\n");
     }
-    fprintf(stdout, "--------------------------------------------------------------------------\n");
+    fprintf(stdout, "-----------------------------------------------------------------------------------------\n");
     return;
 }
 
@@ -463,6 +463,7 @@ static int add_type_to_parameter_list(struct ID **root, char *procname, struct T
  */
 static int id_register_to_tab(struct ID **root, char *name, char *procname, struct TYPE **type, int ispara, int deflinenum) {
     struct ID *p_id;
+    struct ID *p_id_tail;
     struct TYPE *p_type;
     char *p_name;
     char *p_procname;
@@ -531,9 +532,20 @@ static int id_register_to_tab(struct ID **root, char *name, char *procname, stru
     p_id->ispara = ispara;
     p_id->deflinenum = deflinenum;
     p_id->irefp = NULL;
+    p_id->nextp = NULL;
 
-    p_id->nextp = *root;
-    *root = p_id;
+    /* Move to the end of the list */
+    /* and register a variable */
+    p_id_tail = *root;
+    if (p_id_tail == NULL) {
+        *root = p_id;
+    } else {
+        while (p_id_tail->nextp != NULL) {
+            p_id_tail = p_id_tail->nextp;
+        }
+        p_id_tail->nextp = p_id;
+    }
+
     return 0;
 }
 
