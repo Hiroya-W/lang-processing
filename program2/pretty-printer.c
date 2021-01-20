@@ -51,6 +51,7 @@ static int exists_empty_statement = 0;
 static int indent_level = 0;
 /*! Indicates a nesting level of while statement */
 static int while_statement_level = 0;
+static int has_begin_been_output = 0;
 
 /*!
  * @brief Parsing a program
@@ -394,10 +395,11 @@ static int parse_compound_statement(void) {
     if (token != TBEGIN) {
         return error("Keyword 'begin' is not found.");
     }
-    /*fprintf(stdout, "\r"); */
-    insert_indent();
-    fprintf(stdout, "%s", tokenstr[token]);
-    fprintf(stdout, "\n");
+    if (!has_begin_been_output) {
+        insert_indent();
+        fprintf(stdout, "%s", tokenstr[token]);
+        fprintf(stdout, "\n");
+    }
     token = scan();
 
     indent_level++;
@@ -611,13 +613,18 @@ static int parse_iteration_statement(void) {
         return error("Keyword 'do' is not found.");
     }
     fprintf(stdout, " %s", tokenstr[token]);
-    fprintf(stdout, "\n");
     token = scan();
 
     if (token != TBEGIN) {
+        has_begin_been_output = 0;
+        fprintf(stdout, "\n");
         indent_level++;
         insert_indent();
         indent_level--;
+    } else {
+        has_begin_been_output = 1;
+        fprintf(stdout, " %s", tokenstr[token]);
+        fprintf(stdout, "\n");
     }
 
     if (parse_statement() == ERROR) {

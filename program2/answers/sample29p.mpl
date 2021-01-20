@@ -6,8 +6,7 @@ var a, b, r : integer;
     begin
         a := m;
         b := n;
-        while b <> 0 do
-        begin
+        while b <> 0 do begin
             r := a - (a div b) * b;
             a := b;
             b := r
@@ -28,7 +27,6 @@ var lc, aa, bb : integer;
         if (a = 0) or (b = 0) then
             gc := 1
         else
-            begin
                 call abs(a, aa);
                 call abs(b, bb);
                 call gcmlcm(aa, bb, gc, lc)
@@ -40,7 +38,6 @@ var gc, aa, bb : integer;
         if (a = 0) or (b = 0) then
             lc := 1
         else
-            begin
                 call abs(a, aa);
                 call abs(b, bb);
                 call gcmlcm(aa, bb, gc, lc)
@@ -51,17 +48,14 @@ procedure reduce(a1, a2 : integer);
 var gc : integer;
     begin
         if a1 = 0 then
-            begin
                 a2 := 1;
                 return
             end;
         if a2 = 0 then
-            begin
                 a1 := 1;
                 return
             end;
         if a2 < 0 then
-            begin
                 a1 := -a1;
                 a2 := -a2
             end;
@@ -123,18 +117,15 @@ procedure printtemp(a, b : integer);
 var x1, x2, y1, y2 : integer;
 var com : char;
     endflag : boolean;
-begin
     writeln('   *** Calculator -- h for help ***');
     x1 := 0;
     x2 := 1;
     endflag := false;
-    while notendflag do
-    begin
+    while notendflag do begin
         writeln(' Please input command :');
         readln(com,y1);
         y2 := 1;
         if (com = 'c') or (com = 'C') then
-            begin
                 x1 := y1;
                 x2 := y2
             end
@@ -149,7 +140,6 @@ begin
         else if (com = 'o') or (com = 'O') then
             endflag := true
         else
-            begin
                 writeln;
                 writeln('Calculator Usage:');
                 writeln('  c number : clear & set it');
