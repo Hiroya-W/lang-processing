@@ -953,6 +953,7 @@ static int parse_expressions(void) {
                 assemble_variable_reference_lval(id_referenced_variable); /* address */
             } else {
                 /* expression doesn't have address */
+                assemble_assign_real_param_to_address();
             }
         }
     }
