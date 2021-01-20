@@ -1,6 +1,6 @@
 program parseformalparameters;
-    procedure func(a, b : integer;
-        c, d : char);
+procedure func(a, b : integer;
+    c, d : char);
     begin
         a := b;
         c := d;
