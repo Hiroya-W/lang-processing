@@ -14,6 +14,7 @@ void init_literal_list() {
 
 /*!
  * @brief Add a literal
+ * @param[in] root pointer of literal root 
  * @param[in] label Label assigned to a literal
  * @param[in] value Value of literal
  * @return int Return 0 on success and -1 on failure.
@@ -33,6 +34,9 @@ int add_literal(struct LITERAL **root, char *label, char *value) {
     return 0;
 }
 
+/*!
+ * @brief Remove the first element from while_end_literal_root 
+ */
 void pop_while_literal_list(void) {
     struct LITERAL *p_literal;
     if (while_end_literal_root == NULL) {
@@ -43,6 +47,9 @@ void pop_while_literal_list(void) {
     while_end_literal_root = p_literal;
 }
 
+/*!
+ * @brief Release the literal lists
+ */
 void release_literal_lists(void) {
     release_literal(&literal_root);
     release_literal(&while_end_literal_root);
