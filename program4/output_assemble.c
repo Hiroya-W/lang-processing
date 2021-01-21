@@ -84,12 +84,16 @@ void assemble_block_end(void) {
 /*!
  * @brief Generating assembly code for procedure definition
  */
-void assemble_procedure_definition() {
+void assemble_procedure_definition(void) {
     /* fprintf(out_fp, ";procedure declaration\n"); */
     fprintf(out_fp, "$%s\n", current_procedure_name);
 }
 
-int assemble_procedure_begin() {
+/*!
+ * @brief Generating assembly code for beginning of procedure statement
+ * Process the parameters and the address to be returned when the function terminates
+ */
+int assemble_procedure_begin(void) {
     struct ID *p_id;
     struct ID *p_id_list = NULL;
 
@@ -109,9 +113,6 @@ int assemble_procedure_begin() {
         }
     } else {
         /* If the procedure does not have parameters, it does nothing.*/
-        /* POP gr2
-         * PUSH 0, gr2
-         */
         return 0;
     }
 
@@ -129,6 +130,9 @@ int assemble_procedure_begin() {
     return 0;
 }
 
+/*!
+ * @brief Generating assembly code for end of procedure statement
+ */
 void assemble_procedure_end() {
     fprintf(out_fp, "\tRET\n");
 }
@@ -201,6 +205,10 @@ void assemble_variable_reference_rval(struct ID *referenced_variable) {
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
+/*!
+ * @brief Generating assembly code for to assign real parameters to address 
+ * If the real parameter does not have a left value, assign an address
+ */
 void assemble_assign_real_param_to_address(void) {
     char *label = NULL;
     create_newlabel(&label);
@@ -242,16 +250,25 @@ void assemble_else(char *if_end_label, char *else_label) {
     fprintf(out_fp, "%s\n", else_label);
 }
 
+/*!
+ * @brief Generating assembly code for condition of iteration statement
+ */
 void assemble_iteration_condition(char *bottom_label) {
     fprintf(out_fp, "\tPOP \tgr1\n");
     fprintf(out_fp, "\tCPA \tgr1, \tgr0\n");
     fprintf(out_fp, "\tJZE \t%s\n", bottom_label);
 }
 
+/*!
+ * @brief Generating assembly code for break 
+ */
 void assemble_break(void) {
     fprintf(out_fp, "\tJUMP \t%s\n", while_end_literal_root->label);
 }
 
+/*!
+ * @brief Generating assembly code for return
+ */
 void assemble_return(void) {
     if (in_subprogram_declaration) {
         fprintf(out_fp, "\tRET\n");
@@ -260,10 +277,16 @@ void assemble_return(void) {
     }
 }
 
+/*!
+ * @brief Generating assembly code for call statemnt
+ */
 void assemble_call(struct ID *id_procedure) {
     fprintf(out_fp, "\tCALL $%s\n", id_procedure->name);
 }
 
+/*!
+ * @brief Generating assembly code for expression
+ */
 void assemble_expression(int relational_operator_token) {
     char *jmp_true_label = NULL;
     char *jmp_false_label = NULL;
@@ -307,12 +330,18 @@ void assemble_expression(int relational_operator_token) {
     fprintf(out_fp, "%s\n", jmp_false_label);
 }
 
+/*!
+ * @brief Generating assembly code for multiply the negatives
+ */
 void assemble_minus_sign() {
     fprintf(out_fp, "\tLAD \tgr1, \t-1\n");
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
     assemble_MULA();
 }
 
+/*!
+ * @brief Generating assembly code for ADDA
+ */
 void assemble_ADDA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
@@ -321,6 +350,9 @@ void assemble_ADDA() {
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
+/*!
+ * @brief Generating assembly code for SUBA
+ */
 void assemble_SUBA() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
@@ -329,6 +361,9 @@ void assemble_SUBA() {
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
+/*!
+ * @brief Generating assembly code for OR
+ */
 void assemble_OR() {
     fprintf(out_fp, "\tPOP \tgr2\n");
     fprintf(out_fp, "\tPOP \tgr1\n");
@@ -336,12 +371,19 @@ void assemble_OR() {
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
 }
 
+/*!
+ * @brief Generating assembly code for constant
+ * @param[in] param right value of constant
+ */
 int assemble_constant(int value) {
     fprintf(out_fp, "\tLAD \tgr1, \t%d\n", value);
     fprintf(out_fp, "\tPUSH \t0, \tgr1\n");
     return 0;
 }
 
+/*!
+ * @brief Generating assembly code for NOT operation
+ */
 void assemble_not_factor(void) {
     char *jmp_zero_label = NULL;
     char *jmp_not_end_label = NULL;
@@ -361,6 +403,9 @@ void assemble_not_factor(void) {
     fprintf(out_fp, "%s\n", jmp_not_end_label);
 }
 
+/*!
+ * @brief Generating assembly code for type conversion
+ */
 void assemble_cast(int to_type, int from_type) {
     if (from_type == TPINT) {
         if (to_type == TPINT) {
@@ -497,6 +542,9 @@ void assemble_output_line() {
     fprintf(out_fp, "\tCALL \tWRITELINE\n");
 }
 
+/*!
+ * @brief Generating assembly code read statemnt
+ */
 void assemble_read(int type) {
     fprintf(out_fp, "\tPOP \tgr1\n");
     switch (type) {
@@ -508,6 +556,10 @@ void assemble_read(int type) {
             break;
     }
 }
+
+/*!
+ * @brief Generating assembly code read with new line
+ */
 void assemble_read_line() {
     fprintf(out_fp, "\tCALL \tREADLINE\n");
 }
