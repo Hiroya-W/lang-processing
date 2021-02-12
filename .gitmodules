@@ -1,0 +1,3 @@
+[submodule "commet2-simulator"]
+	path = commet2-simulator
+	url = git@github.com:Hiroya-W/commet2-simulator.git
