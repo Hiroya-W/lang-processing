@@ -675,11 +675,10 @@ static int parse_condition_statement(void) {
         return ERROR;
     }
 
-    if (create_newlabel(&if_end_label) == ERROR) {
-        return ERROR;
-    }
-
     if (token == TELSE) {
+        if (create_newlabel(&if_end_label) == ERROR) {
+            return ERROR;
+        }
         assemble_else(if_end_label, else_label);
         token = scan();
 
@@ -692,8 +691,10 @@ static int parse_condition_statement(void) {
                 return ERROR;
             }
         }
+        fprintf(out_fp, "%s\n",if_end_label);
+    } else {
+        fprintf(out_fp, "%s\n",else_label);
     }
-    fprintf(out_fp, "%s\n",if_end_label);
     return NORMAL;
 }
 
