@@ -409,7 +409,7 @@ static int parse_subprogram_declaration(void) {
 
 /*!
  * @brief Parsing a procedure name
- * @param[in] register_mode If 1, store the name of the procedure 
+ * @param[in] register_mode If 1, store the name of the procedure
  * @return int Returns 0 on success and 1 on failure.
  */
 static int parse_procedure_name(void) {
@@ -707,6 +707,7 @@ static int parse_iteration_statement(void) {
     char *iteration_bottom_label = NULL;
 
     create_newlabel(&iteration_top_label);
+    fprintf(out_fp, "%s\n", iteration_top_label);
     create_newlabel(&iteration_bottom_label);
     add_literal(&while_end_literal_root, iteration_bottom_label, "0"); /* No value is required. */
 
