@@ -693,6 +693,7 @@ static int parse_condition_statement(void) {
             }
         }
     }
+    fprintf(out_fp, "%s\n",if_end_label);
     return NORMAL;
 }
 
