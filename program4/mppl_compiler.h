@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ctype.h"
 
 #define ERROR -1
 #define NORMAL 0
@@ -237,6 +238,7 @@ extern void print_tab(struct ID *root);
 /*! @name output_assemble.c */
 /* @{ */
 extern FILE *out_fp;
+extern char *toupper_str(char *from, char *out);
 extern int init_assemble(char *filename_mppl);
 extern int end_assemble(void);
 extern int assemble_start(char *program_name);
