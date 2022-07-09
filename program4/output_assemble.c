@@ -16,8 +16,8 @@ int label_counter = 0;
 int init_assemble(char *filename_mppl) {
     char *filename = strtok(filename_mppl, ".");
     char filename_csl[128];
-    /* hoge.mpl -> hoge.csl */
-    sprintf(filename_csl, "%s.csl", filename);
+    /* hoge.mpl -> hoge.cas */
+    sprintf(filename_csl, "%s.cas", filename);
 
     if ((out_fp = fopen(filename_csl, "w")) == NULL) {
         error("fopen() returns NULL");
