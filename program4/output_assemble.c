@@ -611,10 +611,10 @@ void assemble_output_format_standard_type(int type, int num) {
             fprintf(out_fp, "\tCALL \tWRITEINT\n");
             break;
         case TPCHAR:
-            fprintf(out_fp, "\tCALL \tWRITECHAR\n");
+            fprintf(out_fp, "\tCALL \tWRITCHAR\n");
             break;
         case TPBOOL:
-            fprintf(out_fp, "\tCALL \tWRITEBOOL\n");
+            fprintf(out_fp, "\tCALL \tWRITBOOL\n");
             break;
     }
 }
@@ -623,7 +623,7 @@ void assemble_output_format_standard_type(int type, int num) {
  * @brief Generating assembly code for newline
  */
 void assemble_output_line() {
-    fprintf(out_fp, "\tCALL \tWRITELINE\n");
+    fprintf(out_fp, "\tCALL \tWRITLINE\n");
 }
 
 /*!
@@ -655,36 +655,36 @@ void assemble_library() {
     fprintf(out_fp, ";-- Library --\n");
     fprintf(out_fp, ";EOVF\n");
     fprintf(out_fp, "EOVF");
-    fprintf(out_fp, "  CALL  WRITELINE\n");
+    fprintf(out_fp, "  CALL  WRITLINE\n");
     fprintf(out_fp, "  LAD  GR1, EOVF1\n");
     fprintf(out_fp, "  LD  GR2, GR0\n");
     fprintf(out_fp, "  CALL  WRITESTR\n");
-    fprintf(out_fp, "  CALL  WRITELINE\n");
+    fprintf(out_fp, "  CALL  WRITLINE\n");
     fprintf(out_fp, "  SVC  1  ;  overflow error stop\n");
     fprintf(out_fp, "EOVF1    DC  '***** Run-Time Error : Overflow *****'\n");
     fprintf(out_fp, ";E0DIV\n");
     fprintf(out_fp, "E0DIV");
     fprintf(out_fp, "  JNZ  EOVF\n");
-    fprintf(out_fp, "  CALL  WRITELINE\n");
+    fprintf(out_fp, "  CALL  WRITLINE\n");
     fprintf(out_fp, "  LAD  GR1, E0DIV1\n");
     fprintf(out_fp, "  LD  GR2, GR0\n");
     fprintf(out_fp, "  CALL  WRITESTR\n");
-    fprintf(out_fp, "  CALL  WRITELINE\n");
+    fprintf(out_fp, "  CALL  WRITLINE\n");
     fprintf(out_fp, "  SVC  2  ;  0-divide error stop\n");
     fprintf(out_fp, "E0DIV1    DC  '***** Run-Time Error : Zero-Divide *****'\n");
     fprintf(out_fp, ";EROV\n");
     fprintf(out_fp, "EROV");
-    fprintf(out_fp, "  CALL  WRITELINE\n");
+    fprintf(out_fp, "  CALL  WRITLINE\n");
     fprintf(out_fp, "  LAD  GR1, EROV1\n");
     fprintf(out_fp, "  LD  GR2, GR0\n");
     fprintf(out_fp, "  CALL  WRITESTR\n");
-    fprintf(out_fp, "  CALL  WRITELINE\n");
+    fprintf(out_fp, "  CALL  WRITLINE\n");
     fprintf(out_fp, "  SVC  3  ;  range-over error stop\n");
     fprintf(out_fp, "EROV1    DC  '***** Run-Time Error : Range-Over in Array Index *****'\n");
-    fprintf(out_fp, ";WRITECHAR\n");
+    fprintf(out_fp, ";WRITCHAR\n");
     fprintf(out_fp, "; GR1の値（文字）をGR2のけた数で出力する．\n");
     fprintf(out_fp, "; GR2が0なら必要最小限の桁数で出力する\n");
-    fprintf(out_fp, "WRITECHAR");
+    fprintf(out_fp, "WRITCHAR");
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  LD  GR6, SPACE\n");
     fprintf(out_fp, "  LD  GR7, OBUFSIZE\n");
@@ -694,12 +694,12 @@ void assemble_library() {
     fprintf(out_fp, "  JZE  WC2\n");
     fprintf(out_fp, "  JMI  WC2\n");
     fprintf(out_fp, "  ST  GR6, OBUF,GR7  ;  *p++ = ' ';\n");
-    fprintf(out_fp, "  CALL  BOVFCHECK\n");
+    fprintf(out_fp, "  CALL  BOVFCHCK\n");
     fprintf(out_fp, "  JUMP  WC1  ; }\n");
     fprintf(out_fp, ";WC2\n");
     fprintf(out_fp, "WC2");
     fprintf(out_fp, "  ST  GR1, OBUF,GR7  ; *p++ = GR1;\n");
-    fprintf(out_fp, "  CALL  BOVFCHECK\n");
+    fprintf(out_fp, "  CALL  BOVFCHCK\n");
     fprintf(out_fp, "  ST  GR7, OBUFSIZE\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
@@ -725,7 +725,7 @@ void assemble_library() {
     fprintf(out_fp, "  SUBA  GR2, ONE  ; while(--c >= 0) {\n");
     fprintf(out_fp, "  JMI  WS4\n");
     fprintf(out_fp, "  ST  GR5, OBUF,GR7  ;  *q++ = ' ';\n");
-    fprintf(out_fp, "  CALL  BOVFCHECK\n");
+    fprintf(out_fp, "  CALL  BOVFCHCK\n");
     fprintf(out_fp, "  JUMP  WS3  ; }\n");
     fprintf(out_fp, ";WS4\n");
     fprintf(out_fp, "WS4");
@@ -733,24 +733,24 @@ void assemble_library() {
     fprintf(out_fp, "  JZE  WS5\n");
     fprintf(out_fp, "  ST  GR4, OBUF,GR7  ;  *q++ = *GR1++;\n");
     fprintf(out_fp, "  ADDA  GR1, ONE\n");
-    fprintf(out_fp, "  CALL  BOVFCHECK\n");
+    fprintf(out_fp, "  CALL  BOVFCHCK\n");
     fprintf(out_fp, "  JUMP  WS4  ; }\n");
     fprintf(out_fp, ";WS5\n");
     fprintf(out_fp, "WS5");
     fprintf(out_fp, "  ST  GR7, OBUFSIZE  ; OBUFSIZE = q;\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, ";BOVFCHECK\n");
-    fprintf(out_fp, "BOVFCHECK");
+    fprintf(out_fp, ";BOVFCHCK\n");
+    fprintf(out_fp, "BOVFCHCK");
     fprintf(out_fp, "    ADDA  GR7, ONE\n");
-    fprintf(out_fp, "    CPA   GR7, BOVFLEVEL\n");
+    fprintf(out_fp, "    CPA   GR7, BOVFLEVE\n");
     fprintf(out_fp, "    JMI  BOVF1\n");
-    fprintf(out_fp, "    CALL  WRITELINE\n");
+    fprintf(out_fp, "    CALL  WRITLINE\n");
     fprintf(out_fp, "    LD GR7, OBUFSIZE\n");
     fprintf(out_fp, ";BOVF1\n");
     fprintf(out_fp, "BOVF1");
     fprintf(out_fp, "    RET\n");
-    fprintf(out_fp, "BOVFLEVEL  DC 256\n");
+    fprintf(out_fp, "BOVFLEVE  DC 256\n");
     fprintf(out_fp, ";WRITEINT\n");
     fprintf(out_fp, "; GR1の値（整数）をGR2のけた数で出力する．\n");
     fprintf(out_fp, "; GR2が0なら必要最小限の桁数で出力する\n");
@@ -813,10 +813,11 @@ void assemble_library() {
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
     fprintf(out_fp, "MMINT    DC  '-32768'\n");
-    fprintf(out_fp, "WRITEBOOL");
+    fprintf(out_fp, ";WRITBOOL\n");
     fprintf(out_fp, "; GR1の値（真理値）が0なら'FALSE'を\n");
     fprintf(out_fp, "; 0以外なら'TRUE'をGR2のけた数で出力する．\n");
     fprintf(out_fp, "; GR2が0なら必要最小限の桁数で出力する\n");
+    fprintf(out_fp, "WRITBOOL");
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  CPA  GR1, GR0  ; if(GR1 != 0)\n");
     fprintf(out_fp, "  JZE  WB1\n");
@@ -832,9 +833,9 @@ void assemble_library() {
     fprintf(out_fp, "  RET\n");
     fprintf(out_fp, "WBTRUE    DC  'TRUE'\n");
     fprintf(out_fp, "WBFALSE    DC  'FALSE'\n");
-    fprintf(out_fp, ";WRITELINE\n");
+    fprintf(out_fp, ";WRITLINE\n");
     fprintf(out_fp, "; 改行を出力する\n");
-    fprintf(out_fp, "WRITELINE");
+    fprintf(out_fp, "WRITLINE");
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  LD  GR7, OBUFSIZE\n");
     fprintf(out_fp, "  LD  GR6, NEWLINE\n");
@@ -850,7 +851,7 @@ void assemble_library() {
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  LD GR7, OBUFSIZE\n");
     fprintf(out_fp, "  JZE FL1\n");
-    fprintf(out_fp, "  CALL WRITELINE\n");
+    fprintf(out_fp, "  CALL WRITLINE\n");
     fprintf(out_fp, ";FL1\n");
     fprintf(out_fp, "FL1");
     fprintf(out_fp, "  RPOP\n");
