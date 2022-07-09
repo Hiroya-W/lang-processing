@@ -238,7 +238,7 @@ extern void print_tab(struct ID *root);
 /*! @name output_assemble.c */
 /* @{ */
 extern FILE *out_fp;
-extern int toupper_str(char *from, char *out);
+extern int toupper_str(char *from, char **out);
 extern int init_assemble(char *filename_mppl);
 extern int end_assemble(void);
 extern int assemble_start(char *program_name);
