@@ -74,8 +74,9 @@ void release_literal(struct LITERAL **root) {
  */
 void assemble_literals(void) {
     struct LITERAL *p_literal = literal_root;
+    char *_llabel = NULL;
     while (p_literal != NULL) {
-        fprintf(out_fp, "%s \tDC \t%s\n", p_literal->label, p_literal->value);
+        fprintf(out_fp, "%s \tDC \t%s\n", toupper_str(p_literal->label, _llabel), p_literal->value);
         p_literal = p_literal->nextp;
     }
 }
