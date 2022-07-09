@@ -1,4 +1,5 @@
 #include <string.h>
+
 #include "mppl_compiler.h"
 
 /*! maximum length of a label */
@@ -14,18 +15,18 @@ int label_counter = 0;
  * @param[in] lowercase strings
  * @return int Returns uppercase strings
  */
-char *toupper_str(char *from, char *out) {
+int toupper_str(char *from, char *out) {
     char *p;
 
     if ((out = (char *)malloc(strlen(from) + 1)) == NULL) {
-        error("can not malloc for out in toupper_str\n");
+        return error("can not malloc for out in toupper_str\n");
     }
     strcpy(out, from);
 
     for (p = out; *p != '\0'; ++p) {
         *p = toupper(*p);
     }
-    return out;
+    return 0;
 }
 
 /*!
@@ -67,8 +68,10 @@ int end_assemble(void) {
  * @return int Returns 0 on success and -1 on failure.
  */
 int assemble_start(char *program_name) {
-    char *_program_name = NULL;
-    fprintf(out_fp, "%s \tSTART\n", toupper_str(program_name, _program_name));
+    char *up_program_name = NULL;
+    toupper_str(program_name, up_program_name);
+
+    fprintf(out_fp, "%s \tSTART\n", up_program_name);
     fprintf(out_fp, "\tLAD \tGR0, \t0\n");
     fprintf(out_fp, "\tCALL \tL0001\n");
     fprintf(out_fp, "\tCALL \tFLUSH\n");
@@ -107,8 +110,9 @@ void assemble_block_end(void) {
  */
 void assemble_procedure_definition(void) {
     /* fprintf(out_fp, ";procedure declaration\n"); */
-    char *_current_procedure_name = NULL;
-    fprintf(out_fp, "%s\n", toupper_str(current_procedure_name, _current_procedure_name));
+    char *up_current_procedure_name = NULL;
+    toupper_str(current_procedure_name, up_current_procedure_name);
+    fprintf(out_fp, "%s\n", up_current_procedure_name);
 }
 
 /*!
@@ -142,9 +146,12 @@ int assemble_procedure_begin(void) {
     /* Set a value to parameters */
     p_id = p_id_list;
     while (p_id != NULL) {
-        char *_p_id_name = NULL, *_current_procedure_name = NULL;
+        char *up_p_id_name = NULL, *up_current_procedure_name = NULL;
+        toupper_str(p_id->name, up_p_id_name);
+        toupper_str(current_procedure_name, up_current_procedure_name);
+
         fprintf(out_fp, "\tPOP GR1\n");
-        fprintf(out_fp, "\tST \tGR1, \tV%sP%s\n", toupper_str(p_id->name, _p_id_name), toupper_str(current_procedure_name, _current_procedure_name));
+        fprintf(out_fp, "\tST \tGR1, \tV%sP%s\n",up_p_id_name, up_current_procedure_name);
         p_id = p_id->nextp;
     }
 
@@ -166,11 +173,13 @@ void assemble_procedure_end() {
  */
 void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type) {
     /* fprintf(out_fp, ";variable declaration\n"); */
-    char *_variable_name = NULL;
-    fprintf(out_fp, "V%s", toupper_str(variable_name, _variable_name));
+    char *up_variable_name = NULL;
+    toupper_str(variable_name, up_variable_name);
+    fprintf(out_fp, "V%s", up_variable_name);
     if (procname != NULL) {
-        char *_procname = NULL;
-        fprintf(out_fp, "P%s", toupper_str(procname, _procname));
+        char *up_procname = NULL;
+        toupper_str(procname, up_procname);
+        fprintf(out_fp, "P%s", up_procname);
     }
     if ((*type)->ttype & TPARRAY) {
         fprintf(out_fp, " \tDS \t%d\n", (*type)->arraysize);
@@ -184,14 +193,17 @@ void assemble_variable_declaration(char *variable_name, char *procname, struct T
  * @param[in] referenced_variable referenced variable
  */
 void assemble_variable_reference_lval(struct ID *referenced_variable) {
-    char *_rname = NULL, *_rprocname = NULL;
+    char *up_rname = NULL, *up_rprocname = NULL;
+    toupper_str(referenced_variable->name, up_rname);
+    toupper_str(referenced_variable->procname, up_rprocname);
+
     if (referenced_variable->ispara) {
         /* if id is parameter, id has procname */
-        fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", toupper_str(referenced_variable->name, _rname), toupper_str(referenced_variable->procname, _rprocname));
+        fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", up_rname, up_rprocname);
     } else if (referenced_variable->procname != NULL) {
-        fprintf(out_fp, "\tLAD \tGR1, \tV%sP%s\n", toupper_str(referenced_variable->name, _rname), toupper_str(referenced_variable->procname, _rprocname));
+        fprintf(out_fp, "\tLAD \tGR1, \tV%sP%s\n", up_rname, up_rprocname);
     } else {
-        fprintf(out_fp, "\tLAD \tGR1, \tV%s\n", toupper_str(referenced_variable->name, _rname));
+        fprintf(out_fp, "\tLAD \tGR1, \tV%s\n", up_rname);
     }
 
     if (referenced_variable->itp->ttype & TPARRAY) {
@@ -212,7 +224,10 @@ void assemble_variable_reference_lval(struct ID *referenced_variable) {
  * @param[in] referenced_variable referenced variable
  */
 void assemble_variable_reference_rval(struct ID *referenced_variable) {
-    char *_rname = NULL, *_rprocname = NULL;
+    char *up_rname = NULL, *up_rprocname = NULL;
+    toupper_str(referenced_variable->name, up_rname);
+    toupper_str(referenced_variable->procname, up_rprocname);
+
     if (referenced_variable->itp->ttype & TPARRAY) {
         assemble_variable_reference_lval(referenced_variable); /* get address */
         fprintf(out_fp, "\tPOP \tGR1\n");
@@ -220,12 +235,12 @@ void assemble_variable_reference_rval(struct ID *referenced_variable) {
     } else {
         if (referenced_variable->ispara) {
             /* if id is parameter, id has procname */
-            fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", toupper_str(referenced_variable->name, _rname), toupper_str(referenced_variable->procname, _rprocname));
+            fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", up_rname, up_rprocname);
             fprintf(out_fp, "\tLD \tGR1, \t0, \tGR1\n");
         } else if (referenced_variable->procname != NULL) {
-            fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", toupper_str(referenced_variable->name, _rname), toupper_str(referenced_variable->procname, _rprocname));
+            fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", up_rname, up_rprocname);
         } else {
-            fprintf(out_fp, "\tLD \tGR1, \tV%s\n", toupper_str(referenced_variable->name, _rname));
+            fprintf(out_fp, "\tLD \tGR1, \tV%s\n", up_rname);
         }
     }
 
@@ -308,8 +323,9 @@ void assemble_return(void) {
  * @brief Generating assembly code for call statemnt
  */
 void assemble_call(struct ID *id_procedure) {
-    char *_id_procname_name = NULL;
-    fprintf(out_fp, "\tCALL $%s\n", toupper_str(id_procedure->name, _id_procname_name));
+    char *up_id_procname_name = NULL;
+    toupper_str(id_procedure->procname, up_id_procname_name);
+    fprintf(out_fp, "\tCALL $%s\n", up_id_procname_name);
 }
 
 /*!
