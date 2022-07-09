@@ -15,15 +15,20 @@ int label_counter = 0;
  * @param[in] lowercase strings
  * @return int Returns uppercase strings
  */
-int toupper_str(char *from, char *out) {
+int toupper_str(char *from, char **out) {
     char *p;
 
-    if ((out = (char *)malloc(strlen(from) + 1)) == NULL) {
+    if(from == NULL) {
+        *out = "";
+        return 0;
+    }
+
+    if ((*out = (char *)malloc(strlen(from) + 1)) == NULL) {
         return error("can not malloc for out in toupper_str\n");
     }
-    strcpy(out, from);
+    strcpy(*out, from);
 
-    for (p = out; *p != '\0'; ++p) {
+    for (p = *out; *p != '\0'; ++p) {
         *p = toupper(*p);
     }
     return 0;
@@ -69,7 +74,7 @@ int end_assemble(void) {
  */
 int assemble_start(char *program_name) {
     char *up_program_name = NULL;
-    toupper_str(program_name, up_program_name);
+    toupper_str(program_name, &up_program_name);
 
     fprintf(out_fp, "%s \tSTART\n", up_program_name);
     fprintf(out_fp, "\tLAD \tGR0, \t0\n");
@@ -111,7 +116,7 @@ void assemble_block_end(void) {
 void assemble_procedure_definition(void) {
     /* fprintf(out_fp, ";procedure declaration\n"); */
     char *up_current_procedure_name = NULL;
-    toupper_str(current_procedure_name, up_current_procedure_name);
+    toupper_str(current_procedure_name, &up_current_procedure_name);
     fprintf(out_fp, "%s\n", up_current_procedure_name);
 }
 
@@ -147,8 +152,8 @@ int assemble_procedure_begin(void) {
     p_id = p_id_list;
     while (p_id != NULL) {
         char *up_p_id_name = NULL, *up_current_procedure_name = NULL;
-        toupper_str(p_id->name, up_p_id_name);
-        toupper_str(current_procedure_name, up_current_procedure_name);
+        toupper_str(p_id->name, &up_p_id_name);
+        toupper_str(current_procedure_name, &up_current_procedure_name);
 
         fprintf(out_fp, "\tPOP GR1\n");
         fprintf(out_fp, "\tST \tGR1, \tV%sP%s\n",up_p_id_name, up_current_procedure_name);
@@ -174,11 +179,11 @@ void assemble_procedure_end() {
 void assemble_variable_declaration(char *variable_name, char *procname, struct TYPE **type) {
     /* fprintf(out_fp, ";variable declaration\n"); */
     char *up_variable_name = NULL;
-    toupper_str(variable_name, up_variable_name);
+    toupper_str(variable_name, &up_variable_name);
     fprintf(out_fp, "V%s", up_variable_name);
     if (procname != NULL) {
         char *up_procname = NULL;
-        toupper_str(procname, up_procname);
+        toupper_str(procname, &up_procname);
         fprintf(out_fp, "P%s", up_procname);
     }
     if ((*type)->ttype & TPARRAY) {
@@ -194,8 +199,8 @@ void assemble_variable_declaration(char *variable_name, char *procname, struct T
  */
 void assemble_variable_reference_lval(struct ID *referenced_variable) {
     char *up_rname = NULL, *up_rprocname = NULL;
-    toupper_str(referenced_variable->name, up_rname);
-    toupper_str(referenced_variable->procname, up_rprocname);
+    toupper_str(referenced_variable->name, &up_rname);
+    toupper_str(referenced_variable->procname, &up_rprocname);
 
     if (referenced_variable->ispara) {
         /* if id is parameter, id has procname */
@@ -225,8 +230,8 @@ void assemble_variable_reference_lval(struct ID *referenced_variable) {
  */
 void assemble_variable_reference_rval(struct ID *referenced_variable) {
     char *up_rname = NULL, *up_rprocname = NULL;
-    toupper_str(referenced_variable->name, up_rname);
-    toupper_str(referenced_variable->procname, up_rprocname);
+    toupper_str(referenced_variable->name, &up_rname);
+    toupper_str(referenced_variable->procname, &up_rprocname);
 
     if (referenced_variable->itp->ttype & TPARRAY) {
         assemble_variable_reference_lval(referenced_variable); /* get address */
@@ -324,7 +329,7 @@ void assemble_return(void) {
  */
 void assemble_call(struct ID *id_procedure) {
     char *up_id_procname_name = NULL;
-    toupper_str(id_procedure->procname, up_id_procname_name);
+    toupper_str(id_procedure->procname, &up_id_procname_name);
     fprintf(out_fp, "\tCALL $%s\n", up_id_procname_name);
 }
 
