@@ -156,7 +156,7 @@ int assemble_procedure_begin(void) {
         toupper_str(current_procedure_name, &up_current_procedure_name);
 
         fprintf(out_fp, "\tPOP GR1\n");
-        fprintf(out_fp, "\tST \tGR1, \tV%sP%s\n",up_p_id_name, up_current_procedure_name);
+        fprintf(out_fp, "\tST \tGR1, \t%s%s\n",up_p_id_name, up_current_procedure_name);
         p_id = p_id->nextp;
     }
 
@@ -180,11 +180,11 @@ void assemble_variable_declaration(char *variable_name, char *procname, struct T
     /* fprintf(out_fp, ";variable declaration\n"); */
     char *up_variable_name = NULL;
     toupper_str(variable_name, &up_variable_name);
-    fprintf(out_fp, "V%s", up_variable_name);
+    fprintf(out_fp, "%s", up_variable_name);
     if (procname != NULL) {
         char *up_procname = NULL;
         toupper_str(procname, &up_procname);
-        fprintf(out_fp, "P%s", up_procname);
+        fprintf(out_fp, "%s", up_procname);
     }
     if ((*type)->ttype & TPARRAY) {
         fprintf(out_fp, " \tDS \t%d\n", (*type)->arraysize);
@@ -204,11 +204,11 @@ void assemble_variable_reference_lval(struct ID *referenced_variable) {
 
     if (referenced_variable->ispara) {
         /* if id is parameter, id has procname */
-        fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", up_rname, up_rprocname);
+        fprintf(out_fp, "\tLD \tGR1, \t%s%s\n", up_rname, up_rprocname);
     } else if (referenced_variable->procname != NULL) {
-        fprintf(out_fp, "\tLAD \tGR1, \tV%sP%s\n", up_rname, up_rprocname);
+        fprintf(out_fp, "\tLAD \tGR1, \t%s%s\n", up_rname, up_rprocname);
     } else {
-        fprintf(out_fp, "\tLAD \tGR1, \tV%s\n", up_rname);
+        fprintf(out_fp, "\tLAD \tGR1, \t%s\n", up_rname);
     }
 
     if (referenced_variable->itp->ttype & TPARRAY) {
@@ -240,12 +240,12 @@ void assemble_variable_reference_rval(struct ID *referenced_variable) {
     } else {
         if (referenced_variable->ispara) {
             /* if id is parameter, id has procname */
-            fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", up_rname, up_rprocname);
+            fprintf(out_fp, "\tLD \tGR1, \t%s%s\n", up_rname, up_rprocname);
             fprintf(out_fp, "\tLD \tGR1, \t0, \tGR1\n");
         } else if (referenced_variable->procname != NULL) {
-            fprintf(out_fp, "\tLD \tGR1, \tV%sP%s\n", up_rname, up_rprocname);
+            fprintf(out_fp, "\tLD \tGR1, \t%s%s\n", up_rname, up_rprocname);
         } else {
-            fprintf(out_fp, "\tLD \tGR1, \tV%s\n", up_rname);
+            fprintf(out_fp, "\tLD \tGR1, \t%s\n", up_rname);
         }
     }
 
