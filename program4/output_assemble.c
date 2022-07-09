@@ -31,6 +31,11 @@ int toupper_str(char *from, char **out) {
     for (p = *out; *p != '\0'; ++p) {
         *p = toupper(*p);
     }
+
+    if(strlen(*out) > 4){
+        (*out)[4] = '\0';
+    }
+
     return 0;
 }
 
