@@ -32,8 +32,8 @@ int toupper_str(char *from, char **out) {
         *p = toupper(*p);
     }
 
-    if(strlen(*out) > 4){
-        (*out)[4] = '\0';
+    if(strlen(*out) > 8){
+        (*out)[8] = '\0';
     }
 
     return 0;
@@ -159,6 +159,12 @@ int assemble_procedure_begin(void) {
         char *up_p_id_name = NULL, *up_current_procedure_name = NULL;
         toupper_str(p_id->name, &up_p_id_name);
         toupper_str(current_procedure_name, &up_current_procedure_name);
+        if(strlen(up_p_id_name) > 4){
+            up_p_id_name[4] = '\0';
+        }
+        if(strlen(up_current_procedure_name) > 4){
+            up_current_procedure_name[4] = '\0';
+        }
 
         fprintf(out_fp, "\tPOP GR1\n");
         fprintf(out_fp, "\tST \tGR1, \t%s%s\n",up_p_id_name, up_current_procedure_name);
@@ -209,8 +215,20 @@ void assemble_variable_reference_lval(struct ID *referenced_variable) {
 
     if (referenced_variable->ispara) {
         /* if id is parameter, id has procname */
+        if(strlen(up_rname) > 4){
+            up_rname[4] = '\0';
+        }
+        if(strlen(up_rprocname) > 4){
+            up_rprocname[4] = '\0';
+        }
         fprintf(out_fp, "\tLD \tGR1, \t%s%s\n", up_rname, up_rprocname);
     } else if (referenced_variable->procname != NULL) {
+        if(strlen(up_rname) > 4){
+            up_rname[4] = '\0';
+        }
+        if(strlen(up_rprocname) > 4){
+            up_rprocname[4] = '\0';
+        }
         fprintf(out_fp, "\tLAD \tGR1, \t%s%s\n", up_rname, up_rprocname);
     } else {
         fprintf(out_fp, "\tLAD \tGR1, \t%s\n", up_rname);
@@ -245,9 +263,21 @@ void assemble_variable_reference_rval(struct ID *referenced_variable) {
     } else {
         if (referenced_variable->ispara) {
             /* if id is parameter, id has procname */
+            if(strlen(up_rname) > 4){
+                up_rname[4] = '\0';
+            }
+            if(strlen(up_rprocname) > 4){
+                up_rprocname[4] = '\0';
+            }
             fprintf(out_fp, "\tLD \tGR1, \t%s%s\n", up_rname, up_rprocname);
             fprintf(out_fp, "\tLD \tGR1, \t0, \tGR1\n");
         } else if (referenced_variable->procname != NULL) {
+            if(strlen(up_rname) > 4){
+                up_rname[4] = '\0';
+            }
+            if(strlen(up_rprocname) > 4){
+                up_rprocname[4] = '\0';
+            }
             fprintf(out_fp, "\tLD \tGR1, \t%s%s\n", up_rname, up_rprocname);
         } else {
             fprintf(out_fp, "\tLD \tGR1, \t%s\n", up_rname);
