@@ -364,7 +364,7 @@ void assemble_return(void) {
  */
 void assemble_call(struct ID *id_procedure) {
     char *up_id_procname_name = NULL;
-    toupper_str(id_procedure->procname, &up_id_procname_name);
+    toupper_str(id_procedure->name, &up_id_procname_name);
     fprintf(out_fp, "\tCALL %s\n", up_id_procname_name);
 }
 
