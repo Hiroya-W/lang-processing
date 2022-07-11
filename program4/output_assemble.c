@@ -117,7 +117,7 @@ void assemble_procedure_definition(void) {
     /* fprintf(out_fp, ";procedure declaration\n"); */
     char *up_current_procedure_name = NULL;
     toupper_str(current_procedure_name, &up_current_procedure_name);
-    fprintf(out_fp, "%s\n", up_current_procedure_name);
+    fprintf(out_fp, "%s\tDS\t0\n", up_current_procedure_name);
 }
 
 /*!
@@ -294,7 +294,7 @@ void assemble_if_condition(char *else_label) {
 void assemble_else(char *if_end_label, char *else_label) {
     /* fprintf(out_fp, ";else\n"); */
     fprintf(out_fp, "\tJUMP \t%s\n", if_end_label);
-    fprintf(out_fp, "%s\n", else_label);
+    fprintf(out_fp, "%s\tDS\t0\n", else_label);
 }
 
 /*!
@@ -373,10 +373,10 @@ void assemble_expression(int relational_operator_token) {
     fprintf(out_fp, "\tPUSH \t0, \tGR1\n");
     fprintf(out_fp, "\tJUMP \t%s\n", jmp_false_label);
 
-    fprintf(out_fp, "%s\n", jmp_true_label);
+    fprintf(out_fp, "%s\tDS\t0\n", jmp_true_label);
     fprintf(out_fp, "\tLAD \tGR1, \t1\n"); /* return 1 */
     fprintf(out_fp, "\tPUSH \t0, \tGR1\n");
-    fprintf(out_fp, "%s\n", jmp_false_label);
+    fprintf(out_fp, "%s\tDS\t0\n", jmp_false_label);
 }
 
 /*!
@@ -446,10 +446,10 @@ void assemble_not_factor(void) {
     fprintf(out_fp, "\tPUSH \t0, \tGR1\n");
     fprintf(out_fp, "\tJUMP \t%s\n", jmp_not_end_label);
 
-    fprintf(out_fp, "%s\n", jmp_zero_label);
+    fprintf(out_fp, "%s\tDS\t0\n", jmp_zero_label);
     fprintf(out_fp, "\tLD \tGR1, \tGR0\n"); /* return 0 */
     fprintf(out_fp, "\tPUSH \t0, \tGR1\n");
-    fprintf(out_fp, "%s\n", jmp_not_end_label);
+    fprintf(out_fp, "%s\tDS\t0\n", jmp_not_end_label);
 }
 
 /*!
@@ -472,10 +472,10 @@ void assemble_cast(int to_type, int from_type) {
             fprintf(out_fp, "\tPUSH \t0, \tGR1\n");
             fprintf(out_fp, "\tJUMP \t%s\n", jmp_cast_end_label);
 
-            fprintf(out_fp, "%s\n", jmp_true_label);
+            fprintf(out_fp, "%s\tDS\t0\n", jmp_true_label);
             fprintf(out_fp, "\tLAD \tGR1, \t1\n"); /* return 1 */
             fprintf(out_fp, "\tPUSH \t0, \tGR1\n");
-            fprintf(out_fp, "%s\n", jmp_cast_end_label);
+            fprintf(out_fp, "%s\tDS\t0\n", jmp_cast_end_label);
         } else if (to_type == TPCHAR) {
             fprintf(out_fp, "\tPOP \tGR1\n"); /* expression value */
             fprintf(out_fp, "\tLAD \tGR2, \t#007F\n");
@@ -498,10 +498,10 @@ void assemble_cast(int to_type, int from_type) {
             fprintf(out_fp, "\tPUSH \t0, \tGR1\n");
             fprintf(out_fp, "\tJUMP \t%s\n", jmp_cast_end_label);
 
-            fprintf(out_fp, "%s\n", jmp_true_label);
+            fprintf(out_fp, "%s\tDS\t0\n", jmp_true_label);
             fprintf(out_fp, "\tLAD \tGR1, \t1\n"); /* return 1 */
             fprintf(out_fp, "\tPUSH \t0, \tGR1\n");
-            fprintf(out_fp, "%s\n", jmp_cast_end_label);
+            fprintf(out_fp, "%s\tDS\t0\n", jmp_cast_end_label);
         } else if (to_type == TPINT || to_type == TPCHAR) {
             /* no operation */
         }
@@ -618,7 +618,7 @@ void assemble_read_line() {
  */
 void assemble_library() {
     fprintf(out_fp, ";-- Library --\n");
-    fprintf(out_fp, "EOVF\n");
+    fprintf(out_fp, "EOVF\tDS\t0\n");
     fprintf(out_fp, "  CALL  WRITELINE\n");
     fprintf(out_fp, "  LAD  GR1, EOVF1\n");
     fprintf(out_fp, "  LD  GR2, GR0\n");
@@ -626,7 +626,7 @@ void assemble_library() {
     fprintf(out_fp, "  CALL  WRITELINE\n");
     fprintf(out_fp, "  SVC  1  ;  overflow error stop\n");
     fprintf(out_fp, "EOVF1    DC  '***** Run-Time Error : Overflow *****'\n");
-    fprintf(out_fp, "E0DIV\n");
+    fprintf(out_fp, "E0DIV\tDS\t0\n");
     fprintf(out_fp, "  JNZ  EOVF\n");
     fprintf(out_fp, "  CALL  WRITELINE\n");
     fprintf(out_fp, "  LAD  GR1, E0DIV1\n");
@@ -635,7 +635,7 @@ void assemble_library() {
     fprintf(out_fp, "  CALL  WRITELINE\n");
     fprintf(out_fp, "  SVC  2  ;  0-divide error stop\n");
     fprintf(out_fp, "E0DIV1    DC  '***** Run-Time Error : Zero-Divide *****'\n");
-    fprintf(out_fp, "EROV\n");
+    fprintf(out_fp, "EROV\tDS\t0\n");
     fprintf(out_fp, "  CALL  WRITELINE\n");
     fprintf(out_fp, "  LAD  GR1, EROV1\n");
     fprintf(out_fp, "  LD  GR2, GR0\n");
@@ -643,66 +643,66 @@ void assemble_library() {
     fprintf(out_fp, "  CALL  WRITELINE\n");
     fprintf(out_fp, "  SVC  3  ;  range-over error stop\n");
     fprintf(out_fp, "EROV1    DC  '***** Run-Time Error : Range-Over in Array Index *****'\n");
-    fprintf(out_fp, "WRITECHAR\n");
+    fprintf(out_fp, "WRITECHAR\tDS\t0\n");
     fprintf(out_fp, "; GR1の値（文字）をGR2のけた数で出力する．\n");
     fprintf(out_fp, "; GR2が0なら必要最小限の桁数で出力する\n");
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  LD  GR6, SPACE\n");
     fprintf(out_fp, "  LD  GR7, OBUFSIZE\n");
-    fprintf(out_fp, "WC1\n");
+    fprintf(out_fp, "WC1\tDS\t0\n");
     fprintf(out_fp, "  SUBA  GR2, ONE  ; while(--c > 0) {\n");
     fprintf(out_fp, "  JZE  WC2\n");
     fprintf(out_fp, "  JMI  WC2\n");
     fprintf(out_fp, "  ST  GR6, OBUF,GR7  ;  *p++ = ' ';\n");
     fprintf(out_fp, "  CALL  BOVFCHECK\n");
     fprintf(out_fp, "  JUMP  WC1  ; }\n");
-    fprintf(out_fp, "WC2\n");
+    fprintf(out_fp, "WC2\tDS\t0\n");
     fprintf(out_fp, "  ST  GR1, OBUF,GR7  ; *p++ = GR1;\n");
     fprintf(out_fp, "  CALL  BOVFCHECK\n");
     fprintf(out_fp, "  ST  GR7, OBUFSIZE\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, "WRITESTR\n");
+    fprintf(out_fp, "WRITESTR\tDS\t0\n");
     fprintf(out_fp, "; GR1が指す文字列をGR2のけた数で出力する．\n");
     fprintf(out_fp, "; GR2が0なら必要最小限の桁数で出力する\n");
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  LD  GR6, GR1  ; p = GR1;\n");
-    fprintf(out_fp, "WS1\n");
+    fprintf(out_fp, "WS1\tDS\t0\n");
     fprintf(out_fp, "  LD  GR4, 0,GR6  ; while(*p != '\\0') {\n");
     fprintf(out_fp, "  JZE  WS2\n");
     fprintf(out_fp, "  ADDA  GR6, ONE  ;  p++;\n");
     fprintf(out_fp, "  SUBA  GR2, ONE  ;  c--;\n");
     fprintf(out_fp, "  JUMP  WS1  ; }\n");
-    fprintf(out_fp, "WS2\n");
+    fprintf(out_fp, "WS2\tDS\t0\n");
     fprintf(out_fp, "  LD  GR7, OBUFSIZE  ; q = OBUFSIZE;\n");
     fprintf(out_fp, "  LD  GR5, SPACE\n");
-    fprintf(out_fp, "WS3\n");
+    fprintf(out_fp, "WS3\tDS\t0\n");
     fprintf(out_fp, "  SUBA  GR2, ONE  ; while(--c >= 0) {\n");
     fprintf(out_fp, "  JMI  WS4\n");
     fprintf(out_fp, "  ST  GR5, OBUF,GR7  ;  *q++ = ' ';\n");
     fprintf(out_fp, "  CALL  BOVFCHECK\n");
     fprintf(out_fp, "  JUMP  WS3  ; }\n");
-    fprintf(out_fp, "WS4\n");
+    fprintf(out_fp, "WS4\tDS\t0\n");
     fprintf(out_fp, "  LD  GR4, 0,GR1  ; while(*GR1 != '\\0') {\n");
     fprintf(out_fp, "  JZE  WS5\n");
     fprintf(out_fp, "  ST  GR4, OBUF,GR7  ;  *q++ = *GR1++;\n");
     fprintf(out_fp, "  ADDA  GR1, ONE\n");
     fprintf(out_fp, "  CALL  BOVFCHECK\n");
     fprintf(out_fp, "  JUMP  WS4  ; }\n");
-    fprintf(out_fp, "WS5\n");
+    fprintf(out_fp, "WS5\tDS\t0\n");
     fprintf(out_fp, "  ST  GR7, OBUFSIZE  ; OBUFSIZE = q;\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, "BOVFCHECK\n");
+    fprintf(out_fp, "BOVFCHECK\tDS\t0\n");
     fprintf(out_fp, "    ADDA  GR7, ONE\n");
     fprintf(out_fp, "    CPA   GR7, BOVFLEVEL\n");
     fprintf(out_fp, "    JMI  BOVF1\n");
     fprintf(out_fp, "    CALL  WRITELINE\n");
     fprintf(out_fp, "    LD GR7, OBUFSIZE\n");
-    fprintf(out_fp, "BOVF1\n");
+    fprintf(out_fp, "BOVF1\tDS\t0\n");
     fprintf(out_fp, "    RET\n");
     fprintf(out_fp, "BOVFLEVEL  DC 256\n");
-    fprintf(out_fp, "WRITEINT\n");
+    fprintf(out_fp, "WRITEINT\tDS\t0\n");
     fprintf(out_fp, "; GR1の値（整数）をGR2のけた数で出力する．\n");
     fprintf(out_fp, "; GR2が0なら必要最小限の桁数で出力する\n");
     fprintf(out_fp, "  RPUSH\n");
@@ -716,7 +716,7 @@ void assemble_library() {
     fprintf(out_fp, "  JZE  WI6\n");
     fprintf(out_fp, "  LD  GR1, GR4\n");
     fprintf(out_fp, "  LD  GR7, ONE  ; flag = 1;\n");
-    fprintf(out_fp, "WI1\n");
+    fprintf(out_fp, "WI1\tDS\t0\n");
     fprintf(out_fp, "  LD  GR6, SIX  ; p = INTBUF+6;\n");
     fprintf(out_fp, "  ST  GR0, INTBUF,GR6  ; *p = '\\0';\n");
     fprintf(out_fp, "  SUBA  GR6, ONE  ; p--;\n");
@@ -725,7 +725,7 @@ void assemble_library() {
     fprintf(out_fp, "  LD  GR4, ZERO  ;  *p = '0';\n");
     fprintf(out_fp, "  ST  GR4, INTBUF,GR6\n");
     fprintf(out_fp, "  JUMP  WI5  ; }\n");
-    fprintf(out_fp, "WI2      ; else {\n");
+    fprintf(out_fp, "WI2\tDS\t0      ; else {\n");
     fprintf(out_fp, "  CPA  GR1, GR0  ;  while(GR1 != 0) {\n");
     fprintf(out_fp, "  JZE  WI3\n");
     fprintf(out_fp, "  LD  GR5, GR1  ;   GR5 = GR1 - (GR1 / 10) * 10;\n");
@@ -737,27 +737,27 @@ void assemble_library() {
     fprintf(out_fp, "  ST  GR5, INTBUF,GR6  ;   *p = GR5;\n");
     fprintf(out_fp, "  SUBA  GR6, ONE  ;   p--;\n");
     fprintf(out_fp, "  JUMP  WI2  ;  }\n");
-    fprintf(out_fp, "WI3\n");
+    fprintf(out_fp, "WI3\tDS\t0\n");
     fprintf(out_fp, "  CPA  GR7, GR0  ;  if(flag != 0) {\n");
     fprintf(out_fp, "  JZE  WI4\n");
     fprintf(out_fp, "  LD  GR4, MINUS  ;   *p = '-';\n");
     fprintf(out_fp, "  ST  GR4, INTBUF,GR6\n");
     fprintf(out_fp, "  JUMP  WI5  ;  }\n");
-    fprintf(out_fp, "WI4\n");
+    fprintf(out_fp, "WI4\tDS\t0\n");
     fprintf(out_fp, "  ADDA  GR6, ONE  ;  else p++;\n");
     fprintf(out_fp, "    ; }\n");
-    fprintf(out_fp, "WI5\n");
+    fprintf(out_fp, "WI5\tDS\t0\n");
     fprintf(out_fp, "  LAD  GR1, INTBUF,GR6  ; GR1 = p;\n");
     fprintf(out_fp, "  CALL  WRITESTR  ; WRITESTR();\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, "WI6\n");
+    fprintf(out_fp, "WI6\tDS\t0\n");
     fprintf(out_fp, "  LAD  GR1, MMINT\n");
     fprintf(out_fp, "  CALL  WRITESTR  ; WRITESTR();\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
     fprintf(out_fp, "MMINT    DC  '-32768'\n");
-    fprintf(out_fp, "WRITEBOOL\n");
+    fprintf(out_fp, "WRITEBOOL\tDS\t0\n");
     fprintf(out_fp, "; GR1の値（真理値）が0なら'FALSE'を\n");
     fprintf(out_fp, "; 0以外なら'TRUE'をGR2のけた数で出力する．\n");
     fprintf(out_fp, "; GR2が0なら必要最小限の桁数で出力する\n");
@@ -766,15 +766,15 @@ void assemble_library() {
     fprintf(out_fp, "  JZE  WB1\n");
     fprintf(out_fp, "  LAD  GR1, WBTRUE  ;  GR1 = \" TRUE \";\n");
     fprintf(out_fp, "  JUMP  WB2\n");
-    fprintf(out_fp, "WB1      ; else\n");
+    fprintf(out_fp, "WB1\tDS\t0      ; else\n");
     fprintf(out_fp, "  LAD  GR1, WBFALSE  ;  GR1 = \" FALSE \";\n");
-    fprintf(out_fp, "WB2\n");
+    fprintf(out_fp, "WB2\tDS\t0\n");
     fprintf(out_fp, "  CALL  WRITESTR  ; WRITESTR();\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
     fprintf(out_fp, "WBTRUE    DC  'TRUE'\n");
     fprintf(out_fp, "WBFALSE    DC  'FALSE'\n");
-    fprintf(out_fp, "WRITELINE\n");
+    fprintf(out_fp, "WRITELINE\tDS\t0\n");
     fprintf(out_fp, "; 改行を出力する\n");
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  LD  GR7, OBUFSIZE\n");
@@ -786,15 +786,15 @@ void assemble_library() {
     fprintf(out_fp, "  ST  GR0, OBUFSIZE\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, "FLUSH\n");
+    fprintf(out_fp, "FLUSH\tDS\t0\n");
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  LD GR7, OBUFSIZE\n");
     fprintf(out_fp, "  JZE FL1\n");
     fprintf(out_fp, "  CALL WRITELINE\n");
-    fprintf(out_fp, "FL1\n");
+    fprintf(out_fp, "FL1\tDS\t0\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, "READCHAR\n");
+    fprintf(out_fp, "READCHAR\tDS\t0\n");
     fprintf(out_fp, "; GR1が指す番地に文字一つを読み込む\n");
     fprintf(out_fp, "  RPUSH\n");
     fprintf(out_fp, "  LD  GR5, RPBBUF  ; if(RPBBUF != '\\0') {\n");
@@ -802,14 +802,14 @@ void assemble_library() {
     fprintf(out_fp, "  ST  GR5, 0,GR1  ;  *GR1 = RPBBUF;\n");
     fprintf(out_fp, "  ST  GR0, RPBBUF  ;  RPBBUF = '\\0'\n");
     fprintf(out_fp, "  JUMP  RC3  ;  return; }\n");
-    fprintf(out_fp, "RC0\n");
+    fprintf(out_fp, "RC0\tDS\t0\n");
     fprintf(out_fp, "  LD  GR7, INP  ; inp = INP;\n");
     fprintf(out_fp, "  LD  GR6, IBUFSIZE  ; if(IBUFSIZE == 0) {\n");
     fprintf(out_fp, "  JNZ  RC1\n");
     fprintf(out_fp, "  IN  IBUF, IBUFSIZE  ;  IN();\n");
     fprintf(out_fp, "  LD  GR7, GR0  ;  inp = 0;\n");
     fprintf(out_fp, "    ; }\n");
-    fprintf(out_fp, "RC1\n");
+    fprintf(out_fp, "RC1\tDS\t0\n");
     fprintf(out_fp, "  CPA  GR7, IBUFSIZE  ; if(inp == IBUFSIZE) {\n");
     fprintf(out_fp, "  JNZ  RC2\n");
     fprintf(out_fp, "  LD  GR5, NEWLINE  ;  *GR1 = '\\n';\n");
@@ -817,18 +817,18 @@ void assemble_library() {
     fprintf(out_fp, "  ST  GR0, IBUFSIZE  ;  IBUFSIZE = INP = 0;\n");
     fprintf(out_fp, "  ST  GR0, INP\n");
     fprintf(out_fp, "  JUMP  RC3  ; }\n");
-    fprintf(out_fp, "RC2      ; else {\n");
+    fprintf(out_fp, "RC2\tDS\t0      ; else {\n");
     fprintf(out_fp, "  LD  GR5, IBUF,GR7  ;  *GR1 = *inp++;\n");
     fprintf(out_fp, "  ADDA  GR7, ONE\n");
     fprintf(out_fp, "  ST  GR5, 0,GR1\n");
     fprintf(out_fp, "  ST  GR7, INP  ;  INP = inp;\n");
-    fprintf(out_fp, "RC3      ; }\n");
+    fprintf(out_fp, "RC3\tDS\t0      ; }\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, "READINT\n");
+    fprintf(out_fp, "READINT\tDS\t0\n");
     fprintf(out_fp, ";GR1が指す番地に整数値一つを読み込む\n");
     fprintf(out_fp, "  RPUSH\n");
-    fprintf(out_fp, "RI1      ; do {\n");
+    fprintf(out_fp, "RI1\tDS\t0      ; do {\n");
     fprintf(out_fp, "  CALL  READCHAR  ;  ch = READCHAR();\n");
     fprintf(out_fp, "  LD  GR7, 0,GR1\n");
     fprintf(out_fp, "  CPA  GR7, SPACE  ; } while(ch == ' ' || ch == '\\t' || ch == '\\n');\n");
@@ -843,9 +843,9 @@ void assemble_library() {
     fprintf(out_fp, "  LD  GR5, GR0  ;  flag = 0;\n");
     fprintf(out_fp, "  CALL  READCHAR  ;  ch = READCHAR();\n");
     fprintf(out_fp, "  LD  GR7, 0,GR1\n");
-    fprintf(out_fp, "RI4      ; }\n");
+    fprintf(out_fp, "RI4\tDS\t0      ; }\n");
     fprintf(out_fp, "  LD  GR6, GR0  ; v = 0;\n");
-    fprintf(out_fp, "RI2\n");
+    fprintf(out_fp, "RI2\tDS\t0\n");
     fprintf(out_fp, "  CPA  GR7, ZERO  ; while('0' <= ch && ch <= '9') {\n");
     fprintf(out_fp, "  JMI  RI3\n");
     fprintf(out_fp, "  CPA  GR7, NINE\n");
@@ -856,17 +856,17 @@ void assemble_library() {
     fprintf(out_fp, "  CALL  READCHAR  ;  ch = READSCHAR();\n");
     fprintf(out_fp, "  LD  GR7, 0,GR1\n");
     fprintf(out_fp, "  JUMP  RI2  ; }\n");
-    fprintf(out_fp, "RI3\n");
+    fprintf(out_fp, "RI3\tDS\t0\n");
     fprintf(out_fp, "  ST  GR7, RPBBUF  ; ReadPushBack();\n");
     fprintf(out_fp, "  ST  GR6, 0,GR1  ; *GR1 = v;\n");
     fprintf(out_fp, "  CPA  GR5, GR0  ; if(flag == 0) {\n");
     fprintf(out_fp, "  JNZ  RI5\n");
     fprintf(out_fp, "  SUBA  GR5, GR6  ;  *GR1 = -v;\n");
     fprintf(out_fp, "  ST  GR5, 0,GR1\n");
-    fprintf(out_fp, "RI5      ; }\n");
+    fprintf(out_fp, "RI5\tDS\t0      ; }\n");
     fprintf(out_fp, "  RPOP\n");
     fprintf(out_fp, "  RET\n");
-    fprintf(out_fp, "READLINE\n");
+    fprintf(out_fp, "READLINE\tDS\t0\n");
     fprintf(out_fp, "; 入力を改行コードまで（改行コードも含む）読み飛ばす\n");
     fprintf(out_fp, "  ST  GR0, IBUFSIZE\n");
     fprintf(out_fp, "  ST  GR0, INP\n");
