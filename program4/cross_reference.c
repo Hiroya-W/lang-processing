@@ -126,7 +126,7 @@ static int parse_block(void) {
         }
     }
 
-    fprintf(out_fp, "%s\n", L0001);
+    fprintf(out_fp, "%s\tDS\t0\n", L0001);
     if (parse_compound_statement() == ERROR) {
         return ERROR;
     }
@@ -691,9 +691,9 @@ static int parse_condition_statement(void) {
                 return ERROR;
             }
         }
-        fprintf(out_fp, "%s\n",if_end_label);
+        fprintf(out_fp, "%s\tDS\t0\n",if_end_label);
     } else {
-        fprintf(out_fp, "%s\n",else_label);
+        fprintf(out_fp, "%s\tDS\t0\n",else_label);
     }
     return NORMAL;
 }
@@ -709,7 +709,7 @@ static int parse_iteration_statement(void) {
     char *iteration_bottom_label = NULL;
 
     create_newlabel(&iteration_top_label);
-    fprintf(out_fp, "%s\n", iteration_top_label);
+    fprintf(out_fp, "%s\tDS\t0\n", iteration_top_label);
     create_newlabel(&iteration_bottom_label);
     add_literal(&while_end_literal_root, iteration_bottom_label, "0"); /* No value is required. */
 
@@ -745,7 +745,7 @@ static int parse_iteration_statement(void) {
     while_statement_level--;
 
     fprintf(out_fp, "\tJUMP \t%s\n", iteration_top_label);
-    fprintf(out_fp, "%s\n", iteration_bottom_label);
+    fprintf(out_fp, "%s\tDS\t0\n", iteration_bottom_label);
     pop_while_literal_list();
 
     return NORMAL;
