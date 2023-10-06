@@ -89,9 +89,11 @@ int main(int nc, char *np[]) {
         if (numtoken[index] > 0) {
             fprintf(stdout, "\"%-10s\" %5d\n", tokenstr[index], numtoken[index]);
         }
+        /*
         if (index == TNAME) {
             print_idtab();
         }
+        */
     }
     release_idtab();
 
