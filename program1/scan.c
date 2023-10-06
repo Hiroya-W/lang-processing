@@ -81,7 +81,7 @@ int scan(void) {
             look_ahead();
         } else if (!isprint(current_char)) { /* Not Graphic Character(0x20~0x7e) */
             error("function scan()");
-            fprintf(stderr, "[%c]0x%x is not graphic character.\n", current_char, current_char);
+            fprintf(stderr, "0x%x is not graphic character.\n", current_char);
             return -1;
         } else if (isalpha(current_char)) { /* Name or Keyword */
             token_code = scan_alnum();
@@ -209,7 +209,7 @@ static int scan_string() {
     while (1) {
         if (!isprint(current_char)) {
             error("function scan_string()");
-            fprintf(stderr, "[%c]0x%x is not graphic character.\n", current_char, current_char);
+            fprintf(stderr, "0x%x is not graphic character.\n", current_char);
             return -1;
         }
 
