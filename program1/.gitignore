@@ -1,8 +1,9 @@
 token-list
+tc
 test
-*.gcno 
-*.gcov 
-*.gcda 
+*.gcno
+*.gcov
+*.gcda
 *.gch
 Doxyfile.bak
 output.txt

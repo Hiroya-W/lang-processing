@@ -7,9 +7,10 @@ TEST_CFLAGS := $(CFLAGS) -Dmain=_main_disabled -coverage -fprofile-arcs -ftest-c
 TEST_LIBDIR := -L/usr/lib 
 TEST_LIB := -lcunit
 
-all: clean token-list test
+all: clean tc test
 
-token-list: $(OBJS)
+tc: $(OBJS)
+	$(CC) $^ -o $@
 
 test: test.c
 	$(CC) $^ $(TEST_CFLAGS) $(TEST_LIBDIR) $(TEST_LIB) -o $@
@@ -28,7 +29,7 @@ check: test
 .PHONY: clean
 clean:
 	-rm *.o 
-	-rm token-list test test-ignore
+	-rm tc test test-ignore
 	-rm *.gcno *.gcov *.gcda *.gch
 
 .DEFAULT_GOAL=all
