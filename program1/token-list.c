@@ -87,7 +87,7 @@ int main(int nc, char *np[]) {
     /* Output the results of the count. */
     for (index = 0; index < NUMOFTOKEN + 1; index++) {
         if (numtoken[index] > 0) {
-            fprintf(stdout, "%10s: %5d\n", tokenstr[index], numtoken[index]);
+            fprintf(stdout, "\"%-10s\" %5d\n", tokenstr[index], numtoken[index]);
         }
         if (index == TNAME) {
             print_idtab();
